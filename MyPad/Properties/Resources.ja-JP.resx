@@ -1,0 +1,626 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Command_About" xml:space="preserve">
+    <value>バージョン情報</value>
+  </data>
+  <data name="Command_Formatting" xml:space="preserve">
+    <value>整形</value>
+  </data>
+  <data name="Command_Close" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+  <data name="Command_ConvertSpacesToTabs" xml:space="preserve">
+    <value>空白をタブに変換</value>
+  </data>
+  <data name="Command_ConvertTabsToSpaces" xml:space="preserve">
+    <value>タブを空白に変換</value>
+  </data>
+  <data name="Command_ConvertToLowerCase" xml:space="preserve">
+    <value>小文字に変換</value>
+  </data>
+  <data name="Command_ConvertToNarrow" xml:space="preserve">
+    <value>半角に変換</value>
+  </data>
+  <data name="Command_ConvertToUpperCase" xml:space="preserve">
+    <value>大文字に変換</value>
+  </data>
+  <data name="Command_ConvertToWide" xml:space="preserve">
+    <value>全角に変換</value>
+  </data>
+  <data name="Command_Copy" xml:space="preserve">
+    <value>コピー</value>
+  </data>
+  <data name="Command_Cut" xml:space="preserve">
+    <value>切り取り</value>
+  </data>
+  <data name="Command_Delete" xml:space="preserve">
+    <value>削除</value>
+  </data>
+  <data name="Command_Edit" xml:space="preserve">
+    <value>編集</value>
+  </data>
+  <data name="Command_File" xml:space="preserve">
+    <value>ファイル</value>
+  </data>
+  <data name="Command_Find" xml:space="preserve">
+    <value>検索</value>
+  </data>
+  <data name="Command_FindNext" xml:space="preserve">
+    <value>次を検索</value>
+  </data>
+  <data name="Command_FindPrev" xml:space="preserve">
+    <value>前を検索</value>
+  </data>
+  <data name="Command_GoToLine" xml:space="preserve">
+    <value>指定行へ移動</value>
+  </data>
+  <data name="Command_Help" xml:space="preserve">
+    <value>ヘルプ</value>
+  </data>
+  <data name="Command_New" xml:space="preserve">
+    <value>新規作成</value>
+  </data>
+  <data name="Command_Open" xml:space="preserve">
+    <value>開く</value>
+  </data>
+  <data name="Command_Options" xml:space="preserve">
+    <value>オプション</value>
+  </data>
+  <data name="Command_Paste" xml:space="preserve">
+    <value>貼り付け</value>
+  </data>
+  <data name="Command_Properties" xml:space="preserve">
+    <value>プロパティ</value>
+  </data>
+  <data name="Command_Redo" xml:space="preserve">
+    <value>やり直し</value>
+  </data>
+  <data name="Command_Replace" xml:space="preserve">
+    <value>置換</value>
+  </data>
+  <data name="Command_ReplaceAll" xml:space="preserve">
+    <value>すべて置換</value>
+  </data>
+  <data name="Command_ReplaceNext" xml:space="preserve">
+    <value>次を置換</value>
+  </data>
+  <data name="Command_Save" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="Command_SaveAs" xml:space="preserve">
+    <value>名前を付けて保存</value>
+  </data>
+  <data name="Command_SelectAll" xml:space="preserve">
+    <value>すべて選択</value>
+  </data>
+  <data name="Command_ShowMenuBar" xml:space="preserve">
+    <value>メニューバー</value>
+  </data>
+  <data name="Command_ShowStatusBar" xml:space="preserve">
+    <value>ステータスバー</value>
+  </data>
+  <data name="Command_ShowToolBar" xml:space="preserve">
+    <value>ツールバー</value>
+  </data>
+  <data name="Command_Tools" xml:space="preserve">
+    <value>ツール</value>
+  </data>
+  <data name="Command_Topmost" xml:space="preserve">
+    <value>最前面に表示</value>
+  </data>
+  <data name="Command_Undo" xml:space="preserve">
+    <value>元に戻す</value>
+  </data>
+  <data name="Text_AllowScrollBelowDocument" xml:space="preserve">
+    <value>最終行を超えたスクロールを許可する。</value>
+  </data>
+  <data name="Text_AllowToggleOverstrikeMode" xml:space="preserve">
+    <value>上書きモードへの切り替えを許可する。</value>
+  </data>
+  <data name="Text_ConvertTabsToSpaces" xml:space="preserve">
+    <value>タブをスペースに変換する。</value>
+  </data>
+  <data name="Label_CreationDate" xml:space="preserve">
+    <value>作成日時</value>
+  </data>
+  <data name="Label_Culture" xml:space="preserve">
+    <value>言語情報</value>
+  </data>
+  <data name="Text_EnableCutCopyWholeLine" xml:space="preserve">
+    <value>未選択状態でのコピーと切り取りを可能にする。</value>
+  </data>
+  <data name="Text_EnableEmailHyperlinks" xml:space="preserve">
+    <value>メールアドレスのハイパーリンクを有効にする。</value>
+  </data>
+  <data name="Text_EnableHyperlinks" xml:space="preserve">
+    <value>URLのハイパーリンクを有効にする。</value>
+  </data>
+  <data name="Text_EnableImeSupport" xml:space="preserve">
+    <value>IMEサポートを有効にする。</value>
+  </data>
+  <data name="Text_EnableRectangularSelection" xml:space="preserve">
+    <value>矩形選択を有効にする。</value>
+  </data>
+  <data name="Text_EnableTextDragDrop" xml:space="preserve">
+    <value>ドラッグ アンド ドロップ 編集を有効にする。</value>
+  </data>
+  <data name="Text_EnableVirtualSpace" xml:space="preserve">
+    <value>フリーカーソルを有効にする。</value>
+  </data>
+  <data name="Text_EnableWordWrap" xml:space="preserve">
+    <value>折り返し表示を有効にする。</value>
+  </data>
+  <data name="Label_Encoding" xml:space="preserve">
+    <value>文字コード</value>
+  </data>
+  <data name="Label_AutoDetect" xml:space="preserve">
+    <value>自動検出</value>
+  </data>
+  <data name="Label_FileSize" xml:space="preserve">
+    <value>ファイルサイズ</value>
+  </data>
+  <data name="Label_Font" xml:space="preserve">
+    <value>フォント</value>
+  </data>
+  <data name="Text_HideCursorWhileTyping" xml:space="preserve">
+    <value>入力中はカーソルを非表示にする。</value>
+  </data>
+  <data name="Text_HighlightCurrentLine" xml:space="preserve">
+    <value>現在の行を強調する。</value>
+  </data>
+  <data name="Label_Language" xml:space="preserve">
+    <value>言語</value>
+  </data>
+  <data name="Label_LineCount" xml:space="preserve">
+    <value>行数</value>
+  </data>
+  <data name="Label_ModifiredDate" xml:space="preserve">
+    <value>更新日時</value>
+  </data>
+  <data name="Text_RequireControlModifierForHyperlinkClick" xml:space="preserve">
+    <value>ハイパーリンクの選択に[Ctrl]キーを要求する。</value>
+  </data>
+  <data name="Text_SaveWindowPosition" xml:space="preserve">
+    <value>ウィンドウの位置を保存する。</value>
+  </data>
+  <data name="Text_ShowBoxForControlCharacters" xml:space="preserve">
+    <value>制御文字を表示する。</value>
+  </data>
+  <data name="Text_ShowEndOfLine" xml:space="preserve">
+    <value>改行を表示する。</value>
+  </data>
+  <data name="Text_ShowFullName" xml:space="preserve">
+    <value>ファイルの完全パスを表示する。</value>
+  </data>
+  <data name="Text_ShowLineNumbers" xml:space="preserve">
+    <value>行番号を表示する。</value>
+  </data>
+  <data name="Text_ShowMenuBar" xml:space="preserve">
+    <value>メニューバーを表示する。</value>
+  </data>
+  <data name="Text_ShowSpaces" xml:space="preserve">
+    <value>スペースを表示する。</value>
+  </data>
+  <data name="Text_ShowStatusBar" xml:space="preserve">
+    <value>ステータスバーを表示する。</value>
+  </data>
+  <data name="Text_ShowTabs" xml:space="preserve">
+    <value>タブを表示する。</value>
+  </data>
+  <data name="Text_ShowToolBar" xml:space="preserve">
+    <value>ツールバーを表示する。</value>
+  </data>
+  <data name="Label_System" xml:space="preserve">
+    <value>システム</value>
+  </data>
+  <data name="Label_TextEditor" xml:space="preserve">
+    <value>エディター</value>
+  </data>
+  <data name="Label_TextLength" xml:space="preserve">
+    <value>文字列の長さ</value>
+  </data>
+  <data name="Label_Window" xml:space="preserve">
+    <value>ウィンドウ</value>
+  </data>
+  <data name="Command_CaseSensitive" xml:space="preserve">
+    <value>大文字と小文字を区別</value>
+  </data>
+  <data name="Message_ConfirmDiscardChanges" xml:space="preserve">
+    <value>変更内容は破棄されます。よろしいですか？</value>
+  </data>
+  <data name="Message_ConfirmOpenLargeFile" xml:space="preserve">
+    <value>大きなファイルは開くまでに長い時間がかかる場合があります。よろしいですか？</value>
+  </data>
+  <data name="Message_ConfirmSaveChanges" xml:space="preserve">
+    <value>変更内容を保存しますか？</value>
+  </data>
+  <data name="Message_NotifyFileLocked" xml:space="preserve">
+    <value>このファイルは書き込みが禁止されています。</value>
+  </data>
+  <data name="Command_SwitchToFindMode" xml:space="preserve">
+    <value>検索モードに切り替え</value>
+  </data>
+  <data name="Command_SwitchToReplaceMode" xml:space="preserve">
+    <value>置換モードに切り替え</value>
+  </data>
+  <data name="Message_NotifyErrorText" xml:space="preserve">
+    <value>エラーが存在します。</value>
+  </data>
+  <data name="Command_UseRegex" xml:space="preserve">
+    <value>正規表現を使用</value>
+  </data>
+  <data name="Message_Working" xml:space="preserve">
+    <value>しばらくお待ちください。</value>
+  </data>
+  <data name="Text_AutoDetectByDefault" xml:space="preserve">
+    <value>既定で自動検出する。</value>
+  </data>
+  <data name="Label_AllFiles" xml:space="preserve">
+    <value>すべてのファイル</value>
+  </data>
+  <data name="Label_EmphasisOnQuality" xml:space="preserve">
+    <value>精度優先</value>
+  </data>
+  <data name="Label_EmphasisOnResponse" xml:space="preserve">
+    <value>速度優先</value>
+  </data>
+  <data name="Label_FileName" xml:space="preserve">
+    <value>ファイル名</value>
+  </data>
+  <data name="Label_AccessDate" xml:space="preserve">
+    <value>アクセス日時</value>
+  </data>
+  <data name="Label_SettingFile" xml:space="preserve">
+    <value>設定ファイル</value>
+  </data>
+  <data name="Label_XshdDirectory" xml:space="preserve">
+    <value>シンタックス定義</value>
+  </data>
+  <data name="Message_ConfirmInitializeXshd" xml:space="preserve">
+    <value>シンタックス定義を初期化します。
+フォルダ内のファイルは既定のものに置き換えられます。
+設定は次回起動時に反映されます。よろしいですか？</value>
+  </data>
+  <data name="Command_Completion" xml:space="preserve">
+    <value>キーワード補完</value>
+  </data>
+  <data name="Message_NotifyNoMatchesText" xml:space="preserve">
+    <value>指定された文字列は見つかりませんでした。</value>
+  </data>
+  <data name="Command_ConvertToTitleCase" xml:space="preserve">
+    <value>単語の先頭を大文字に変換</value>
+  </data>
+  <data name="Command_MoveDownByPage" xml:space="preserve">
+    <value>次ページへ移動</value>
+  </data>
+  <data name="Command_MoveLeftByWord" xml:space="preserve">
+    <value>単語の先頭へ移動</value>
+  </data>
+  <data name="Command_Movement" xml:space="preserve">
+    <value>移動</value>
+  </data>
+  <data name="Command_MoveRightByWord" xml:space="preserve">
+    <value>単語の末尾へ移動</value>
+  </data>
+  <data name="Command_MoveToDocumentEnd" xml:space="preserve">
+    <value>ファイルの末尾へ移動</value>
+  </data>
+  <data name="Command_MoveToDocumentStart" xml:space="preserve">
+    <value>ファイルの先頭へ移動</value>
+  </data>
+  <data name="Command_MoveToLineEnd" xml:space="preserve">
+    <value>行末へ移動</value>
+  </data>
+  <data name="Command_MoveToLineStart" xml:space="preserve">
+    <value>行頭へ移動</value>
+  </data>
+  <data name="Command_MoveUpByPage" xml:space="preserve">
+    <value>前ページへ移動</value>
+  </data>
+  <data name="Command_SelectDownByPage" xml:space="preserve">
+    <value>次ページまで選択</value>
+  </data>
+  <data name="Command_Selection" xml:space="preserve">
+    <value>選択</value>
+  </data>
+  <data name="Command_SelectLeftByWord" xml:space="preserve">
+    <value>単語の先頭まで選択</value>
+  </data>
+  <data name="Command_SelectRightByWord" xml:space="preserve">
+    <value>単語の末尾まで選択</value>
+  </data>
+  <data name="Command_SelectToDocumentEnd" xml:space="preserve">
+    <value>ファイルの末尾まで選択</value>
+  </data>
+  <data name="Command_SelectToDocumentStart" xml:space="preserve">
+    <value>ファイルの先頭まで選択</value>
+  </data>
+  <data name="Command_SelectToLineEnd" xml:space="preserve">
+    <value>行末まで選択</value>
+  </data>
+  <data name="Command_SelectToLineStart" xml:space="preserve">
+    <value>行頭まで選択</value>
+  </data>
+  <data name="Command_SelectUpByPage" xml:space="preserve">
+    <value>前ページまで選択</value>
+  </data>
+  <data name="Command_Initialize" xml:space="preserve">
+    <value>初期化</value>
+  </data>
+  <data name="Label_LogDirectory" xml:space="preserve">
+    <value>ログフォルダ</value>
+  </data>
+  <data name="Message_ConfirmCleanUpLog" xml:space="preserve">
+    <value>ログファイルを削除します。よろしいですか？</value>
+  </data>
+  <data name="Label_ExecutionFile" xml:space="preserve">
+    <value>実行ファイル</value>
+  </data>
+  <data name="Text_EnableNotificationIcon" xml:space="preserve">
+    <value>通知領域アイコンを有効にする。</value>
+  </data>
+  <data name="Command_Show" xml:space="preserve">
+    <value>表示</value>
+  </data>
+  <data name="Label_Show" xml:space="preserve">
+    <value>表示</value>
+  </data>
+  <data name="Label_Path" xml:space="preserve">
+    <value>パス</value>
+  </data>
+  <data name="Label_Activate" xml:space="preserve">
+    <value>有効化</value>
+  </data>
+  <data name="Label_Behavior" xml:space="preserve">
+    <value>動作</value>
+  </data>
+  <data name="Command_Print" xml:space="preserve">
+    <value>印刷</value>
+  </data>
+  <data name="Label_Directory" xml:space="preserve">
+    <value>フォルダ</value>
+  </data>
+  <data name="Label_File" xml:space="preserve">
+    <value>ファイル</value>
+  </data>
+  <data name="Label_SyntaxDefinition" xml:space="preserve">
+    <value>シンタックス定義</value>
+  </data>
+  <data name="Message_NotifyEmptyDocument" xml:space="preserve">
+    <value>ドキュメントが空です。</value>
+  </data>
+  <data name="Command_CloseNotificationIcon" xml:space="preserve">
+    <value>通知領域アイコンを閉じる</value>
+  </data>
+  <data name="Text_EnableAutoCompletion" xml:space="preserve">
+    <value>キーワードの自動補完を有効にする。</value>
+  </data>
+  <data name="Label_General" xml:space="preserve">
+    <value>全般</value>
+  </data>
+  <data name="Label_AutoSaveInterval" xml:space="preserve">
+    <value>間隔(分)</value>
+  </data>
+  <data name="Label_Other" xml:space="preserve">
+    <value>その他</value>
+  </data>
+  <data name="Label_TempDirectory" xml:space="preserve">
+    <value>一時フォルダ</value>
+  </data>
+  <data name="Text_EnableAutoSave" xml:space="preserve">
+    <value>編集中のファイルを一時フォルダに自動保存する。</value>
+  </data>
+  <data name="Label_WorkDirectory" xml:space="preserve">
+    <value>作業フォルダ</value>
+  </data>
+  <data name="Command_Encoding" xml:space="preserve">
+    <value>文字コード</value>
+  </data>
+  <data name="Command_SyntaxDefinition" xml:space="preserve">
+    <value>シンタックス定義</value>
+  </data>
+  <data name="Label_Opacity" xml:space="preserve">
+    <value>不透明度(%)</value>
+  </data>
+  <data name="Text_AllowsTransparency" xml:space="preserve">
+    <value>背景を透過する。</value>
+  </data>
+  <data name="Message_NotifyAppliedOnRestart" xml:space="preserve">
+    <value>一部の変更は次回起動時に適用されます。</value>
+  </data>
+  <data name="Command_CloseAll" xml:space="preserve">
+    <value>すべて閉じる</value>
+  </data>
+  <data name="Command_CloseOther" xml:space="preserve">
+    <value>他をすべて閉じる</value>
+  </data>
+  <data name="Text_ShowSingleTab" xml:space="preserve">
+    <value>単一タブを表示する。</value>
+  </data>
+  <data name="Command_Zoom" xml:space="preserve">
+    <value>ズーム</value>
+  </data>
+  <data name="Command_ZoomIn" xml:space="preserve">
+    <value>拡大</value>
+  </data>
+  <data name="Command_ZoomOut" xml:space="preserve">
+    <value>縮小</value>
+  </data>
+  <data name="Command_ZoomReset" xml:space="preserve">
+    <value>リセット</value>
+  </data>
+  <data name="Command_SaveAll" xml:space="preserve">
+    <value>すべて保存</value>
+  </data>
+  <data name="Message_NotifyAutoSaved" xml:space="preserve">
+    <value>一時ファイルに保存されました。</value>
+  </data>
+  <data name="Command_WindowList" xml:space="preserve">
+    <value>ウィンドウ一覧</value>
+  </data>
+  <data name="Command_NewWindow" xml:space="preserve">
+    <value>新規ウィンドウ</value>
+  </data>
+  <data name="Text_EnableResident" xml:space="preserve">
+    <value>通知領域に常駐する。</value>
+  </data>
+  <data name="Command_MergeWindows" xml:space="preserve">
+    <value>ウィンドウを集約</value>
+  </data>
+  <data name="Command_View" xml:space="preserve">
+    <value>表示</value>
+  </data>
+  <data name="Command_TabList" xml:space="preserve">
+    <value>タブ一覧</value>
+  </data>
+  <data name="Label_Permission" xml:space="preserve">
+    <value>権限</value>
+  </data>
+  <data name="Label_ReadOnly" xml:space="preserve">
+    <value>読み取り専用</value>
+  </data>
+  <data name="Label_ReadWrite" xml:space="preserve">
+    <value>読み書き</value>
+  </data>
+  <data name="Text_UseOverlayMessage" xml:space="preserve">
+    <value>メッセージをオーバーレイ表示する。</value>
+  </data>
+  <data name="Label_RoamingDirectory" xml:space="preserve">
+    <value>ユーザフォルダ</value>
+  </data>
+  <data name="Command_ShowSideBar" xml:space="preserve">
+    <value>サイドバー</value>
+  </data>
+  <data name="Text_ShowSideBar" xml:space="preserve">
+    <value>サイドバーを表示する。</value>
+  </data>
+  <data name="Command_Clipboard" xml:space="preserve">
+    <value>クリップボード</value>
+  </data>
+  <data name="Label_VisualLength" xml:space="preserve">
+    <value>見た目の長さ</value>
+  </data>
+  <data name="Label_ClipboardHistoryCount" xml:space="preserve">
+    <value>クリップボードの履歴数</value>
+  </data>
+  <data name="Command_DeleteAll" xml:space="preserve">
+    <value>すべて削除</value>
+  </data>
+</root>

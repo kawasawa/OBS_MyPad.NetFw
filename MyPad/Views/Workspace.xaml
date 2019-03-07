@@ -1,0 +1,75 @@
+﻿<Window x:Class="MyPad.Views.Workspace"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:p="http://prismlibrary.com/"
+        xmlns:qc="http://QuickConverter.CodePlex.com/"
+        xmlns:mi="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:t="http://www.hardcodet.net/taskbar"
+        xmlns:ml="clr-namespace:MyLib.Wpf;assembly=MyLib.Wpf"
+        xmlns:mli="clr-namespace:MyLib.Wpf.Interactions;assembly=MyLib.Wpf"
+        xmlns:models="clr-namespace:MyPad.Models"
+        xmlns:views="clr-namespace:MyPad.Views"
+        xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
+        mc:Ignorable="d"
+        p:ViewModelLocator.AutoWireViewModel="True"
+        Title="{Binding Source={x:Static views:Workspace.WINDOW_TITLE}}"
+        ShowInTaskbar="False" WindowStyle="None" AllowsTransparency="True" Opacity="0" Height="0" Width="0" ResizeMode="NoResize">
+
+    <i:Interaction.Triggers>
+        <p:InteractionRequestTrigger SourceObject="{Binding TransitionRequest}">
+            <mli:TransitionAction/>
+        </p:InteractionRequestTrigger>
+    </i:Interaction.Triggers>
+    
+    <Window.Resources>
+        <Style TargetType="{x:Type t:TaskbarIcon}">
+            <Setter Property="IconSource" Value="/Resources/app.ico"/>
+            <Setter Property="ToolTipText" Value="{x:Static ml:ProductInfo.Product}"/>
+            <Setter Property="Visibility" Value="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding System.EnableNotificationIcon, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}}"/>
+        </Style>
+    </Window.Resources>
+    
+    <t:TaskbarIcon x:Name="TaskbarIcon">
+        <i:Interaction.Triggers>
+            <p:InteractionRequestTrigger SourceObject="{Binding NotifyRequest}">
+                <behaviors:BalloonAction/>
+            </p:InteractionRequestTrigger>
+        </i:Interaction.Triggers>
+        <t:TaskbarIcon.ContextMenu>
+            <ContextMenu>
+                <MenuItem Command="{Binding AddEditorCommand}" Header="{Binding Resources.Command_New, Source={x:Static models:ResourceService.Instance}}">
+                    <MenuItem.Icon>
+                        <mi:Modern Kind="PageNew"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="{Binding AddWindowCommand, Mode=OneWay}" Header="{Binding Resources.Command_NewWindow, Source={x:Static models:ResourceService.Instance}}">
+                    <MenuItem.Icon>
+                        <mi:Material Kind="WindowMaximize"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem ItemsSource="{Binding Contents}" Header="{Binding Resources.Command_WindowList, Source={x:Static models:ResourceService.Instance}}" IsEnabled="{qc:Binding '$P.CompareTo(0) == 1', P={Binding Contents.Count}}">
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource MetroMenuItem}">
+                            <Setter Property="Header" Value="{qc:MultiBinding '\'Window\-\' + $P0 + \': \' + $P1', P0={Binding Sequense}, P1={Binding ActiveContent.FileName}}"/>
+                            <Setter Property="Command" Value="{Binding ActivateCommand}"/>
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Command="{Binding CloseNotificationIconCommand}" Header="{Binding Resources.Command_CloseNotificationIcon, Source={x:Static models:ResourceService.Instance}}">
+                    <MenuItem.Icon>
+                        <mi:Material Kind="BellOff"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="{Binding CloseAllWindowCommand}" Header="{Binding Resources.Command_CloseAll, Source={x:Static models:ResourceService.Instance}}">
+                    <MenuItem.Icon>
+                        <mi:Material Kind="CloseBox"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </ContextMenu>
+        </t:TaskbarIcon.ContextMenu>
+    </t:TaskbarIcon>
+</Window>

@@ -1,0 +1,611 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+                    xmlns:m="http://metro.mahapps.com/winfx/xaml/controls"
+                    xmlns:mi="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                    xmlns:s="clr-namespace:System;assembly=mscorlib">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedSingleRowTabControl.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml"/>
+
+        <!-- BEGIN [DarkTheme]: ダークテーマを適用する場合は、コメントアウトを外してください。 -->
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseDark.xaml"/>
+        <!-- E N D [DarkTheme]: ダークテーマを適用する場合は、コメントアウトを外してください。 -->
+
+        <!-- BEGIN [VSStyle]: Visual Studio スタイルに置き換える場合は、コメントアウトを外してください。 -->
+        <ResourceDictionary Source="./VSStyle.xaml"/>
+        <!-- E N D [VSStyle]: Visual Studio スタイルに置き換える場合は、コメントアウトを外してください。 -->
+    </ResourceDictionary.MergedDictionaries>
+
+
+
+    <!--
+    ************************************************************ 
+    |
+    | 定数
+    |
+    | アプリケーションで使用するための定数を定義します。
+    | プレフィックスが Const. で統一します。
+    |
+    ************************************************************ 
+    -->
+
+    <s:Double x:Key="Const.Opacity">0.95</s:Double>
+    <s:Double x:Key="Const.Scale">1.2</s:Double>
+    <ScaleTransform x:Key="Const.ScaleTransform" ScaleX="{StaticResource Const.Scale}" ScaleY="{StaticResource Const.Scale}"/>
+    <Thickness x:Key="Const.GapH">0,5</Thickness>
+    <Thickness x:Key="Const.GapW">10,0</Thickness>
+    <Thickness x:Key="Const.GapHW">10,5</Thickness>
+    <Thickness x:Key="Const.Gap2H">0,10</Thickness>
+    <Thickness x:Key="Const.Gap2W">20,0</Thickness>
+    <Thickness x:Key="Const.Gap2HW">20,10</Thickness>
+
+
+
+    <!--
+    ************************************************************ 
+    |
+    | カラー／ブラシ
+    |
+    ************************************************************ 
+    -->
+
+    <Color x:Key="VSColorKey">#FF017ACC</Color>
+    <Color x:Key="GreenColorKey">#FF227447</Color>
+    <Color x:Key="DarkGreenColorKey">#FF076558</Color>
+    <Color x:Key="BlueColorKey">#FF106EBE</Color>
+    <Color x:Key="DarkBlueColorKey">#FF2A579A</Color>
+    <Color x:Key="PurpleColorKey">#FF80397B</Color>
+    <Color x:Key="OrangeColorKey">#FFB7472A</Color>
+    <Color x:Key="RedColorKey">#FFA4373A</Color>
+    <SolidColorBrush x:Key="VSColorBrush"        Color="{DynamicResource VSColorKey}"        o:Freeze="True"/>
+    <SolidColorBrush x:Key="GreenColorBrush"     Color="{DynamicResource GreenColorKey}"     o:Freeze="True"/>
+    <SolidColorBrush x:Key="DarkGreenColorBrush" Color="{DynamicResource DarkGreenColorKey}" o:Freeze="True"/>
+    <SolidColorBrush x:Key="BlueColorBrush"      Color="{DynamicResource BlueColorKey}"      o:Freeze="True"/>
+    <SolidColorBrush x:Key="DarkBlueColorBrush"  Color="{DynamicResource DarkBlueColorKey}"  o:Freeze="True"/>
+    <SolidColorBrush x:Key="PurpleColorBrush"    Color="{DynamicResource PurpleColorKey}"    o:Freeze="True"/>
+    <SolidColorBrush x:Key="OrangeColorBrush"    Color="{DynamicResource OrangeColorKey}"    o:Freeze="True"/>
+    <SolidColorBrush x:Key="RedColorBrush"       Color="{DynamicResource RedColorKey}"       o:Freeze="True"/>
+
+
+
+    <!--
+    ************************************************************ 
+    |
+    | カスタムスタイル
+    |
+    | アプリケーションで使用するためのコントロールのスタイルを定義します。
+    | プレフィックスが Default. で定義されるスタイルは既定値として登録します。
+    |
+    ************************************************************ 
+    -->
+
+    <Style x:Key="Default.ResizeGrip" TargetType="{x:Type ResizeGrip}" BasedOn="{StaticResource {x:Type ResizeGrip}}">
+        <!-- 領域を残すため Hidden とする -->
+        <Setter Property="Visibility" Value="Hidden"/>
+    </Style>
+
+    <Style x:Key="Default.PackIconModern" TargetType="{x:Type mi:PackIconModern}" BasedOn="{StaticResource {x:Type mi:PackIconModern}}">
+    </Style>
+
+    <Style x:Key="Default.PackIconMaterial" TargetType="{x:Type mi:PackIconMaterial}" BasedOn="{StaticResource {x:Type mi:PackIconMaterial}}">
+    </Style>
+
+    <Style x:Key="Common.PackIconModernGrayMiddle" TargetType="{x:Type mi:PackIconModern}" BasedOn="{StaticResource Default.PackIconModern}">
+        <Setter Property="Width" Value="20"/>
+        <Setter Property="Height" Value="20"/>
+    </Style>
+
+    <Style x:Key="Common.PackIconMaterialGrayMiddle" TargetType="{x:Type mi:PackIconMaterial}" BasedOn="{StaticResource Default.PackIconMaterial}">
+        <Setter Property="Width" Value="20"/>
+        <Setter Property="Height" Value="20"/>
+    </Style>
+
+    <Style x:Key="Default.Label" TargetType="{x:Type Label}" BasedOn="{StaticResource MetroLabel}"/>
+
+    <Style x:Key="Default.TextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MetroTextBlock}">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="Default.TextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource MetroTextBox}">
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="m:TextBoxHelper.SelectAllOnFocus" Value="True"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
+        <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{DynamicResource BorderBrushSelected}"/>
+    </Style>
+
+    <Style x:Key="Default.PasswordBox" TargetType="{x:Type PasswordBox}" BasedOn="{StaticResource Win8MetroPasswordBox}">
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="m:TextBoxHelper.SelectAllOnFocus" Value="True"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
+        <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{DynamicResource BorderBrushSelected}"/>
+    </Style>
+
+    <Style x:Key="Default.DatePicker" TargetType="{x:Type DatePicker}" BasedOn="{StaticResource MetroDatePicker}">
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="Local"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
+        <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{DynamicResource BorderBrushSelected}"/>
+        <Setter Property="CalendarStyle">
+            <Setter.Value>
+                <Style TargetType="{x:Type Calendar}" BasedOn="{StaticResource MetroCalendar}">
+                    <Setter Property="LayoutTransform" Value="{StaticResource Const.ScaleTransform}"/>
+                </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="Default.NumericUpDown" TargetType="{x:Type m:NumericUpDown}" BasedOn="{StaticResource {x:Type m:NumericUpDown}}">
+        <Style.Resources>
+            <!-- 既定のリソースを打ち消す -->
+            <SolidColorBrush x:Key="GrayBrush1" Color="{DynamicResource AccentBaseColor}" o:Freeze="True"/>
+        </Style.Resources>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Speedup" Value="False"/>
+        <Style.Triggers>
+            <Trigger Property="IsReadOnly" Value="True">
+                <Setter Property="HideUpDownButtons" Value="True"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="Default.ComboBoxItem" TargetType="{x:Type ComboBoxItem}" BasedOn="{StaticResource MetroComboBoxItem}">
+        <Setter Property="m:ItemHelper.SelectedForegroundBrush" Value="{DynamicResource TextBrush}"/>
+        <Setter Property="m:ItemHelper.ActiveSelectionForegroundBrush" Value="{DynamicResource TextBrush}"/>
+        <Setter Property="m:ItemHelper.ActiveSelectionBackgroundBrush" Value="{DynamicResource AccentColorBrush2}"/>
+        <Setter Property="m:ItemHelper.HoverSelectedBackgroundBrush" Value="{DynamicResource AccentColorBrush3}"/>
+    </Style>
+
+    <Style x:Key="Default.ComboBox" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MetroComboBox}">
+        <Style.Resources>
+            <!-- 既定のリソースを打ち消す -->
+            <SolidColorBrush x:Key="GrayBrush3" Color="Transparent" o:Freeze="True"/>
+            <SolidColorBrush x:Key="GrayBrush5" Color="Transparent" o:Freeze="True"/>
+            <SolidColorBrush x:Key="GrayBrush7" Color="Transparent" o:Freeze="True"/>
+            <SolidColorBrush x:Key="GrayBrush8" Color="Transparent" o:Freeze="True"/>
+        </Style.Resources>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
+        <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{StaticResource BorderBrushSelected}"/>
+        <Setter Property="ItemContainerStyle" Value="{StaticResource Default.ComboBoxItem}"/>
+    </Style>
+
+    <Style x:Key="Default.ListBoxItem" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MetroListBoxItem}">
+        <Setter Property="m:ItemHelper.SelectedForegroundBrush" Value="{DynamicResource TextBrush}"/>
+        <Setter Property="m:ItemHelper.ActiveSelectionForegroundBrush" Value="{DynamicResource TextBrush}"/>
+        <Setter Property="m:ItemHelper.ActiveSelectionBackgroundBrush" Value="{DynamicResource AccentColorBrush2}"/>
+        <Setter Property="m:ItemHelper.HoverSelectedBackgroundBrush" Value="{DynamicResource AccentColorBrush3}"/>
+    </Style>
+
+    <Style x:Key="Default.ListBox" TargetType="{x:Type ListBox}" BasedOn="{StaticResource MetroListBox}">
+        <Setter Property="ItemContainerStyle" Value="{StaticResource Default.ListBoxItem}"/>
+    </Style>
+
+    <Style x:Key="Default.AppCheckBox" TargetType="{x:Type CheckBox}" BasedOn="{StaticResource MetroCheckBox}">
+        <Setter Property="LayoutTransform" Value="{StaticResource Const.ScaleTransform}"/>
+        <Setter Property="Margin" Value="{StaticResource Const.Gap}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
+        <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{StaticResource BorderBrushSelected}"/>
+    </Style>
+
+    <Style x:Key="Default.RadioButton" TargetType="{x:Type RadioButton}" BasedOn="{StaticResource MetroRadioButton}">
+        <Setter Property="LayoutTransform" Value="{StaticResource Const.ScaleTransform}"/>
+        <Setter Property="Margin" Value="{StaticResource Const.GapW}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
+        <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{StaticResource BorderBrushSelected}"/>
+    </Style>
+
+    <Style x:Key="Default.Buton" TargetType="{x:Type Button}" BasedOn="{StaticResource MetroFlatButton}">
+        <Setter Property="Foreground" Value="{DynamicResource BlackColorBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource BackgroundNormal}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
+        <Style.Triggers>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="Background" Value="{DynamicResource AccentColorBrush3}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="DarkGray"/>
+                <Setter Property="Foreground" Value="{DynamicResource Foreground}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource FlatButtonPressedBackgroundBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource FlatButtonPressedForegroundBrush}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource GrayBrush2}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="Default.ToggleButon" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource MetroFlatToggleButton}">
+        <Setter Property="Foreground" Value="{DynamicResource BlackColorBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource BackgroundNormal}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
+        <Style.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Background" Value="{DynamicResource AccentColorBrush2}"/>
+            </Trigger>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="Background" Value="{DynamicResource AccentColorBrush3}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{DynamicResource Foreground}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource FlatButtonPressedBackgroundBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource FlatButtonPressedForegroundBrush}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource GrayBrush2}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="Common.ToolButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Buton}">
+        <Setter Property="Background" Value="{x:Null}"/>
+        <Setter Property="BorderBrush" Value="{x:Null}"/>
+        <Setter Property="Width" Value="20"/>
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="Padding" Value="2"/>
+    </Style>
+
+    <Style x:Key="Common.ToolToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Default.ToggleButon}">
+        <Setter Property="Background" Value="{x:Null}"/>
+        <Setter Property="BorderBrush" Value="{x:Null}"/>
+        <Setter Property="Width" Value="20"/>
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="Padding" Value="2"/>
+        <Style.Triggers>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsChecked" Value="True"/>
+                    <Condition Property="IsPressed" Value="False"/>
+                </MultiTrigger.Conditions>
+                <Setter Property="Background" Value="{DynamicResource BackgroundSelected}"/>
+            </MultiTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="Common.CircleButton" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource MetroCircleButtonStyle}">
+        <Setter Property="Width" Value="50"/>
+        <Setter Property="Height" Value="50"/>
+        <Setter Property="Margin" Value="5"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxPopupBorderBrush}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource SemiTransparentWhiteBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+        <Style.Resources>
+            <Style TargetType="{x:Type mi:PackIconModern}" BasedOn="{StaticResource Common.PackIconModernGrayMiddle}"/>
+            <Style TargetType="{x:Type mi:PackIconMaterial}" BasedOn="{StaticResource Common.PackIconMaterialGrayMiddle}"/>
+        </Style.Resources>
+    </Style>
+
+    <Style x:Key="Default.GroupBox" TargetType="{x:Type GroupBox}" BasedOn="{StaticResource MetroGroupBox}">
+        <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
+        <Setter Property="m:ControlsHelper.HeaderFontSize" Value="{StaticResource DialogMessageFontSize}"/>
+        <Setter Property="Padding" Value="{StaticResource Const.GapHW}"/>
+    </Style>
+
+    <Style x:Key="Default.Expander" TargetType="{x:Type Expander}" BasedOn="{StaticResource MetroExpander}">
+        <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
+        <Setter Property="m:ControlsHelper.HeaderFontSize" Value="{StaticResource DialogMessageFontSize}"/>
+        <Setter Property="Padding" Value="{StaticResource Const.GapHW}"/>
+        <Setter Property="IsExpanded" Value="True"/>
+    </Style>
+
+    <Style x:Key="Default.Border" TargetType="{x:Type Border}"/>
+
+    <Style x:Key="Default.Panel" TargetType="{x:Type Panel}"/>
+
+    <Style x:Key="Default.DockPanel" TargetType="{x:Type DockPanel}"/>
+
+    <Style x:Key="Default.StackPanel" TargetType="{x:Type StackPanel}">
+        <Style.Resources>
+            <Style TargetType="{x:Type Label}" BasedOn="{StaticResource Default.Label}">
+                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
+            </Style>
+            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
+                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
+            </Style>
+            <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource Default.ComboBox}">
+                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
+            </Style>
+            <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource Default.AppCheckBox}">
+                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
+            </Style>
+            <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource Default.RadioButton}">
+                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
+            </Style>
+            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Buton}">
+                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
+            </Style>
+            <Style TargetType="{x:Type GroupBox}" BasedOn="{StaticResource Default.GroupBox}">
+                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
+            </Style>
+            <Style TargetType="{x:Type Expander}" BasedOn="{StaticResource Default.Expander}">
+                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
+            </Style>
+        </Style.Resources>
+    </Style>
+
+    <Style x:Key="Default.Grid" TargetType="{x:Type Grid}">
+        <Style.Resources>
+            <Style TargetType="{x:Type Label}" BasedOn="{StaticResource Default.Label}">
+                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
+            </Style>
+            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
+                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
+            </Style>
+            <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource Default.ComboBox}">
+                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
+            </Style>
+            <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource Default.AppCheckBox}">
+                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
+            </Style>
+            <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource Default.RadioButton}">
+                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
+            </Style>
+            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Buton}">
+                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
+            </Style>
+            <Style TargetType="{x:Type GroupBox}" BasedOn="{StaticResource Default.GroupBox}">
+                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
+            </Style>
+            <Style TargetType="{x:Type Expander}" BasedOn="{StaticResource Default.Expander}">
+                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
+            </Style>
+        </Style.Resources>
+    </Style>
+
+    <Style x:Key="Default.GridSplitter" TargetType="{x:Type GridSplitter}">
+        <Setter Property="Background" Value="{DynamicResource LightBackground}"/>
+        <Setter Property="Focusable" Value="False"/>
+    </Style>
+
+    <Style x:Key="Default.ScrollViewer" TargetType="{x:Type ScrollViewer}" BasedOn="{StaticResource {x:Type ScrollViewer}}">
+        <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="Focusable" Value="False"/>
+    </Style>
+
+    <Style x:Key="Default.TabItem" TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
+        <Setter Property="m:TabControlHelper.CloseButtonEnabled" Value="False"/>
+        <Setter Property="m:ControlsHelper.HeaderFontSize" Value="{DynamicResource DialogMessageFontSize}"/>
+    </Style>
+
+    <Style x:Key="Default.TabControl" TargetType="{x:Type TabControl}" BasedOn="{StaticResource {x:Type TabControl}}">
+        <Setter Property="m:TabControlHelper.Underlined" Value="SelectedTabItem"/>
+        <Setter Property="Padding" Value="{StaticResource Const.GapHW}"/>
+        <Style.Resources>
+            <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource Default.TabItem}"/>
+        </Style.Resources>
+    </Style>
+
+    <!-- VSStyle のメニューはチェック状態を表現できないため、常にスタンダードスタイルを適用する -->
+    <Style x:Key="Default.MenuItem" TargetType="{x:Type MenuItem}" BasedOn="{StaticResource MetroMenuItem}">
+        <Setter Property="Background" Value="{DynamicResource LightBackground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource LightBackground}"/>
+    </Style>
+
+    <Style x:Key="Default.ContextMenu" TargetType="{x:Type ContextMenu}" BasedOn="{StaticResource {x:Type ContextMenu}}">
+        <Setter Property="Background" Value="{DynamicResource LightBackground}"/>
+        <Setter Property="Opacity" Value="{StaticResource Const.Opacity}"/>
+        <Style.Resources>
+            <!-- 既定のリソースを打ち消す -->
+            <SolidColorBrush x:Key="ContextMenuBorderBrush" Color="{DynamicResource Gray2}" o:Freeze="True"/>
+            <SolidColorBrush x:Key="SubMenuBorderBrush" Color="{DynamicResource Gray2}" o:Freeze="True"/>
+            <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource Default.MenuItem}"/>
+        </Style.Resources>
+    </Style>
+
+    <Style x:Key="Common.StatusTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StatusBar}}}"/>
+        <Setter Property="Padding" Value="{StaticResource Const.GapW}"/>
+    </Style>
+
+    <Style x:Key="Common.StatusComboBox" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource Default.ComboBox}">
+        <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StatusBar}}}"/>
+        <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StatusBar}}}"/>
+        <Setter Property="m:TextBoxHelper.ButtonWidth" Value="0"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="{StaticResource Const.GapW}"/>
+        <Setter Property="MinWidth" Value="50"/>
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="{x:Type ComboBoxItem}" BasedOn="{StaticResource Default.ComboBoxItem}">
+                    <Setter Property="Focusable" Value="False"/>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource AccentColorBrush2}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="Common.StatusToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Default.ToggleButon}">
+        <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StatusBar}}}"/>
+        <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StatusBar}}}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource {x:Static SystemFonts.StatusFontFamilyKey}}"/>
+        <Setter Property="FontStyle" Value="{DynamicResource {x:Static SystemFonts.StatusFontStyleKey}}"/>
+        <Setter Property="FontWeight" Value="{DynamicResource {x:Static SystemFonts.StatusFontWeightKey}}"/>
+        <Setter Property="FontSize" Value="{StaticResource StatusBarFontSize}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="MinWidth" Value="50"/>
+        <Setter Property="Focusable" Value="False"/>
+        <Style.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StatusBar}}}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource AccentColorBrush2}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="Default.StatusBarItem" TargetType="{x:Type StatusBarItem}">
+        <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StatusBar}}}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Style.Resources>
+            <Style TargetType="{x:Type ResizeGrip}" BasedOn="{StaticResource Default.ResizeGrip}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" Value="Maximized">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.StatusTextBlock}"/>
+            <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource Common.StatusComboBox}"/>
+            <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Common.StatusToggleButton}"/>
+        </Style.Resources>
+    </Style>
+
+    <Style x:Key="Default.StatusBar" TargetType="{x:Type StatusBar}">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="{StaticResource VSColorBrush}"/>
+    </Style>
+
+    <Style x:Key="Default.HamburgerMenu" TargetType="{x:Type m:HamburgerMenu}" BasedOn="{StaticResource {x:Type m:HamburgerMenu}}">
+        <Setter Property="Foreground" Value="{DynamicResource BlackColorBrush}"/>
+        <Setter Property="PaneBackground" Value="{x:Null}"/>
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource HamburgerMenuItemStyle}">
+                    <Setter Property="m:ItemHelper.SelectedBackgroundBrush" Value="{x:Null}"/>
+                    <Setter Property="m:ItemHelper.ActiveSelectionBackgroundBrush" Value="{x:Null}"/>
+                    <Setter Property="m:ItemHelper.DisabledSelectedBackgroundBrush" Value="{x:Null}"/>
+                    <Setter Property="m:ItemHelper.HoverBackgroundBrush" Value="{x:Null}"/>
+                    <Setter Property="m:ItemHelper.HoverSelectedBackgroundBrush" Value="{x:Null}"/>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="OptionsItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource HamburgerMenuItemStyle}">
+                    <Setter Property="m:ItemHelper.SelectedBackgroundBrush" Value="{x:Null}"/>
+                    <Setter Property="m:ItemHelper.ActiveSelectionBackgroundBrush" Value="{x:Null}"/>
+                    <Setter Property="m:ItemHelper.DisabledSelectedBackgroundBrush" Value="{x:Null}"/>
+                    <Setter Property="m:ItemHelper.HoverBackgroundBrush" Value="{x:Null}"/>
+                    <Setter Property="m:ItemHelper.HoverSelectedBackgroundBrush" Value="{x:Null}"/>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Style.Resources>
+            <Style TargetType="{x:Type mi:PackIconModern}" BasedOn="{StaticResource Common.PackIconModernGrayMiddle}">
+                <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type m:HamburgerMenu}}}"/>
+            </Style>
+            <Style TargetType="{x:Type mi:PackIconMaterial}" BasedOn="{StaticResource Common.PackIconMaterialGrayMiddle}">
+                <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type m:HamburgerMenu}}}"/>
+            </Style>
+        </Style.Resources>
+    </Style>
+
+    <Style x:Key="Default.Flyout" TargetType="{x:Type m:Flyout}" BasedOn="{StaticResource {x:Type m:Flyout}}">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="{DynamicResource BlueColorBrush}"/>
+        <Setter Property="Opacity" Value="{StaticResource Const.Opacity}"/>
+        <Setter Property="FontSize" Value="{StaticResource DialogMessageFontSize}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="AnimateOpacity" Value="True"/>
+        <Setter Property="IsPinned" Value="False"/>
+        <Style.Resources>
+            <!-- 既定のリソースを打ち消す -->
+            <SolidColorBrush x:Key="LabelTextBrush" Color="White" o:Freeze="True"/>
+            <SolidColorBrush x:Key="FlatButtonBackgroundBrush" Color="{DynamicResource WhiteColor}" o:Freeze="True"/>
+
+            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
+                <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type m:Flyout}}}"/>
+            </Style>
+            <Style TargetType="{x:Type ListBox}" BasedOn="{StaticResource Default.ListBox}">
+                <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type m:Flyout}}}"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="ItemContainerStyle">
+                    <Setter.Value>
+                        <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource Default.ListBoxItem}">
+                            <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type m:Flyout}}}"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Focusable" Value="False"/>
+                        </Style>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </Style.Resources>
+    </Style>
+
+    <Style x:Key="Default.WindowCommands" TargetType="{x:Type m:WindowCommands}" BasedOn="{StaticResource {x:Type m:WindowCommands}}">
+        <Setter Property="ShowLastSeparator" Value="False"/>
+        <Setter Property="Foreground" Value="{DynamicResource BlackBrush}"/>
+        <Style.Resources>
+            <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Default.ToggleButon}">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Focusable" Value="False"/>
+            </Style>
+        </Style.Resources>
+    </Style>
+
+    <Style x:Key="Default.MetroProgressBar" TargetType="{x:Type m:MetroProgressBar}" BasedOn="{StaticResource {x:Type m:MetroProgressBar}}">
+        <Setter Property="IsIndeterminate" Value="True"/>
+    </Style>
+
+    <Style x:Key="Default.ProgressRing" TargetType="{x:Type m:ProgressRing}" BasedOn="{StaticResource {x:Type m:ProgressRing}}">
+        <Setter Property="Foreground" Value="{DynamicResource HighlightBrush}"/>
+    </Style>
+
+    <Style x:Key="Common.Overlay" TargetType="{x:Type Border}" BasedOn="{StaticResource Default.Border}">
+        <Setter Property="Background" Value="{DynamicResource LightBackground}"/>
+        <Setter Property="Opacity" Value="{StaticResource Const.Opacity}"/>
+        <Style.Resources>
+            <Style TargetType="{x:Type Grid}" BasedOn="{StaticResource Default.Panel}">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="{StaticResource Const.GapW}"/>
+            </Style>
+            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="TextAlignment" Value="Center"/>
+                <Setter Property="Foreground" Value="{DynamicResource Foreground}"/>
+                <Setter Property="FontSize" Value="{StaticResource FlyoutHeaderFontSize}"/>
+            </Style>
+        </Style.Resources>
+    </Style>
+
+    <Style x:Key="Default.Menu" TargetType="{x:Type Menu}" BasedOn="{StaticResource {x:Type Menu}}">
+        <Setter Property="Background" Value="{DynamicResource LightBackground}"/>
+        <Setter Property="Opacity" Value="{StaticResource Const.Opacity}"/>
+        <Style.Resources>
+            <SolidColorBrush x:Key="MenuBorderBrush" Color="{DynamicResource Gray2}"/>
+            <SolidColorBrush x:Key="SubMenuBorderBrush" Color="{DynamicResource Gray2}"/>
+            <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource Default.MenuItem}"/>
+        </Style.Resources>
+    </Style>
+
+    <Style x:Key="Default.ToolBar" TargetType="{x:Type ToolBar}" BasedOn="{StaticResource {x:Type ToolBar}}">
+        <Setter Property="ToolBarTray.IsLocked" Value="True"/>
+        <Style.Resources>
+            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Common.ToolButton}"/>
+        </Style.Resources>
+    </Style>
+
+    <Style x:Key="Common.Window" TargetType="{x:Type m:MetroWindow}" BasedOn="{StaticResource {x:Type m:MetroWindow}}">
+        <Setter Property="MinHeight" Value="200"/>
+        <Setter Property="MinWidth" Value="200"/>
+        <Setter Property="TitleCharacterCasing" Value="Normal"/>
+        <Setter Property="TitleForeground" Value="{DynamicResource LabelTextBrush}"/>
+        <Setter Property="WindowTitleBrush" Value="{x:Null}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource VSColorBrush}"/>
+        <Setter Property="NonActiveWindowTitleBrush" Value="{x:Null}"/>
+        <Setter Property="NonActiveGlowBrush" Value="{DynamicResource DarkBlueColorBrush}"/>
+        <Style.Resources>
+            <s:Double x:Key="WindowTitleFontSize">13</s:Double>
+        </Style.Resources>
+    </Style>
+
+</ResourceDictionary>

@@ -1,0 +1,17 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mlc="clr-namespace:MyLib.Wpf.Converters;assembly=MyLib.Wpf"
+                    xmlns:converters="clr-namespace:MyPad.Views.Converters"
+                    xmlns:components="clr-namespace:MyPad.Views.Components">
+    
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="./Dragablz.xaml"/>
+        <ResourceDictionary Source="./AvalonEdit.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <mlc:EnumToBooleanConverter x:Key="EnumToBoolean"/>
+    <converters:FontFamilyToNameConverter x:Key="FontFamilyToName"/>
+
+    <Style TargetType="{x:Type components:NumericUpDownEx}" BasedOn="{StaticResource Default.NumericUpDown}"/>
+
+</ResourceDictionary>
