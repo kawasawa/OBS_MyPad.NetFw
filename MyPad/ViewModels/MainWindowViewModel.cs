@@ -43,6 +43,8 @@ namespace MyPad.ViewModels
 
         public int Sequense { get; } = ++SEQUENSE;
 
+        public bool IsModified => this.Contents.Any(c => c.IsModified);
+
         private bool _isWorking;
         public bool IsWorking
         {
@@ -174,10 +176,12 @@ namespace MyPad.ViewModels
         public ICommand ClosingHandler
             => new DelegateCommand<CancelEventArgs>(async e =>
             {
-                if (e.Cancel)
+                if (e.Cancel || this.IsModified == false)
                     return;
-                if (await this.SaveChangesIfAndRemove() == false)
-                    e.Cancel = true;
+
+                e.Cancel = true;
+                if (await this.SaveChangesIfAndRemove())
+                    this.Dispose();
             });
 
         public Delegate ClosingContentHandler
@@ -201,7 +205,6 @@ namespace MyPad.ViewModels
 
         protected override void Dispose(bool disposing)
         {
-            this.TransitionRequest.Raise(new TransitionNotification(TransitionKind.Close));
             for (var i = this.Contents.Count - 1; 0 <= i; i--)
                 this.RemoveContent(this.Contents[i]);
             base.Dispose(disposing);

@@ -153,7 +153,7 @@ namespace MyPad.ViewModels
             {
                 var bytes = new byte[this.FileStream.Length];
                 this.FileStream.Position = 0;
-                this.FileStream.Read(bytes, 0, bytes.Length);
+                await this.FileStream.ReadAsync(bytes, 0, bytes.Length);
 
                 if (encoding == null)
                     encoding = await Task.Run(() => (SettingsService.Instance.System.EmphasisOnQuality ? EncodingDetector.Detect(bytes, 0) : EncodingDetector.Detect(bytes, 10 * 1024)) ?? SettingsService.Instance.System.Encoding);
@@ -192,7 +192,7 @@ namespace MyPad.ViewModels
                 var bytes = encoding.GetBytes(this.Document.Text);
                 this.FileStream.Position = 0;
                 this.FileStream.SetLength(0);
-                await Task.Run(() => this.FileStream.Write(bytes, 0, bytes.Length));
+                await this.FileStream.WriteAsync(bytes, 0, bytes.Length);
                 this.FileStream.Flush();
 
                 this.Encoding = encoding;

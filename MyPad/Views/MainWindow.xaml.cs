@@ -80,6 +80,7 @@ namespace MyPad.Views
         public MainWindow()
         {
             this.InitializeComponent();
+            this.DataContextChanged += this.Window_DataContextChanged;
             this.Loaded += this.Window_Loaded;
             this.Closed += this.Window_Closed;
             ((Style)this.TabControl.Resources["__TextEditor"]).Setters.Add(new EventSetter() { Event = PreviewKeyDownEvent, Handler = new KeyEventHandler(this.TextEditor_PreviewKeyDown) });
@@ -91,6 +92,20 @@ namespace MyPad.Views
             this.GoToLineInput.ValueChanged += this.GoToLineInput_ValueChanged;
             this.EncodingComboBox.SelectionChanged += this.StatusComboBox_SelectionChanged;
             this.LanguageComboBox.SelectionChanged += this.StatusComboBox_SelectionChanged;
+        }
+
+        private void Window_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.OldValue is ViewModelBase oldViewModel)
+                oldViewModel.Disposed -= this.ViewModel_Disposed;
+            if (e.NewValue is ViewModelBase newViewModel)
+                newViewModel.Disposed += this.ViewModel_Disposed;
+        }
+
+        private void ViewModel_Disposed(object sender, EventArgs e)
+        {
+            ((ViewModelBase)sender).Disposed -= this.ViewModel_Disposed;
+            this.Dispatcher.InvokeAsync(() => this.Close(), DispatcherPriority.ApplicationIdle);
         }
 
         private IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)

@@ -153,10 +153,6 @@ namespace MyPad.ViewModels
 
         protected override void Dispose(bool disposing)
         {
-            // View から呼び出されたコマンド内でリクエストを送ると View 層のスレッドで実行されてしまう
-            // ViewModel 層のスレッドに含めるためここで行う
-            this.TransitionRequest.Raise(new TransitionNotification(TransitionKind.Close));
-
             // 一時フォルダを削除
             try
             {
