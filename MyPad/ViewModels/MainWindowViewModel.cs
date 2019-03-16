@@ -161,7 +161,11 @@ namespace MyPad.ViewModels
             => new DelegateCommand<Tuple<Encoding, string>>(async tuple => await this.ReloadContent(this.ActiveContent, tuple.Item1, tuple.Item2));
 
         public ICommand ActivatedHandler
-            => new DelegateCommand<EventArgs>(e => WorkspaceViewModel.Instance.ActiveContent = this);
+            => new DelegateCommand<EventArgs>(e =>
+            {
+                if (WorkspaceViewModel.Instance != null)
+                    WorkspaceViewModel.Instance.ActiveContent = this;
+            });
 
         public ICommand DropHandler
             => new DelegateCommand<DragEventArgs>(async e =>
