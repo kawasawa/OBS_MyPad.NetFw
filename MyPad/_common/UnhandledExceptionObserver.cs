@@ -11,7 +11,6 @@ public static class UnhandledExceptionObserver
 {
     /// <summary>
     /// 指定されたアプリケーションに対してハンドルされていない例外の発生を監視します。
-    /// 通常このメソッドは App クラスのコンストラクタで呼び出します。
     /// </summary>
     /// <param name="application">アプリケーション</param>
     public static void Observe(Application application)

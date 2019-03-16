@@ -230,7 +230,7 @@ namespace MyPad.ViewModels
                 flowDocument.ColumnGap = 0;
                 return flowDocument;
             },
-            DispatcherPriority.Normal);
+            DispatcherPriority.Input);
 
         private async void AutoSaveTimer_Tick(object sender, EventArgs e)
         {

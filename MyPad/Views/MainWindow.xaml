@@ -780,7 +780,7 @@
                     </ToggleButton>
                 </StatusBarItem>
                 <StatusBarItem Grid.Column="3" DataContext="{Binding ActiveContent}">
-                    <ComboBox x:Name="EncodingComboBox" ItemsSource="{Binding DataContext.Encodings, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" SelectedValue="{Binding Encoding, Mode=OneWay}">
+                    <ComboBox x:Name="EncodingComboBox" ItemsSource="{x:Static root:Consts.ENCODINGS}" SelectedValue="{Binding Encoding, Mode=OneWay}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock>
@@ -906,7 +906,7 @@
                                     <Expander Header="{Binding Resources.Label_General, Source={x:Static models:ResourceService.Instance}}">
                                         <Grid ge:GridEx.ColumnDefinition="Auto, *" ge:GridEx.RowDefinition="Auto, Auto, Auto, Auto">
                                             <Label    Grid.Row="0" Grid.Column="0" Content="{Binding Resources.Label_Language, Source={x:Static models:ResourceService.Instance}}"/>
-                                            <ComboBox Grid.Row="0" Grid.Column="1" SelectedValue="{Binding Culture}" ItemsSource="{Binding DataContext.Cultures, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" SelectedValuePath="Name">
+                                            <ComboBox Grid.Row="0" Grid.Column="1" SelectedValue="{Binding Culture}" ItemsSource="{x:Static root:Consts.CULTURES}" SelectedValuePath="Name">
                                                 <ComboBox.ItemTemplate>
                                                     <DataTemplate>
                                                         <TextBlock>
@@ -922,7 +922,7 @@
                                             </ComboBox>
 
                                             <Label    Grid.Row="1" Grid.Column="0" Content="{Binding Resources.Label_Encoding, Source={x:Static models:ResourceService.Instance}}"/>
-                                            <ComboBox Grid.Row="1" Grid.Column="1" SelectedValue="{Binding Encoding}" ItemsSource="{Binding DataContext.Encodings, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}">
+                                            <ComboBox Grid.Row="1" Grid.Column="1" SelectedValue="{Binding Encoding}" ItemsSource="{x:Static root:Consts.ENCODINGS}">
                                                 <ComboBox.ItemTemplate>
                                                     <DataTemplate>
                                                         <TextBlock>
@@ -999,14 +999,14 @@
                                 <StackPanel>
                                     <Expander Header="{Binding Resources.Label_Font, Source={x:Static models:ResourceService.Instance}}">
                                         <Grid ge:GridEx.ColumnDefinition="*, Auto(50-)">
-                                            <ComboBox Grid.Column="0" SelectedValue="{Binding FontFamily}" ItemsSource="{Binding DataContext.FontFamilies, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}">
+                                            <ComboBox Grid.Column="0" SelectedValue="{Binding FontFamily}" ItemsSource="{x:Static root:Consts.FONT_FAMILIES}">
                                                 <ComboBox.ItemTemplate>
                                                     <DataTemplate>
                                                         <TextBlock Text="{Binding Converter={StaticResource FontFamilyToName}}" FontFamily="{Binding}"/>
                                                     </DataTemplate>
                                                 </ComboBox.ItemTemplate>
                                             </ComboBox>
-                                            <ComboBox Grid.Column="1" SelectedValue="{Binding ActualFontSize}" ItemsSource="{Binding DataContext.FontSizes, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
+                                            <ComboBox Grid.Column="1" SelectedValue="{Binding ActualFontSize}" ItemsSource="{x:Static root:Consts.FONT_SIZES}"/>
                                         </Grid>
                                     </Expander>
                                     <Expander Header="{Binding Resources.Label_Show, Source={x:Static models:ResourceService.Instance}}">

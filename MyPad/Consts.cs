@@ -2,16 +2,32 @@
 using MyLib.Wpf;
 using MyPad.Models;
 using MyPad.Properties;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Windows.Media;
 
 namespace MyPad
 {
     public static class Consts
     {
         public const string DATE_TIME_FORMAT = "yyyyMMddHHmmssfff";
+
+        public static readonly IEnumerable CULTURES = new[] {
+            new { Description = "English", Name = "en-US" },
+            new { Description = "日本語", Name = "ja-JP" },
+        };
+
+        public static readonly IEnumerable ENCODINGS = Encoding.GetEncodings().Select(x => x.GetEncoding());
+
+        public static readonly IEnumerable FONT_FAMILIES = Fonts.SystemFontFamilies;
+
+        public static readonly IEnumerable FONT_SIZES = new[] {
+            6, 7, 8, 9, 10, 10.5, 11, 12, 13, 14, 15, 16, 18, 20, 22, 24, 26, 28, 32, 36, 42, 48, 60, 72, 96,
+        };
 
         public static string FILE_FILTER
             => string.Join("|", 
