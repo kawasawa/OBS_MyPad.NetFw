@@ -366,9 +366,20 @@ namespace MyPad.ViewModels
                     }
 
                     // 指定された文字コードでリロードする
-                    this.IsWorking = true;
-                    await sameContent.Reload(encoding);
-                    this.IsWorking = false;
+                    try
+                    {
+                        this.IsWorking = true;
+                        await sameContent.Reload(encoding);
+                    }
+                    catch (Exception e)
+                    {
+                        this.MessageRequest.Raise(new MessageNotification(e.Message, MessageKind.Error));
+                        return null;
+                    }
+                    finally
+                    {
+                        this.IsWorking = false;
+                    }
                 }
 
                 // シンタックス定義を設定する
@@ -416,10 +427,22 @@ namespace MyPad.ViewModels
                 }
 
                 // ファイルを読み込む
-                this.IsWorking = true;
-                var content = this.AddContent();
-                await content.Load(stream, encoding);
-                this.IsWorking = false;
+                TextEditorViewModel content;
+                try
+                {
+                    this.IsWorking = true;
+                    content = this.AddContent();
+                    await content.Load(stream, encoding);
+                }
+                catch (Exception e)
+                {
+                    this.MessageRequest.Raise(new MessageNotification(e.Message, MessageKind.Error));
+                    return null;
+                }
+                finally
+                {
+                    this.IsWorking = false;
+                }
 
                 // シンタックス定義を設定する
                 content.SyntaxDefinition = definition;
@@ -429,7 +452,7 @@ namespace MyPad.ViewModels
 
         private async Task<bool> SaveContent(TextEditorViewModel content)
         {
-            if (content.IsNewFile)
+            if (content.IsNewFile || content.IsReadOnly)
                 return await this.SaveAsContent(content);
             else
                 return await this.WriteFile(content, content.FileName, content.Encoding, content.SyntaxDefinition);
@@ -513,8 +536,8 @@ namespace MyPad.ViewModels
             var sameContent = this.Contents.FirstOrDefault(m => m.FileName.Equals(path));
             if (sameContent != null)
             {
-                // 他のコンテンツが同名ファイルを占有している場合は何もせず終了する
-                if (sameContent.Equals(content) == false)
+                // 他のコンテンツが同名ファイルを占有している場合は、保存せずに終了する
+                if (sameContent.Equals(content) == false || sameContent.IsReadOnly)
                 {
                     this.ActiveContent = sameContent;
                     this.MessageRequest.Raise(new MessageNotification(Resources.Message_NotifyFileLocked, sameContent.FileName, MessageKind.Warning));
@@ -522,9 +545,20 @@ namespace MyPad.ViewModels
                 }
 
                 // ファイルに保存する
-                this.IsWorking = true;
-                await sameContent.Save(encoding);
-                this.IsWorking = false;
+                try
+                {
+                    this.IsWorking = true;
+                    await sameContent.Save(encoding);
+                }
+                catch (Exception e)
+                {
+                    this.MessageRequest.Raise(new MessageNotification(e.Message, MessageKind.Error));
+                    return false;
+                }
+                finally
+                {
+                    this.IsWorking = false;
+                }
 
                 // シンタックス定義を設定する
                 sameContent.SyntaxDefinition = definition;
@@ -532,7 +566,7 @@ namespace MyPad.ViewModels
             }
             else
             {
-                // 他のウィンドウが同名ファイルを占有している場合は何もせず終了する
+                // 他のウィンドウが同名ファイルを占有している場合は、保存せずに終了する
                 var otherSameContent = WorkspaceViewModel.Instance.DelegateActivateContent(this, path);
                 if (otherSameContent != null)
                 {
@@ -540,23 +574,24 @@ namespace MyPad.ViewModels
                     return false;
                 }
 
-                // ストリームを取得する
+                // ストリームを取得し、ファイルに保存する
                 FileStream stream = null;
                 try
                 {
+                    this.IsWorking = true;
                     Directory.CreateDirectory(Path.GetDirectoryName(path));
                     stream = new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.Read);
+                    await content.SaveAs(stream, encoding);
                 }
                 catch (Exception e)
                 {
                     this.MessageRequest.Raise(new MessageNotification(e.Message, MessageKind.Error));
                     return false;
                 }
-
-                // ファイルに保存する
-                this.IsWorking = true;
-                await content.SaveAs(stream, encoding);
-                this.IsWorking = false;
+                finally
+                {
+                    this.IsWorking = false;
+                }
 
                 // シンタックス定義を設定する
                 content.SyntaxDefinition = definition;
