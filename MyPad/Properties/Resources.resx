@@ -663,4 +663,10 @@ Definitions is reflected on restart. Do you want to continue?</value>
   <data name="Command_DeleteAll" xml:space="preserve">
     <value>Delete all</value>
   </data>
+  <data name="Command_OpenParentDirectory" xml:space="preserve">
+    <value>Open parent directory</value>
+  </data>
+  <data name="PLSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\plsql.xshd;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

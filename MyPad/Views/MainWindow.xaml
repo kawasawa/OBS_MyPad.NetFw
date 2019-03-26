@@ -635,6 +635,13 @@
                                     </Style>
                                 </MenuItem.ItemContainerStyle>
                             </MenuItem>
+                            <MenuItem Header="{Binding Resources.Command_OpenParentDirectory, Source={x:Static models:ResourceService.Instance}}" Visibility="{qc:Binding '!$P ? Visibility.Visible : Visibility.Collapsed', P={Binding ActiveContent.IsNewFile}}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <mlb:ProcessStartAction FileName="{Binding ActiveContent.FileInfo.DirectoryName}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </MenuItem>
                         </ContextMenu>
                     </dr:TabablzControl.ContextMenu>
                     <dr:TabablzControl.ContentTemplate>

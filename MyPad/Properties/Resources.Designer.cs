@@ -449,6 +449,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   Open parent directory に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_OpenParentDirectory {
+            get {
+                return ResourceManager.GetString("Command_OpenParentDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Options に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Options {
@@ -1365,7 +1374,7 @@ namespace MyPad.Properties {
                 return ((byte[])(obj));
             }
         }
-        
+                
         /// <summary>
         ///   型 System.Byte[] のローカライズされたリソースを検索します。
         /// </summary>
