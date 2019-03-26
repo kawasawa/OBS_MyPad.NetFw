@@ -1374,7 +1374,19 @@ namespace MyPad.Properties {
                 return ((byte[])(obj));
             }
         }
-                
+
+        /// <summary>
+        ///   型 System.Byte[] のローカライズされたリソースを検索します。
+        /// </summary>
+        public static byte[] PLSQL
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject("PLSQL", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+
         /// <summary>
         ///   型 System.Byte[] のローカライズされたリソースを検索します。
         /// </summary>
