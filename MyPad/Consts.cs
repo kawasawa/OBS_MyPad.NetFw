@@ -32,7 +32,7 @@ namespace MyPad
         public static string FILE_FILTER
             => string.Join("|", 
                 new[] { $"{Resources.Label_AllFiles}|*.*" }
-                .Concat(SYNTAX_DEFINITIONS.Values.Select(d => $"{d.Name}|{string.Join(",", d.Extensions)}")));
+                .Concat(SYNTAX_DEFINITIONS.Values.Select(d => $"{d.Name}|{string.Join(";", d.Extensions)}")));
 
         public static string CURRENT_TEMPORARY
             => Path.Combine(ProductInfo.Temporary, Process.GetCurrentProcess().StartTime.ToString(DATE_TIME_FORMAT));

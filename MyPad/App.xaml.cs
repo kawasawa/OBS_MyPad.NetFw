@@ -119,9 +119,11 @@ namespace MyPad
         {
             EquationTokenizer.AddNamespace(typeof(System.Object));
             EquationTokenizer.AddNamespace(typeof(System.IO.Path));
+            EquationTokenizer.AddNamespace(typeof(System.Reflection.Assembly));
             EquationTokenizer.AddNamespace(typeof(System.Windows.UIElement));
             EquationTokenizer.AddNamespace(typeof(Microsoft.VisualBasic.ControlChars));
             EquationTokenizer.AddNamespace(typeof(MyLib.Wpf.Interactions.InteractionNotification));
+            EquationTokenizer.AddExtensionMethods(typeof(System.Linq.Enumerable));
         }
     }
 }

@@ -1,13 +1,11 @@
 ﻿using Dragablz;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
-using MyLib.Wpf;
 using MyLib.Wpf.Interactions;
 using MyPad.Models;
 using MyPad.Properties;
 using Prism.Commands;
 using Prism.Interactivity.InteractionRequest;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -57,9 +55,6 @@ namespace MyPad.ViewModels
             get => this._flowDocument;
             set => this.SetProperty(ref this._flowDocument, value);
         }
-
-        public IEnumerable Assemblies { get; } = ProductInfo.ReferencedAssemblies.OrderBy(x => x.Name);
-        public IEnumerable Languages { get; } = new[] { string.Empty }.Concat(Consts.SYNTAX_DEFINITIONS.Keys);
 
         #endregion
 

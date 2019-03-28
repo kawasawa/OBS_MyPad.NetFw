@@ -638,9 +638,12 @@
                             <MenuItem Header="{Binding Resources.Command_OpenParentDirectory, Source={x:Static models:ResourceService.Instance}}" Visibility="{qc:Binding '!$P ? Visibility.Visible : Visibility.Collapsed', P={Binding ActiveContent.IsNewFile}}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
-                                        <mlb:ProcessStartAction FileName="{Binding ActiveContent.FileInfo.DirectoryName}"/>
+                                        <mlb:ProcessStartAction FileName="explorer.exe" Argument="{qc:Binding '\'/select, \' + $P', P={Binding ActiveContent.FileName}}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
+                                <MenuItem.Icon>
+                                    <mi:Material Kind="FolderOpen"/>
+                                </MenuItem.Icon>
                             </MenuItem>
                         </ContextMenu>
                     </dr:TabablzControl.ContextMenu>
@@ -803,7 +806,7 @@
                     </ComboBox>
                 </StatusBarItem>
                 <StatusBarItem Grid.Column="4" DataContext="{Binding ActiveContent}">
-                    <ComboBox x:Name="LanguageComboBox" ItemsSource="{Binding DataContext.Languages, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" SelectedValue="{Binding SyntaxDefinition.Name, Mode=OneWay}" m:TextBoxHelper.Watermark="Plain Text"/>
+                    <ComboBox x:Name="LanguageComboBox" ItemsSource="{qc:Binding 'new string\[\] { string.Empty }.Concat($P.Keys)', P={Binding Source={x:Static root:Consts.SYNTAX_DEFINITIONS}}}" SelectedValue="{Binding SyntaxDefinition.Name, Mode=OneWay}" m:TextBoxHelper.Watermark="Plain Text"/>
                 </StatusBarItem>
                 <StatusBarItem Grid.Column="5" DataContext="{Binding ActiveContent}">
                     <ToggleButton>
@@ -951,7 +954,7 @@
                                             </StackPanel>
 
                                             <Label    Grid.Row="3" Grid.Column="0" Content="{Binding Resources.Label_SyntaxDefinition, Source={x:Static models:ResourceService.Instance}}"/>
-                                            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding DataContext.Languages, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" SelectedValue="{Binding SyntaxDefinitionName}"/>
+                                            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{qc:Binding 'new string\[\] { string.Empty }.Concat($P.Keys)', P={Binding Source={x:Static root:Consts.SYNTAX_DEFINITIONS}}}" SelectedValue="{Binding SyntaxDefinitionName}"/>
                                         </Grid>
                                     </Expander>
 
@@ -1161,7 +1164,7 @@
                             <TextBlock Text="{qc:MultiBinding '\'Version \' + $P0 + ($P1 ? \' - Debug Build\' : null)', P0={Binding Source={x:Static ml:ProductInfo.Version}}, P1={Binding Source={x:Static ml:ProductInfo.IsDebugBuild}}}" VerticalAlignment="Bottom"/>
                         </StackPanel>
                         <TextBlock Grid.Row="1" Margin="20,10,0,0" Text="{x:Static ml:ProductInfo.Copyright}"/>
-                        <ListBox   Grid.Row="2" Margin="20,10,0,0" ItemsSource="{Binding Assemblies}">
+                        <ListBox   Grid.Row="2" Margin="20,10,0,0" ItemsSource="{qc:Binding '$P.OrderBy(((AssemblyName)x) => (string)($x.Name))', P={Binding Source={x:Static ml:ProductInfo.ReferencedAssemblies}}}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock ToolTip="{Binding FullName}">
