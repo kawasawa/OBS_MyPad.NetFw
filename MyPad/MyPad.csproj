@@ -29,12 +29,12 @@
     <ProductName>MyPad</ProductName>
     <PublisherName>Kazuki Awasawa</PublisherName>
     <SuiteName>MyPad</SuiteName>
-    <MinimumRequiredVersion>0.1.4.0</MinimumRequiredVersion>
+    <MinimumRequiredVersion>0.1.5.0</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>0.1.4.0</ApplicationVersion>
+    <ApplicationVersion>0.1.5.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -137,8 +137,9 @@
     <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.3.3, Culture=neutral, PublicKeyToken=8985beaab7ea3f04, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft-WindowsAPICodePack-Shell.1.1.3.3\lib\net452\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
     </Reference>
-    <Reference Include="MyLib.Wpf, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MyLib.Wpf.1.0.3-beta\lib\net46\MyLib.Wpf.dll</HintPath>
+    <Reference Include="MyLib.Wpf, Version=1.1.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MyLib.Wpf.1.1.0-beta2\lib\net46\MyLib.Wpf.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -217,6 +218,7 @@
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
     <None Include="Resources\PLSQL.xshd" />
+    <Compile Include="Views\Behaviors\MessageActionEx.cs" />
     <Compile Include="_common\UnhandledExceptionObserver.cs" />
     <Compile Include="AppConfig.cs" />
     <Compile Include="Consts.cs" />
