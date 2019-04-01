@@ -38,7 +38,7 @@
 
     <i:Interaction.Triggers>
         <p:InteractionRequestTrigger SourceObject="{Binding MessageRequest}">
-            <mli:MessageAction DialogKind="{qc:Binding '$P ? MessageDialogKind.Common.Overlay : MessageDialogKind.Common', P={Binding Window.UseOverlayMessage, Source={x:Static models:SettingsService.Instance}}}"/>
+            <behaviors:MessageActionEx UseOverlayMessage="{Binding Window.UseOverlayMessage, Source={x:Static models:SettingsService.Instance}}"/>
         </p:InteractionRequestTrigger>
         <p:InteractionRequestTrigger SourceObject="{Binding OpenFileRequest}">
             <behaviors:OpenFileActionEx Filter="{x:Static root:Consts.FILE_FILTER}" Multiselect="True"/>
