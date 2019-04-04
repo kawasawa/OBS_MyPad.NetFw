@@ -12,10 +12,11 @@
                xmlns:ge="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
                xmlns:dr="clr-namespace:Dragablz;assembly=Dragablz"
                xmlns:a="http://icsharpcode.net/sharpdevelop/avalonedit"
-               xmlns:ml="clr-namespace:MyLib.Wpf;assembly=MyLib.Wpf"
-               xmlns:mlb="clr-namespace:MyLib.Wpf.Behaviors;assembly=MyLib.Wpf"
-               xmlns:mli="clr-namespace:MyLib.Wpf.Interactions;assembly=MyLib.Wpf"
-               xmlns:mlm="clr-namespace:MyLib.Wpf.Markup;assembly=MyLib.Wpf"
+               xmlns:ml="clr-namespace:MyLib;assembly=MyLib"
+               xmlns:mlw="clr-namespace:MyLib.Wpf;assembly=MyLib.Wpf"
+               xmlns:mlwb="clr-namespace:MyLib.Wpf.Behaviors;assembly=MyLib.Wpf"
+               xmlns:mlwi="clr-namespace:MyLib.Wpf.Interactions;assembly=MyLib.Wpf"
+               xmlns:mlwm="clr-namespace:MyLib.Wpf.Markup;assembly=MyLib.Wpf"
                xmlns:root="clr-namespace:MyPad"
                xmlns:models="clr-namespace:MyPad.Models"
                xmlns:viewModels="clr-namespace:MyPad.ViewModels"
@@ -33,7 +34,7 @@
                AllowDrop="True" Height="500" Width="800" ResizeMode="CanResizeWithGrip">
     
     <i:Interaction.Behaviors>
-        <mlb:WindowBehavior AdjustSizeOnRendered="True" DataContextDisposeOnDetaching="True"/>
+        <mlwb:WindowBehavior AdjustSizeOnRendered="True" DataContextDisposeOnDetaching="True"/>
     </i:Interaction.Behaviors>
 
     <i:Interaction.Triggers>
@@ -47,16 +48,16 @@
             <behaviors:SaveFileActionEx Filter="{x:Static root:Consts.FILE_FILTER}"/>
         </p:InteractionRequestTrigger>
         <p:InteractionRequestTrigger SourceObject="{Binding PrintRequest}">
-            <mli:PrintDocumentAction/>
+            <mlwi:PrintDocumentAction/>
         </p:InteractionRequestTrigger>
         <p:InteractionRequestTrigger SourceObject="{Binding TransitionRequest}">
-            <mli:TransitionAction/>
+            <mlwi:TransitionAction/>
         </p:InteractionRequestTrigger>
         <i:EventTrigger EventName="Activated">
             <p:InvokeCommandAction Command="{Binding ActivatedHandler}"/>
         </i:EventTrigger>
         <i:EventTrigger EventName="Drop">
-            <mlb:InvokeWindowAction Transition="Activate"/>
+            <mlwb:InvokeWindowAction Transition="Activate"/>
             <p:InvokeCommandAction Command="{Binding DropHandler}"/>
         </i:EventTrigger>
         <i:EventTrigger EventName="Closing">
@@ -71,7 +72,7 @@
     </i:Interaction.Triggers>
 
     <Window.Resources>
-        <mlm:BindingProxy x:Key="Proxy" Data="{Binding}"/>
+        <mlwm:BindingProxy x:Key="Proxy" Data="{Binding}"/>
         <Style TargetType="{x:Type Menu}" BasedOn="{StaticResource Default.Menu}">
             <Setter Property="Visibility" Value="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding Window.ShowMenuBar, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}}"/>
         </Style>
@@ -562,28 +563,28 @@
                             <Setter Property="IsModified" Value="{Binding IsModified, Mode=TwoWay}"/>
                             <Setter Property="SyntaxDefinition" Value="{Binding SyntaxDefinition, Mode=TwoWay}"/>
                             <Setter Property="OverstrikeMode" Value="{Binding OverstrikeMode, Mode=TwoWay}"/>
-                            <Setter Property="mlm:PushBindingManager.StylePushBindings">
+                            <Setter Property="mlwm:PushBindingManager.StylePushBindings">
                                 <Setter.Value>
-                                    <mlm:PushBindingCollection>
-                                        <mlm:PushBinding TargetProperty="ActualFontSize"       Path="ActualFontSize"/>
-                                        <mlm:PushBinding TargetProperty="ZoomIncrement"        Path="ZoomIncrement"/>
-                                        <mlm:PushBinding TargetProperty="Line"                 Path="Line"/>
-                                        <mlm:PushBinding TargetProperty="Column"               Path="Column"/>
-                                        <mlm:PushBinding TargetProperty="VisualColumn"         Path="VisualColumn"/>
-                                        <mlm:PushBinding TargetProperty="VisualLength"         Path="VisualLength"/>
-                                        <mlm:PushBinding TargetProperty="TextLength"           Path="TextLength"/>
-                                        <mlm:PushBinding TargetProperty="SelectionLength"      Path="SelectionLength"/>
-                                        <mlm:PushBinding TargetProperty="SelectionStart"       Path="SelectionStart"/>
-                                        <mlm:PushBinding TargetProperty="SelectionEnd"         Path="SelectionEnd"/>
-                                        <mlm:PushBinding TargetProperty="SelectionStartLine"   Path="SelectionStartLine"/>
-                                        <mlm:PushBinding TargetProperty="SelectionEndLine"     Path="SelectionEndLine"/>
-                                        <mlm:PushBinding TargetProperty="SelectionLineCount"   Path="SelectionLineCount"/>
-                                        <mlm:PushBinding TargetProperty="SelectedText"         Path="SelectedText"/>
-                                        <mlm:PushBinding TargetProperty="CharName"             Path="CharName"/>
-                                        <mlm:PushBinding TargetProperty="IsAtEndOfLine"        Path="IsAtEndOfLine"/>
-                                        <mlm:PushBinding TargetProperty="IsInVirtualSpace"     Path="IsInVirtualSpace"/>
-                                        <mlm:PushBinding TargetProperty="EnableAutoCompletion" Path="EnableAutoCompletion"/>
-                                    </mlm:PushBindingCollection>
+                                    <mlwm:PushBindingCollection>
+                                        <mlwm:PushBinding TargetProperty="ActualFontSize"       Path="ActualFontSize"/>
+                                        <mlwm:PushBinding TargetProperty="ZoomIncrement"        Path="ZoomIncrement"/>
+                                        <mlwm:PushBinding TargetProperty="Line"                 Path="Line"/>
+                                        <mlwm:PushBinding TargetProperty="Column"               Path="Column"/>
+                                        <mlwm:PushBinding TargetProperty="VisualColumn"         Path="VisualColumn"/>
+                                        <mlwm:PushBinding TargetProperty="VisualLength"         Path="VisualLength"/>
+                                        <mlwm:PushBinding TargetProperty="TextLength"           Path="TextLength"/>
+                                        <mlwm:PushBinding TargetProperty="SelectionLength"      Path="SelectionLength"/>
+                                        <mlwm:PushBinding TargetProperty="SelectionStart"       Path="SelectionStart"/>
+                                        <mlwm:PushBinding TargetProperty="SelectionEnd"         Path="SelectionEnd"/>
+                                        <mlwm:PushBinding TargetProperty="SelectionStartLine"   Path="SelectionStartLine"/>
+                                        <mlwm:PushBinding TargetProperty="SelectionEndLine"     Path="SelectionEndLine"/>
+                                        <mlwm:PushBinding TargetProperty="SelectionLineCount"   Path="SelectionLineCount"/>
+                                        <mlwm:PushBinding TargetProperty="SelectedText"         Path="SelectedText"/>
+                                        <mlwm:PushBinding TargetProperty="CharName"             Path="CharName"/>
+                                        <mlwm:PushBinding TargetProperty="IsAtEndOfLine"        Path="IsAtEndOfLine"/>
+                                        <mlwm:PushBinding TargetProperty="IsInVirtualSpace"     Path="IsInVirtualSpace"/>
+                                        <mlwm:PushBinding TargetProperty="EnableAutoCompletion" Path="EnableAutoCompletion"/>
+                                    </mlwm:PushBindingCollection>
                                 </Setter.Value>
                             </Setter>
                         </Style>
@@ -638,7 +639,7 @@
                             <MenuItem Header="{Binding Resources.Command_OpenParentDirectory, Source={x:Static models:ResourceService.Instance}}" Visibility="{qc:Binding '!$P ? Visibility.Visible : Visibility.Collapsed', P={Binding ActiveContent.IsNewFile}}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
-                                        <mlb:ProcessStartAction FileName="explorer.exe" Argument="{qc:Binding '\'/select, \' + $P', P={Binding ActiveContent.FileName}}"/>
+                                        <mlwb:ProcessStartAction FileName="explorer.exe" Argument="{qc:Binding '\'/select, \' + $P', P={Binding ActiveContent.FileName}}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                                 <MenuItem.Icon>
@@ -652,8 +653,8 @@
                             <components:TextEditor x:Name="TextEditor" DataContext="{Binding}" Style="{StaticResource __TextEditor}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Loaded">
-                                        <mlb:CallElementMethodAction MethodName="Focus"/>
-                                        <mlb:CallElementMethodAction MethodName="Redraw"/>
+                                        <mlwb:CallElementMethodAction MethodName="Focus"/>
+                                        <mlwb:CallElementMethodAction MethodName="Redraw"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                                 <components:TextEditor.ContextMenu>
@@ -1083,7 +1084,7 @@
                                             <Button  Grid.Row="0" Grid.Column="3" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}}">
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName="Click">
-                                                        <mlb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Working}"/>
+                                                        <mlwb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Working}"/>
                                                     </i:EventTrigger>
                                                 </i:Interaction.Triggers>
                                                 <mi:Modern Kind="FolderOpen"/>
@@ -1094,7 +1095,7 @@
                                             <Button  Grid.Row="1" Grid.Column="3" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}}">
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName="Click">
-                                                        <mlb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Temporary}"/>
+                                                        <mlwb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Temporary}"/>
                                                     </i:EventTrigger>
                                                 </i:Interaction.Triggers>
                                                 <mi:Modern Kind="FolderOpen"/>
@@ -1105,7 +1106,7 @@
                                             <Button  Grid.Row="2" Grid.Column="3" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}}">
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName="Click">
-                                                        <mlb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Roaming}"/>
+                                                        <mlwb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Roaming}"/>
                                                     </i:EventTrigger>
                                                 </i:Interaction.Triggers>
                                                 <mi:Modern Kind="FolderOpen"/>
@@ -1116,7 +1117,7 @@
                                             <Button  Grid.Row="3" Grid.Column="3" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}}">
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName="Click">
-                                                        <mlb:ProcessStartAction FileName="{x:Static ml:Logger.LogDirectoryPath}"/>
+                                                        <mlwb:ProcessStartAction FileName="{x:Static ml:Logger.LogDirectoryPath}"/>
                                                     </i:EventTrigger>
                                                 </i:Interaction.Triggers>
                                                 <mi:Modern Kind="FolderOpen"/>
@@ -1127,7 +1128,7 @@
                                             <Button  Grid.Row="4" Grid.Column="3" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}}">
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName="Click">
-                                                        <mlb:ProcessStartAction FileName="{x:Static models:ResourceService.XshdDirectoryPath}"/>
+                                                        <mlwb:ProcessStartAction FileName="{x:Static models:ResourceService.XshdDirectoryPath}"/>
                                                     </i:EventTrigger>
                                                 </i:Interaction.Triggers>
                                                 <mi:Modern Kind="FolderOpen"/>

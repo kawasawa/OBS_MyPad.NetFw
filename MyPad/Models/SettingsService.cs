@@ -1,4 +1,4 @@
-﻿using MyLib.Wpf;
+﻿using MyLib;
 using Newtonsoft.Json;
 using System.Globalization;
 using System.IO;

@@ -1,4 +1,4 @@
-﻿using MyLib.Wpf;
+﻿using MyLib;
 using System;
 using System.Threading.Tasks;
 using System.Windows;

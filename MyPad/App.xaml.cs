@@ -1,4 +1,4 @@
-﻿using MyLib.Wpf;
+﻿using MyLib;
 using MyPad.Models;
 using MyPad.Views;
 using QuickConverter;

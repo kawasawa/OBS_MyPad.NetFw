@@ -1,4 +1,5 @@
-﻿using MyLib.Wpf;
+﻿using MyLib;
+using MyLib.Wpf;
 using MyLib.Wpf.Interactions;
 using MyPad.Models;
 using MyPad.ViewModels;

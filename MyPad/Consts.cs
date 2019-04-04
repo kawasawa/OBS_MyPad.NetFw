@@ -1,5 +1,5 @@
 ﻿using ICSharpCode.AvalonEdit.Highlighting.Xshd;
-using MyLib.Wpf;
+using MyLib;
 using MyPad.Models;
 using MyPad.Properties;
 using System.Collections;

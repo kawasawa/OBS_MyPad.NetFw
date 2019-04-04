@@ -2,7 +2,7 @@
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Utils;
-using MyLib.Wpf;
+using MyLib;
 using MyLib.Wpf.Interactions;
 using MyPad.Models;
 using MyPad.Properties;

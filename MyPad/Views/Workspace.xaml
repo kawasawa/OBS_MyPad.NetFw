@@ -8,8 +8,9 @@
         xmlns:qc="http://QuickConverter.CodePlex.com/"
         xmlns:mi="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:t="http://www.hardcodet.net/taskbar"
-        xmlns:ml="clr-namespace:MyLib.Wpf;assembly=MyLib.Wpf"
-        xmlns:mli="clr-namespace:MyLib.Wpf.Interactions;assembly=MyLib.Wpf"
+        xmlns:ml="clr-namespace:MyLib;assembly=MyLib"
+        xmlns:mlw="clr-namespace:MyLib.Wpf;assembly=MyLib.Wpf"
+        xmlns:mlwi="clr-namespace:MyLib.Wpf.Interactions;assembly=MyLib.Wpf"
         xmlns:models="clr-namespace:MyPad.Models"
         xmlns:views="clr-namespace:MyPad.Views"
         xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
@@ -20,7 +21,7 @@
 
     <i:Interaction.Triggers>
         <p:InteractionRequestTrigger SourceObject="{Binding TransitionRequest}">
-            <mli:TransitionAction/>
+            <mlwi:TransitionAction/>
         </p:InteractionRequestTrigger>
     </i:Interaction.Triggers>
     

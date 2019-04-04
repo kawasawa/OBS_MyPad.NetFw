@@ -1,4 +1,4 @@
-﻿using MyLib.Wpf;
+﻿using MyLib;
 using System.Configuration;
 
 namespace MyPad

@@ -1,4 +1,4 @@
-﻿using MyLib.Wpf;
+﻿using MyLib;
 using MyLib.Wpf.Interactions;
 using MyPad.Models;
 using Prism.Commands;
