@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:m="http://metro.mahapps.com/winfx/xaml/controls"
-                    xmlns:mi="http://metro.mahapps.com/winfx/xaml/iconpacks">
+                    xmlns:mi="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                    xmlns:md="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="./Common.xaml"/>
@@ -18,7 +19,10 @@
     <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource Default.ComboBox}"/>
     <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource Default.ListBoxItem}"/>
     <Style TargetType="{x:Type ListBox}" BasedOn="{StaticResource Default.ListBox}"/>
-    <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource Default.AppCheckBox}"/>
+    <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource Default.ListViewItem}"/>
+    <Style TargetType="{x:Type ListView}" BasedOn="{StaticResource Default.ListView}"/>
+    <Style TargetType="{x:Type GridViewColumnHeader}" BasedOn="{StaticResource Default.GridViewColumnHeader}"/>
+    <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource Default.CheckBox}"/>
     <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Buton}"/>
     <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource Default.RadioButton}"/>
     <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Default.ToggleButon}"/>
@@ -39,6 +43,7 @@
     <Style TargetType="{x:Type Menu}" BasedOn="{StaticResource Default.Menu}"/>
     <Style TargetType="{x:Type ToolBar}" BasedOn="{StaticResource Default.ToolBar}"/>
 
+    <Style TargetType="{x:Type m:Badged}" BasedOn="{StaticResource Default.Badged}"/>
     <Style TargetType="{x:Type m:NumericUpDown}" BasedOn="{StaticResource Default.NumericUpDown}"/>
     <Style TargetType="{x:Type m:HamburgerMenu}" BasedOn="{StaticResource Default.HamburgerMenu}"/>
     <Style TargetType="{x:Type m:Flyout}" BasedOn="{StaticResource Default.Flyout}"/>
@@ -47,5 +52,8 @@
     <Style TargetType="{x:Type m:ProgressRing}" BasedOn="{StaticResource Default.ProgressRing}"/>
     <Style TargetType="{x:Type mi:PackIconModern}" BasedOn="{StaticResource Default.PackIconModern}"/>
     <Style TargetType="{x:Type mi:PackIconMaterial}" BasedOn="{StaticResource Default.PackIconMaterial}"/>
+    <Style TargetType="{x:Type md:BaseMetroDialog}" BasedOn="{StaticResource Default.BaseMetroDialog}"/>
+    <Style TargetType="{x:Type md:MessageDialog}" BasedOn="{StaticResource Default.BaseMetroDialog}"/>
+    <Style TargetType="{x:Type md:CustomDialog}" BasedOn="{StaticResource Default.BaseMetroDialog}"/>
 
 </ResourceDictionary>

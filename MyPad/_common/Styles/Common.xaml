@@ -3,6 +3,7 @@
                     xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                     xmlns:m="http://metro.mahapps.com/winfx/xaml/controls"
                     xmlns:mi="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                    xmlns:md="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
                     xmlns:s="clr-namespace:System;assembly=mscorlib">
 
     <ResourceDictionary.MergedDictionaries>
@@ -12,46 +13,23 @@
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml"/>
 
-        <!-- BEGIN [DarkTheme]: ダークテーマを適用する場合は、コメントアウトを外してください。 -->
+        <!-- BEGIN: ダークテーマを適用する場合は、コメントアウトを外してください。 -->
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseDark.xaml"/>
-        <!-- E N D [DarkTheme]: ダークテーマを適用する場合は、コメントアウトを外してください。 -->
+        <!-- E N D: ダークテーマを適用する場合は、コメントアウトを外してください。 -->
 
-        <!-- BEGIN [VSStyle]: Visual Studio スタイルに置き換える場合は、コメントアウトを外してください。 -->
+        <!-- BEGIN: Visual Studio スタイルを適用する場合は、コメントアウトを外してください。 -->
         <ResourceDictionary Source="./VSStyle.xaml"/>
-        <!-- E N D [VSStyle]: Visual Studio スタイルに置き換える場合は、コメントアウトを外してください。 -->
+        <!-- E N D: Visual Studio スタイルを提供する場合は、コメントアウトを外してください。 -->
     </ResourceDictionary.MergedDictionaries>
 
 
 
     <!--
-    ************************************************************ 
-    |
-    | 定数
-    |
-    | アプリケーションで使用するための定数を定義します。
-    | プレフィックスが Const. で統一します。
-    |
-    ************************************************************ 
-    -->
-
-    <s:Double x:Key="Const.Opacity">0.95</s:Double>
-    <s:Double x:Key="Const.Scale">1.2</s:Double>
-    <ScaleTransform x:Key="Const.ScaleTransform" ScaleX="{StaticResource Const.Scale}" ScaleY="{StaticResource Const.Scale}"/>
-    <Thickness x:Key="Const.GapH">0,5</Thickness>
-    <Thickness x:Key="Const.GapW">10,0</Thickness>
-    <Thickness x:Key="Const.GapHW">10,5</Thickness>
-    <Thickness x:Key="Const.Gap2H">0,10</Thickness>
-    <Thickness x:Key="Const.Gap2W">20,0</Thickness>
-    <Thickness x:Key="Const.Gap2HW">20,10</Thickness>
-
-
-
-    <!--
-    ************************************************************ 
+    ************************************************************
     |
     | カラー／ブラシ
     |
-    ************************************************************ 
+    ************************************************************
     -->
 
     <Color x:Key="VSColorKey">#FF017ACC</Color>
@@ -74,14 +52,42 @@
 
 
     <!--
-    ************************************************************ 
+    ************************************************************
+    |
+    | 定数
+    |
+    | アプリケーションで使用するための定数を定義します。
+    | プレフィックスが Const. で統一します。
+    |
+    ************************************************************
+    -->
+
+    <s:Double x:Key="Const.Gap0">0.0</s:Double>
+    <s:Double x:Key="Const.Gap1">5.0</s:Double>
+    <s:Double x:Key="Const.Gap2">10.0</s:Double>
+    <s:Double x:Key="Const.Scale">1.2</s:Double>
+    <s:Double x:Key="Const.Opacity">0.95</s:Double>
+    <Thickness x:Key="Const.Gap1W"   Left="{StaticResource Const.Gap1}" Top="{StaticResource Const.Gap0}" Right="{StaticResource Const.Gap1}" Bottom="{StaticResource Const.Gap0}"/>
+    <Thickness x:Key="Const.Gap1H"   Left="{StaticResource Const.Gap0}" Top="{StaticResource Const.Gap1}" Right="{StaticResource Const.Gap0}" Bottom="{StaticResource Const.Gap1}"/>
+    <Thickness x:Key="Const.Gap1W1H" Left="{StaticResource Const.Gap1}" Top="{StaticResource Const.Gap1}" Right="{StaticResource Const.Gap1}" Bottom="{StaticResource Const.Gap1}"/>
+    <Thickness x:Key="Const.Gap2W"   Left="{StaticResource Const.Gap2}" Top="{StaticResource Const.Gap0}" Right="{StaticResource Const.Gap2}" Bottom="{StaticResource Const.Gap0}"/>
+    <Thickness x:Key="Const.Gap2H"   Left="{StaticResource Const.Gap0}" Top="{StaticResource Const.Gap2}" Right="{StaticResource Const.Gap0}" Bottom="{StaticResource Const.Gap2}"/>
+    <Thickness x:Key="Const.Gap1W2H" Left="{StaticResource Const.Gap1}" Top="{StaticResource Const.Gap2}" Right="{StaticResource Const.Gap1}" Bottom="{StaticResource Const.Gap2}"/>
+    <Thickness x:Key="Const.Gap2W1H" Left="{StaticResource Const.Gap2}" Top="{StaticResource Const.Gap1}" Right="{StaticResource Const.Gap2}" Bottom="{StaticResource Const.Gap1}"/>
+    <Thickness x:Key="Const.Gap2W2H" Left="{StaticResource Const.Gap2}" Top="{StaticResource Const.Gap2}" Right="{StaticResource Const.Gap2}" Bottom="{StaticResource Const.Gap2}"/>
+    <ScaleTransform x:Key="Const.ScaleTransform" ScaleX="{StaticResource Const.Scale}" ScaleY="{StaticResource Const.Scale}"/>
+
+
+
+    <!--
+    ************************************************************
     |
     | カスタムスタイル
     |
     | アプリケーションで使用するためのコントロールのスタイルを定義します。
     | プレフィックスが Default. で定義されるスタイルは既定値として登録します。
     |
-    ************************************************************ 
+    ************************************************************
     -->
 
     <Style x:Key="Default.ResizeGrip" TargetType="{x:Type ResizeGrip}" BasedOn="{StaticResource {x:Type ResizeGrip}}">
@@ -115,20 +121,20 @@
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="m:TextBoxHelper.SelectAllOnFocus" Value="True"/>
         <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
-        <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{DynamicResource BorderBrushSelected}"/>
+        <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{DynamicResource AccentColorBrush2}"/>
     </Style>
 
     <Style x:Key="Default.PasswordBox" TargetType="{x:Type PasswordBox}" BasedOn="{StaticResource Win8MetroPasswordBox}">
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="m:TextBoxHelper.SelectAllOnFocus" Value="True"/>
         <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
-        <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{DynamicResource BorderBrushSelected}"/>
+        <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{DynamicResource AccentColorBrush2}"/>
     </Style>
 
     <Style x:Key="Default.DatePicker" TargetType="{x:Type DatePicker}" BasedOn="{StaticResource MetroDatePicker}">
         <Setter Property="KeyboardNavigation.TabNavigation" Value="Local"/>
         <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
-        <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{DynamicResource BorderBrushSelected}"/>
+        <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{DynamicResource AccentColorBrush2}"/>
         <Setter Property="CalendarStyle">
             <Setter.Value>
                 <Style TargetType="{x:Type Calendar}" BasedOn="{StaticResource MetroCalendar}">
@@ -138,13 +144,18 @@
         </Setter>
     </Style>
 
+    <Style x:Key="Default.Badged" TargetType="{x:Type m:Badged}" BasedOn="{StaticResource {x:Type m:Badged}}">
+        <Setter Property="BadgeForeground" Value="White"/>
+    </Style>
+
     <Style x:Key="Default.NumericUpDown" TargetType="{x:Type m:NumericUpDown}" BasedOn="{StaticResource {x:Type m:NumericUpDown}}">
         <Style.Resources>
             <!-- 既定のリソースを打ち消す -->
-            <SolidColorBrush x:Key="GrayBrush1" Color="{DynamicResource AccentBaseColor}" o:Freeze="True"/>
+            <SolidColorBrush x:Key="GrayBrush1" Color="{DynamicResource AccentColor2}" o:Freeze="True"/>
         </Style.Resources>
-        <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Speedup" Value="False"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
+        <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{DynamicResource AccentColorBrush2}"/>
         <Style.Triggers>
             <Trigger Property="IsReadOnly" Value="True">
                 <Setter Property="HideUpDownButtons" Value="True"/>
@@ -168,7 +179,7 @@
             <SolidColorBrush x:Key="GrayBrush8" Color="Transparent" o:Freeze="True"/>
         </Style.Resources>
         <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
-        <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{StaticResource BorderBrushSelected}"/>
+        <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{DynamicResource AccentColorBrush2}"/>
         <Setter Property="ItemContainerStyle" Value="{StaticResource Default.ComboBoxItem}"/>
     </Style>
 
@@ -183,21 +194,37 @@
         <Setter Property="ItemContainerStyle" Value="{StaticResource Default.ListBoxItem}"/>
     </Style>
 
-    <Style x:Key="Default.AppCheckBox" TargetType="{x:Type CheckBox}" BasedOn="{StaticResource MetroCheckBox}">
+    <Style x:Key="Default.ListViewItem" TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource MetroListViewItem}">
+        <Setter Property="m:ItemHelper.SelectedForegroundBrush" Value="{DynamicResource TextBrush}"/>
+        <Setter Property="m:ItemHelper.ActiveSelectionForegroundBrush" Value="{DynamicResource TextBrush}"/>
+        <Setter Property="m:ItemHelper.ActiveSelectionBackgroundBrush" Value="{DynamicResource AccentColorBrush2}"/>
+        <Setter Property="m:ItemHelper.HoverSelectedBackgroundBrush" Value="{DynamicResource AccentColorBrush3}"/>
+    </Style>
+
+    <Style x:Key="Default.ListView" TargetType="{x:Type ListView}" BasedOn="{StaticResource MetroListView}">
+        <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+
+    <Style x:Key="Default.GridViewColumnHeader" TargetType="{x:Type GridViewColumnHeader}" BasedOn="{StaticResource MetroGridViewColumnHeader}">
+        <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
+    </Style>
+
+    <Style x:Key="Default.CheckBox" TargetType="{x:Type CheckBox}" BasedOn="{StaticResource MetroCheckBox}">
         <Setter Property="LayoutTransform" Value="{StaticResource Const.ScaleTransform}"/>
-        <Setter Property="Margin" Value="{StaticResource Const.Gap}"/>
+        <Setter Property="Margin" Value="{StaticResource Const.Gap1W}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
-        <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{StaticResource BorderBrushSelected}"/>
+        <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{DynamicResource AccentColorBrush2}"/>
     </Style>
 
     <Style x:Key="Default.RadioButton" TargetType="{x:Type RadioButton}" BasedOn="{StaticResource MetroRadioButton}">
         <Setter Property="LayoutTransform" Value="{StaticResource Const.ScaleTransform}"/>
-        <Setter Property="Margin" Value="{StaticResource Const.GapW}"/>
+        <Setter Property="Margin" Value="{StaticResource Const.Gap1W}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
-        <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{StaticResource BorderBrushSelected}"/>
+        <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{DynamicResource AccentColorBrush2}"/>
     </Style>
 
     <Style x:Key="Default.Buton" TargetType="{x:Type Button}" BasedOn="{StaticResource MetroFlatButton}">
+        <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
         <Setter Property="Foreground" Value="{DynamicResource BlackColorBrush}"/>
         <Setter Property="Background" Value="{DynamicResource BackgroundNormal}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
@@ -217,6 +244,46 @@
                 <Setter Property="Foreground" Value="{DynamicResource GrayBrush2}"/>
             </Trigger>
         </Style.Triggers>
+    </Style>
+
+    <Style x:Key="Common.AccentButon" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Buton}">
+        <Setter Property="Foreground" Value="{DynamicResource WhiteColorBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource AccentColorBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}"/>
+        <Style.Triggers>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="Background" Value="{DynamicResource AccentColorBrush2}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource AccentColorBrush3}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource FlatButtonPressedBackgroundBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource FlatButtonPressedForegroundBrush}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Background" Value="{DynamicResource AccentColorBrush2}"/>
+                <Setter Property="Foreground" Value="{DynamicResource GrayBrush2}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="Common.CircleButton" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource MetroCircleButtonStyle}">
+        <Setter Property="Width" Value="50"/>
+        <Setter Property="Height" Value="50"/>
+        <Setter Property="Margin" Value="5"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxPopupBorderBrush}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource SemiTransparentWhiteBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+        <Style.Resources>
+            <Style TargetType="{x:Type mi:PackIconModern}" BasedOn="{StaticResource Common.PackIconModernGrayMiddle}"/>
+            <Style TargetType="{x:Type mi:PackIconMaterial}" BasedOn="{StaticResource Common.PackIconMaterialGrayMiddle}"/>
+        </Style.Resources>
     </Style>
 
     <Style x:Key="Default.ToggleButon" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource MetroFlatToggleButton}">
@@ -268,34 +335,16 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="Common.CircleButton" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource MetroCircleButtonStyle}">
-        <Setter Property="Width" Value="50"/>
-        <Setter Property="Height" Value="50"/>
-        <Setter Property="Margin" Value="5"/>
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxPopupBorderBrush}"/>
-            </Trigger>
-            <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="{DynamicResource SemiTransparentWhiteBrush}"/>
-            </Trigger>
-        </Style.Triggers>
-        <Style.Resources>
-            <Style TargetType="{x:Type mi:PackIconModern}" BasedOn="{StaticResource Common.PackIconModernGrayMiddle}"/>
-            <Style TargetType="{x:Type mi:PackIconMaterial}" BasedOn="{StaticResource Common.PackIconMaterialGrayMiddle}"/>
-        </Style.Resources>
-    </Style>
-
     <Style x:Key="Default.GroupBox" TargetType="{x:Type GroupBox}" BasedOn="{StaticResource MetroGroupBox}">
         <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
         <Setter Property="m:ControlsHelper.HeaderFontSize" Value="{StaticResource DialogMessageFontSize}"/>
-        <Setter Property="Padding" Value="{StaticResource Const.GapHW}"/>
+        <Setter Property="Padding" Value="{StaticResource Const.Gap1W1H}"/>
     </Style>
 
     <Style x:Key="Default.Expander" TargetType="{x:Type Expander}" BasedOn="{StaticResource MetroExpander}">
         <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
         <Setter Property="m:ControlsHelper.HeaderFontSize" Value="{StaticResource DialogMessageFontSize}"/>
-        <Setter Property="Padding" Value="{StaticResource Const.GapHW}"/>
+        <Setter Property="Padding" Value="{StaticResource Const.Gap1W1H}"/>
         <Setter Property="IsExpanded" Value="True"/>
     </Style>
 
@@ -305,63 +354,9 @@
 
     <Style x:Key="Default.DockPanel" TargetType="{x:Type DockPanel}"/>
 
-    <Style x:Key="Default.StackPanel" TargetType="{x:Type StackPanel}">
-        <Style.Resources>
-            <Style TargetType="{x:Type Label}" BasedOn="{StaticResource Default.Label}">
-                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
-            </Style>
-            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
-                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
-            </Style>
-            <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource Default.ComboBox}">
-                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
-            </Style>
-            <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource Default.AppCheckBox}">
-                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
-            </Style>
-            <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource Default.RadioButton}">
-                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
-            </Style>
-            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Buton}">
-                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
-            </Style>
-            <Style TargetType="{x:Type GroupBox}" BasedOn="{StaticResource Default.GroupBox}">
-                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
-            </Style>
-            <Style TargetType="{x:Type Expander}" BasedOn="{StaticResource Default.Expander}">
-                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
-            </Style>
-        </Style.Resources>
-    </Style>
+    <Style x:Key="Default.StackPanel" TargetType="{x:Type StackPanel}"/>
 
-    <Style x:Key="Default.Grid" TargetType="{x:Type Grid}">
-        <Style.Resources>
-            <Style TargetType="{x:Type Label}" BasedOn="{StaticResource Default.Label}">
-                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
-            </Style>
-            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
-                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
-            </Style>
-            <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource Default.ComboBox}">
-                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
-            </Style>
-            <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource Default.AppCheckBox}">
-                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
-            </Style>
-            <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource Default.RadioButton}">
-                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
-            </Style>
-            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Buton}">
-                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
-            </Style>
-            <Style TargetType="{x:Type GroupBox}" BasedOn="{StaticResource Default.GroupBox}">
-                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
-            </Style>
-            <Style TargetType="{x:Type Expander}" BasedOn="{StaticResource Default.Expander}">
-                <Setter Property="Margin" Value="{StaticResource Const.GapHW}"/>
-            </Style>
-        </Style.Resources>
-    </Style>
+    <Style x:Key="Default.Grid" TargetType="{x:Type Grid}"/>
 
     <Style x:Key="Default.GridSplitter" TargetType="{x:Type GridSplitter}">
         <Setter Property="Background" Value="{DynamicResource LightBackground}"/>
@@ -381,7 +376,7 @@
 
     <Style x:Key="Default.TabControl" TargetType="{x:Type TabControl}" BasedOn="{StaticResource {x:Type TabControl}}">
         <Setter Property="m:TabControlHelper.Underlined" Value="SelectedTabItem"/>
-        <Setter Property="Padding" Value="{StaticResource Const.GapHW}"/>
+        <Setter Property="Padding" Value="{StaticResource Const.Gap1W1H}"/>
         <Style.Resources>
             <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource Default.TabItem}"/>
         </Style.Resources>
@@ -407,7 +402,7 @@
     <Style x:Key="Common.StatusTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StatusBar}}}"/>
-        <Setter Property="Padding" Value="{StaticResource Const.GapW}"/>
+        <Setter Property="Padding" Value="{StaticResource Const.Gap1W}"/>
     </Style>
 
     <Style x:Key="Common.StatusComboBox" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource Default.ComboBox}">
@@ -415,7 +410,7 @@
         <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StatusBar}}}"/>
         <Setter Property="m:TextBoxHelper.ButtonWidth" Value="0"/>
         <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Padding" Value="{StaticResource Const.GapW}"/>
+        <Setter Property="Padding" Value="{StaticResource Const.Gap1W}"/>
         <Setter Property="MinWidth" Value="50"/>
         <Setter Property="Focusable" Value="False"/>
         <Setter Property="ItemContainerStyle">
@@ -471,7 +466,7 @@
 
     <Style x:Key="Default.StatusBar" TargetType="{x:Type StatusBar}">
         <Setter Property="Foreground" Value="White"/>
-        <Setter Property="Background" Value="{StaticResource VSColorBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource VSColorBrush}"/>
     </Style>
 
     <Style x:Key="Default.HamburgerMenu" TargetType="{x:Type m:HamburgerMenu}" BasedOn="{StaticResource {x:Type m:HamburgerMenu}}">
@@ -507,6 +502,72 @@
                 <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type m:HamburgerMenu}}}"/>
             </Style>
         </Style.Resources>
+    </Style>
+
+    <Style x:Key="Default.BaseMetroDialog" TargetType="{x:Type md:BaseMetroDialog}" BasedOn="{StaticResource MahApps.Metro.Styles.MetroDialog}">
+        <Style.Resources>
+            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Buton}"/>
+        </Style.Resources>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type md:BaseMetroDialog}">
+                    <Grid Background="{TemplateBinding Background}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <ContentPresenter Grid.Row="0"
+                                          AutomationProperties.Name="Dialog top"
+                                          Content="{TemplateBinding DialogTop}"
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="10*"/>
+                                <ColumnDefinition Width="80*"/>
+                                <ColumnDefinition Width="10*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="1" Margin="{TemplateBinding Padding}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock x:Name="PART_Title"
+                                           Grid.Row="0"
+                                           AutomationProperties.Name="Dialog title"
+                                           FontSize="{TemplateBinding DialogTitleFontSize}"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           Text="{TemplateBinding Title}"
+                                           TextWrapping="Wrap"/>
+                                <ContentPresenter Grid.Row="1"
+                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  AutomationProperties.Name="Dialog content"
+                                                  Content="{TemplateBinding Content}"
+                                                  ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                  ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
+                                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                            </Grid>
+                        </Grid>
+                        <ContentPresenter Grid.Row="2"
+                                          AutomationProperties.Name="Dialog bottom"
+                                          Content="{TemplateBinding DialogBottom}"
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Title" Value="{x:Null}">
+                            <Setter TargetName="PART_Title" Property="Visibility" Value="Collapsed"/>
+                        </Trigger>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <EventTrigger.Actions>
+                                <BeginStoryboard Storyboard="{StaticResource DialogShownStoryboard}"/>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style x:Key="Default.Flyout" TargetType="{x:Type m:Flyout}" BasedOn="{StaticResource {x:Type m:Flyout}}">
@@ -561,12 +622,12 @@
     </Style>
 
     <Style x:Key="Common.Overlay" TargetType="{x:Type Border}" BasedOn="{StaticResource Default.Border}">
-        <Setter Property="Background" Value="{DynamicResource LightBackground}"/>
+        <Setter Property="Background" Value="{DynamicResource GrayBrush8}"/>
         <Setter Property="Opacity" Value="{StaticResource Const.Opacity}"/>
         <Style.Resources>
             <Style TargetType="{x:Type Grid}" BasedOn="{StaticResource Default.Panel}">
                 <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="Margin" Value="{StaticResource Const.GapW}"/>
+                <Setter Property="Margin" Value="{StaticResource Const.Gap1W}"/>
             </Style>
             <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
                 <Setter Property="HorizontalAlignment" Value="Center"/>

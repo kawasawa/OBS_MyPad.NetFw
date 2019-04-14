@@ -877,11 +877,11 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Activate に類似しているローカライズされた文字列を検索します。
+        ///   Advanced に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string Label_Activate {
+        public static string Label_Advanced {
             get {
-                return ResourceManager.GetString("Label_Activate", resourceCulture);
+                return ResourceManager.GetString("Label_Advanced", resourceCulture);
             }
         }
         
@@ -904,7 +904,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Interval in minutes に類似しているローカライズされた文字列を検索します。
+        ///   Auto save interval in minutes に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_AutoSaveInterval {
             get {
@@ -1374,19 +1374,17 @@ namespace MyPad.Properties {
                 return ((byte[])(obj));
             }
         }
-
+        
         /// <summary>
         ///   型 System.Byte[] のローカライズされたリソースを検索します。
         /// </summary>
-        public static byte[] PLSQL
-        {
-            get
-            {
+        public static byte[] PLSQL {
+            get {
                 object obj = ResourceManager.GetObject("PLSQL", resourceCulture);
                 return ((byte[])(obj));
             }
         }
-
+        
         /// <summary>
         ///   型 System.Byte[] のローカライズされたリソースを検索します。
         /// </summary>

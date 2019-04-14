@@ -370,14 +370,14 @@
                 <Button Command="{Binding SaveCommand}" ToolTip="{Binding Resources.Command_Save, Source={x:Static models:ResourceService.Instance}}">
                     <mi:Material Kind="ContentSave"/>
                 </Button>
-                <Separator Margin="5"/>
+                <Separator Margin="{StaticResource Const.Gap1W1H}"/>
                 <Button Command="Undo" ToolTip="{Binding Resources.Command_Undo, Source={x:Static models:ResourceService.Instance}}">
                     <mi:Modern Kind="UndoCurve"/>
                 </Button>
                 <Button Command="Redo" ToolTip="{Binding Resources.Command_Redo, Source={x:Static models:ResourceService.Instance}}">
                     <mi:Modern Kind="RedoCurve"/>
                 </Button>
-                <Separator Margin="5"/>
+                <Separator Margin="{StaticResource Const.Gap1W1H}"/>
                 <Button Command="Cut" ToolTip="{Binding Resources.Command_Cut, Source={x:Static models:ResourceService.Instance}}">
                     <mi:Modern Kind="Scissor"/>
                 </Button>
@@ -393,7 +393,7 @@
                 <Button Command="SelectAll" ToolTip="{Binding Resources.Command_SelectAll, Source={x:Static models:ResourceService.Instance}}">
                     <mi:Modern Kind="CursorDefault"/>
                 </Button>
-                <Separator Margin="5"/>
+                <Separator Margin="{StaticResource Const.Gap1W1H}"/>
                 <Button Command="Find" ToolTip="{Binding Resources.Command_Find, Source={x:Static models:ResourceService.Instance}}">
                     <mi:Material Kind="Magnify"/>
                 </Button>
@@ -433,9 +433,9 @@
                     </m:HamburgerMenu.ItemTemplate>
                     <m:HamburgerMenu.ContentTemplate>
                         <DataTemplate DataType="{x:Type m:HamburgerMenuIconItem}">
-                            <Grid Width="{qc:Binding '$P - 48', P={Binding ActualWidth,ElementName=HamburgerMenu}}" ge:GridEx.RowDefinition="48, *">
-                                <TextBlock Grid.Row="0" Text="{Binding Label}" FontSize="{DynamicResource NormalFontSize}" Margin="20,0,0,0"/>
-                                <ContentControl Grid.Row="1" Content="{Binding Tag}" Margin="10,0,0,0" IsTabStop="False" Focusable="False"/>
+                            <Grid Width="{qc:Binding '$P - 48', P={Binding ActualWidth,ElementName=HamburgerMenu}}" ge:GridEx.RowDefinition="48, *" ge:GridEx.ColumnDefinition="10, *">
+                                <TextBlock      Grid.Row="0" Grid.Column="1" Text="{Binding Label}" FontSize="{DynamicResource NormalFontSize}"/>
+                                <ContentControl Grid.Row="1" Grid.Column="1" Content="{Binding Tag}" IsTabStop="False" Focusable="False"/>
                             </Grid>
                         </DataTemplate>
                     </m:HamburgerMenu.ContentTemplate>
@@ -480,7 +480,7 @@
                                     <mi:Modern Kind="Clipboard"/>
                                 </m:HamburgerMenuIconItem.Icon>
                                 <m:HamburgerMenuIconItem.Tag>
-                                    <Grid ge:GridEx.RowDefinition="Auto, *(50-), Auto, 100(50-)">
+                                    <Grid ge:GridEx.RowDefinition="Auto, 5, *(50-), Auto, 100(50-)">
                                         <Grid ge:GridEx.ColumnDefinition="Auto, 5, Auto">
                                             <Grid.Resources>
                                                 <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Buton}">
@@ -496,7 +496,7 @@
                                                 <mi:Modern Kind="Clean"/>
                                             </Button>
                                         </Grid>
-                                        <ListBox Grid.Row="1" ItemsSource="{Binding ClipboardItems, Source={x:Static viewModels:WorkspaceViewModel.Instance}}" SelectedItem="{Binding SelectedClipboardItem, Source={x:Static viewModels:WorkspaceViewModel.Instance}}">
+                                        <ListBox Grid.Row="2" ItemsSource="{Binding ClipboardItems, Source={x:Static viewModels:WorkspaceViewModel.Instance}}" SelectedItem="{Binding SelectedClipboardItem, Source={x:Static viewModels:WorkspaceViewModel.Instance}}">
                                             <ListBox.ItemContainerStyle>
                                                 <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource __ClipboardItems}"/>
                                             </ListBox.ItemContainerStyle>
@@ -506,8 +506,8 @@
                                                 </DataTemplate>
                                             </ListBox.ItemTemplate>
                                         </ListBox>
-                                        <GridSplitter Grid.Row="2" HorizontalAlignment="Stretch" Height="5"/>
-                                        <TextBox Grid.Row="3" Text="{Binding Children[1].(ListBox.SelectedItem), RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}" VerticalContentAlignment="Top" IsReadOnly="True" IsTabStop="False" Focusable="False"/>
+                                        <GridSplitter Grid.Row="3" HorizontalAlignment="Stretch" Height="5"/>
+                                        <TextBox Grid.Row="4" Text="{Binding Children[1].(ListBox.SelectedItem), RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}" VerticalContentAlignment="Top" IsReadOnly="True" IsTabStop="False" Focusable="False"/>
                                     </Grid>
                                 </m:HamburgerMenuIconItem.Tag>
                             </m:HamburgerMenuIconItem>
@@ -906,10 +906,38 @@
                 <Grid Margin="{StaticResource Const.Gap2W}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="5"/>
-                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="{Binding ActualHeight, ElementName=StatusBar}"/>
                     </Grid.RowDefinitions>
+                    <Grid.Resources>
+                        <Style TargetType="{x:Type Label}" BasedOn="{StaticResource Default.Label}">
+                            <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
+                        </Style>
+                        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
+                            <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
+                        </Style>
+                        <Style TargetType="{x:Type m:NumericUpDown}" BasedOn="{StaticResource Default.NumericUpDown}">
+                            <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
+                        </Style>
+                        <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource Default.ComboBox}">
+                            <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
+                        </Style>
+                        <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource Default.CheckBox}">
+                            <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
+                        </Style>
+                        <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource Default.RadioButton}">
+                            <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
+                        </Style>
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Buton}">
+                            <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
+                        </Style>
+                        <Style TargetType="{x:Type GroupBox}" BasedOn="{StaticResource Default.GroupBox}">
+                            <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
+                        </Style>
+                        <Style TargetType="{x:Type Expander}" BasedOn="{StaticResource Default.Expander}">
+                            <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
+                        </Style>
+                    </Grid.Resources>
+                    <TextBlock Text="{Binding Resources.Message_NotifyAppliedOnRestart, Source={x:Static models:ResourceService.Instance}}" HorizontalAlignment="Right" VerticalAlignment="Top"/>
                     <TabControl>
                         <TabItem DataContext="{Binding System, Source={x:Static models:SettingsService.Instance}}" Header="{Binding Resources.Label_System, Source={x:Static models:ResourceService.Instance}}">
                             <ScrollViewer>
@@ -949,7 +977,7 @@
                                             </ComboBox>
                                             <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
                                                 <CheckBox IsChecked="{Binding AutoDetectEncoding}" Content="{Binding Resources.Text_AutoDetectByDefault, Source={x:Static models:ResourceService.Instance}}"/>
-                                                <Border Width="10"/>
+                                                <Border Width="{StaticResource Const.Gap2}"/>
                                                 <RadioButton IsChecked="{qc:Binding Convert='!$P', ConvertBack='!$value', P={Binding EmphasisOnQuality}}" Content="{Binding Resources.Label_EmphasisOnResponse, Source={x:Static models:ResourceService.Instance}}"/>
                                                 <RadioButton IsChecked="{Binding EmphasisOnQuality}" Content="{Binding Resources.Label_EmphasisOnQuality, Source={x:Static models:ResourceService.Instance}}"/>
                                             </StackPanel>
@@ -963,18 +991,18 @@
                                         <StackPanel>
                                             <CheckBox IsChecked="{Binding EnableNotificationIcon}" Content="{Binding Resources.Text_EnableNotificationIcon, Source={x:Static models:ResourceService.Instance}}"/>
                                             <CheckBox IsChecked="{Binding EnableResident}" IsEnabled="{Binding EnableNotificationIcon}" Content="{Binding Resources.Text_EnableResident, Source={x:Static models:ResourceService.Instance}}"/>
+                                            <CheckBox IsChecked="{Binding EnableAutoSave}" Content="{Binding Resources.Text_EnableAutoSave, Source={x:Static models:ResourceService.Instance}}"/>
                                             <StackPanel Orientation="Horizontal">
-                                                <CheckBox IsChecked="{Binding EnableAutoSave}" Content="{Binding Resources.Text_EnableAutoSave, Source={x:Static models:ResourceService.Instance}}"/>
-                                                <Border Width="10"/>
+                                                <Border Width="35"/>
                                                 <TextBlock Text="{Binding Resources.Label_AutoSaveInterval, Source={x:Static models:ResourceService.Instance}}"/>
-                                                <Border Width="10"/>
-                                                <components:NumericUpDownEx Value="{Binding AutoSaveInterval}" Minimum="1" MinWidth="100"/>
+                                                <Border Width="{StaticResource Const.Gap2}"/>
+                                                <m:NumericUpDown Value="{Binding AutoSaveInterval}" Minimum="1" MinWidth="100"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal">
-                                                <Border Width="40"/>
+                                                <Border Width="35"/>
                                                 <TextBlock Text="{Binding Resources.Label_ClipboardHistoryCount, Source={x:Static models:ResourceService.Instance}}"/>
-                                                <Border Width="10"/>
-                                                <components:NumericUpDownEx Value="{Binding ClipboardHistoryCount}" Minimum="1" MinWidth="100"/>
+                                                <Border Width="{StaticResource Const.Gap2}"/>
+                                                <m:NumericUpDown Value="{Binding ClipboardHistoryCount}" Minimum="1" MinWidth="100"/>
                                             </StackPanel>
                                         </StackPanel>
                                     </Expander>
@@ -1039,7 +1067,7 @@
                                             <CheckBox IsChecked="{Binding RequireControlModifierForHyperlinkClick}" Content="{Binding Resources.Text_RequireControlModifierForHyperlinkClick, Source={x:Static models:ResourceService.Instance}}"/>
                                         </StackPanel>
                                     </Expander>
-                                    <Expander Header="{Binding Resources.Label_Activate, Source={x:Static models:ResourceService.Instance}}">
+                                    <Expander Header="{Binding Resources.Label_Advanced, Source={x:Static models:ResourceService.Instance}}">
                                         <StackPanel>
                                             <CheckBox IsChecked="{Binding EnableImeSupport}"                        Content="{Binding Resources.Text_EnableImeSupport, Source={x:Static models:ResourceService.Instance}}"/>
                                             <CheckBox IsChecked="{Binding EnableAutoCompletion}"                    Content="{Binding Resources.Text_EnableAutoCompletion, Source={x:Static models:ResourceService.Instance}}"/>
@@ -1142,9 +1170,6 @@
                             </ScrollViewer>
                         </TabItem>
                     </TabControl>
-                    <StackPanel Grid.Row="2">
-                        <TextBlock Text="{Binding Resources.Message_NotifyAppliedOnRestart, Source={x:Static models:ResourceService.Instance}}" HorizontalAlignment="Right"/>
-                    </StackPanel>
                 </Grid>
             </m:Flyout>
 
@@ -1161,7 +1186,7 @@
                     <Grid ge:GridEx.RowDefinition="Auto, Auto, *">
                         <StackPanel Grid.Row="0" Orientation="Horizontal">
                             <TextBlock Text="{x:Static ml:ProductInfo.Product}" FontSize="{StaticResource FlyoutHeaderFontSize}"/>
-                            <Border Width="20"/>
+                            <Border Width="{StaticResource Const.Gap2}"/>
                             <TextBlock Text="{qc:MultiBinding '\'Version \' + $P0 + ($P1 ? \' - Debug Build\' : null)', P0={Binding Source={x:Static ml:ProductInfo.Version}}, P1={Binding Source={x:Static ml:ProductInfo.IsDebugBuild}}}" VerticalAlignment="Bottom"/>
                         </StackPanel>
                         <TextBlock Grid.Row="1" Margin="20,10,0,0" Text="{x:Static ml:ProductInfo.Copyright}"/>
