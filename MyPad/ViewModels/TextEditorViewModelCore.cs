@@ -9,6 +9,7 @@ using MyPad.Properties;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -232,6 +233,19 @@ namespace MyPad.ViewModels
             },
             DispatcherPriority.Input);
 
+        private string ConvertToCompressedBase64(string str)
+        {
+            var bytes = Encoding.UTF8.GetBytes(str);
+            using (var memory = new MemoryStream())
+            {
+                using (var deflate = new DeflateStream(memory, CompressionLevel.Optimal))
+                {
+                    deflate.Write(bytes, 0, bytes.Length);
+                }
+                return Convert.ToBase64String(memory.ToArray());
+            }
+        }
+
         private async void AutoSaveTimer_Tick(object sender, EventArgs e)
         {
             if (ENABLED_AUTO_SAVE == false || this.IsModified == false || this.Document.Version == this._temporary?.Item2)
@@ -239,7 +253,7 @@ namespace MyPad.ViewModels
 
             await this.SuspendTimerDelegate(async () =>
             {
-                var path = Path.Combine(Consts.CURRENT_TEMPORARY, StringConverter.ConvertToCompressedBase64(this.FileName).Replace("/", "-"));
+                var path = Path.Combine(Consts.CURRENT_TEMPORARY, this.ConvertToCompressedBase64(this.FileName).Replace("/", "-"));
                 var bytes = Array.Empty<byte>();
 
                 try

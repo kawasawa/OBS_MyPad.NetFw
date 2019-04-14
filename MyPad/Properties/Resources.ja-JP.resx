@@ -485,8 +485,8 @@
   <data name="Label_Path" xml:space="preserve">
     <value>パス</value>
   </data>
-  <data name="Label_Activate" xml:space="preserve">
-    <value>有効化</value>
+  <data name="Label_Advanced" xml:space="preserve">
+    <value>高度な設定</value>
   </data>
   <data name="Label_Behavior" xml:space="preserve">
     <value>動作</value>
@@ -516,7 +516,7 @@
     <value>全般</value>
   </data>
   <data name="Label_AutoSaveInterval" xml:space="preserve">
-    <value>間隔(分)</value>
+    <value>自動保存の間隔(分)</value>
   </data>
   <data name="Label_Other" xml:space="preserve">
     <value>その他</value>

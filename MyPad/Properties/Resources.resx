@@ -522,8 +522,8 @@ Definitions is reflected on restart. Do you want to continue?</value>
   <data name="Label_Path" xml:space="preserve">
     <value>Path</value>
   </data>
-  <data name="Label_Activate" xml:space="preserve">
-    <value>Activate</value>
+  <data name="Label_Advanced" xml:space="preserve">
+    <value>Advanced</value>
   </data>
   <data name="Label_Behavior" xml:space="preserve">
     <value>Behavior</value>
@@ -556,7 +556,7 @@ Definitions is reflected on restart. Do you want to continue?</value>
     <value>General</value>
   </data>
   <data name="Label_AutoSaveInterval" xml:space="preserve">
-    <value>Interval in minutes</value>
+    <value>Auto save interval in minutes</value>
   </data>
   <data name="Label_Other" xml:space="preserve">
     <value>Other</value>
