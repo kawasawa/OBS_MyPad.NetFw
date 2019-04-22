@@ -2,7 +2,6 @@
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Utils;
-using MyLib;
 using MyLib.Wpf.Interactions;
 using MyPad.Models;
 using MyPad.Properties;
@@ -111,7 +110,7 @@ namespace MyPad.ViewModels
             base.Dispose(disposing);
         }
 
-        public override void Clear()
+        public void Clear()
         {
             this.SuspendTimerDelegate(() =>
             {
@@ -130,8 +129,6 @@ namespace MyPad.ViewModels
 
                 this.SyntaxDefinition = Consts.SYNTAX_DEFINITIONS.ContainsKey(SettingsService.Instance.System.SyntaxDefinitionName) ?
                     Consts.SYNTAX_DEFINITIONS[SettingsService.Instance.System.SyntaxDefinitionName] : null;
-
-                base.Clear();
             });
         }
 
