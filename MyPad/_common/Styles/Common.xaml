@@ -268,6 +268,28 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="Common.DangerButon" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Buton}">
+        <Setter Property="Foreground" Value="{DynamicResource WhiteColorBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource ValidationSummaryColor1}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ValidationSummaryColor1}"/>
+        <Style.Triggers>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="Background" Value="{DynamicResource ValidationSummaryColor2}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource ValidationSummaryColor3}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource FlatButtonPressedBackgroundBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource FlatButtonPressedForegroundBrush}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Background" Value="{DynamicResource ValidationSummaryColor2}"/>
+                <Setter Property="Foreground" Value="{DynamicResource GrayBrush2}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <Style x:Key="Common.CircleButton" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource MetroCircleButtonStyle}">
         <Setter Property="Width" Value="50"/>
         <Setter Property="Height" Value="50"/>
