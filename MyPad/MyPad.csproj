@@ -29,12 +29,12 @@
     <ProductName>MyPad</ProductName>
     <PublisherName>Kazuki Awasawa</PublisherName>
     <SuiteName>MyPad</SuiteName>
-    <MinimumRequiredVersion>0.1.8.0</MinimumRequiredVersion>
+    <MinimumRequiredVersion>0.1.9.0</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>0.1.8.0</ApplicationVersion>
+    <ApplicationVersion>0.1.9.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -143,8 +143,8 @@
     <Reference Include="MyLib, Version=0.1.0.2, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MyLib.Core.0.1.0-beta2\lib\net46\MyLib.dll</HintPath>
     </Reference>
-    <Reference Include="MyLib.Wpf, Version=1.1.0.6, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MyLib.Wpf.1.1.0-beta6\lib\net46\MyLib.Wpf.dll</HintPath>
+    <Reference Include="MyLib.Wpf, Version=1.1.0.8, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MyLib.Wpf.1.1.0-beta8\lib\net46\MyLib.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>

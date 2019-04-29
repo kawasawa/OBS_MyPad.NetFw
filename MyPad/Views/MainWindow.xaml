@@ -42,10 +42,10 @@
             <behaviors:MessageActionEx UseOverlayMessage="{Binding Window.UseOverlayMessage, Source={x:Static models:SettingsService.Instance}}"/>
         </p:InteractionRequestTrigger>
         <p:InteractionRequestTrigger SourceObject="{Binding OpenFileRequest}">
-            <behaviors:OpenFileActionEx Filter="{x:Static root:Consts.FILE_FILTER}" Multiselect="True"/>
+            <behaviors:OpenFileActionEx Filter="{x:Static root:Consts.FILE_FILTER}" DefaultExtension="{x:Static root:Consts.DEFAULT_EXTENSION}" Multiselect="True"/>
         </p:InteractionRequestTrigger>
         <p:InteractionRequestTrigger SourceObject="{Binding SaveFileRequest}">
-            <behaviors:SaveFileActionEx Filter="{x:Static root:Consts.FILE_FILTER}"/>
+            <behaviors:SaveFileActionEx Filter="{x:Static root:Consts.FILE_FILTER}" DefaultExtension="{x:Static root:Consts.DEFAULT_EXTENSION}"/>
         </p:InteractionRequestTrigger>
         <p:InteractionRequestTrigger SourceObject="{Binding PrintRequest}">
             <mlwi:PrintDocumentAction/>
