@@ -66,7 +66,8 @@
     <s:Double x:Key="Const.Gap1">5.0</s:Double>
     <s:Double x:Key="Const.Gap2">10.0</s:Double>
     <s:Double x:Key="Const.Scale">1.2</s:Double>
-    <s:Double x:Key="Const.Opacity">0.95</s:Double>
+    <s:Double x:Key="Const.Opacity1">0.95</s:Double>
+    <s:Double x:Key="Const.Opacity2">0.90</s:Double>
     <Thickness x:Key="Const.Gap1W"   Left="{StaticResource Const.Gap1}" Top="{StaticResource Const.Gap0}" Right="{StaticResource Const.Gap1}" Bottom="{StaticResource Const.Gap0}"/>
     <Thickness x:Key="Const.Gap1H"   Left="{StaticResource Const.Gap0}" Top="{StaticResource Const.Gap1}" Right="{StaticResource Const.Gap0}" Bottom="{StaticResource Const.Gap1}"/>
     <Thickness x:Key="Const.Gap1W1H" Left="{StaticResource Const.Gap1}" Top="{StaticResource Const.Gap1}" Right="{StaticResource Const.Gap1}" Bottom="{StaticResource Const.Gap1}"/>
@@ -412,7 +413,7 @@
 
     <Style x:Key="Default.ContextMenu" TargetType="{x:Type ContextMenu}" BasedOn="{StaticResource {x:Type ContextMenu}}">
         <Setter Property="Background" Value="{DynamicResource LightBackground}"/>
-        <Setter Property="Opacity" Value="{StaticResource Const.Opacity}"/>
+        <Setter Property="Opacity" Value="{StaticResource Const.Opacity1}"/>
         <Style.Resources>
             <!-- 既定のリソースを打ち消す -->
             <SolidColorBrush x:Key="ContextMenuBorderBrush" Color="{DynamicResource Gray2}" o:Freeze="True"/>
@@ -595,7 +596,7 @@
     <Style x:Key="Default.Flyout" TargetType="{x:Type m:Flyout}" BasedOn="{StaticResource {x:Type m:Flyout}}">
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="Background" Value="{DynamicResource BlueColorBrush}"/>
-        <Setter Property="Opacity" Value="{StaticResource Const.Opacity}"/>
+        <Setter Property="Opacity" Value="{StaticResource Const.Opacity1}"/>
         <Setter Property="FontSize" Value="{StaticResource DialogMessageFontSize}"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="AnimateOpacity" Value="True"/>
@@ -645,7 +646,7 @@
 
     <Style x:Key="Common.Overlay" TargetType="{x:Type Border}" BasedOn="{StaticResource Default.Border}">
         <Setter Property="Background" Value="{DynamicResource GrayBrush8}"/>
-        <Setter Property="Opacity" Value="{StaticResource Const.Opacity}"/>
+        <Setter Property="Opacity" Value="{StaticResource Const.Opacity1}"/>
         <Style.Resources>
             <Style TargetType="{x:Type Grid}" BasedOn="{StaticResource Default.Panel}">
                 <Setter Property="VerticalAlignment" Value="Center"/>
@@ -662,7 +663,7 @@
 
     <Style x:Key="Default.Menu" TargetType="{x:Type Menu}" BasedOn="{StaticResource {x:Type Menu}}">
         <Setter Property="Background" Value="{DynamicResource LightBackground}"/>
-        <Setter Property="Opacity" Value="{StaticResource Const.Opacity}"/>
+        <Setter Property="Opacity" Value="{StaticResource Const.Opacity1}"/>
         <Style.Resources>
             <SolidColorBrush x:Key="MenuBorderBrush" Color="{DynamicResource Gray2}"/>
             <SolidColorBrush x:Key="SubMenuBorderBrush" Color="{DynamicResource Gray2}"/>

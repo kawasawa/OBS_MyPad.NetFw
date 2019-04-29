@@ -39,7 +39,7 @@
         <Setter Property="ResizeMode" Value="NoResize"/>
         <Setter Property="WindowStyle" Value="None"/>
         <Setter Property="AllowsTransparency" Value="True"/>
-        <Setter Property="Opacity" Value="{StaticResource Const.Opacity}"/>
+        <Setter Property="Opacity" Value="{StaticResource Const.Opacity1}"/>
         <Style.Resources>
             <Style TargetType="{x:Type ac:CompletionListBox}" BasedOn="{StaticResource Default.ListBox}">
                 <Setter Property="Background" Value="Transparent"/>
@@ -55,7 +55,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type a:SearchPanel}">
-                    <Border Background="{DynamicResource BackgroundNormal}" BorderBrush="{DynamicResource AccentBaseColorBrush}" Opacity="{StaticResource Const.Opacity}" VerticalAlignment="Top" HorizontalAlignment="Right" BorderThickness="0,0,0,2" Padding="3">
+                    <Border Background="{DynamicResource BackgroundNormal}" BorderBrush="{DynamicResource AccentBaseColorBrush}" Opacity="{StaticResource Const.Opacity1}" VerticalAlignment="Top" HorizontalAlignment="Right" BorderThickness="0,0,0,2" Padding="3">
                         <Grid ge:GridEx.ColumnDefinition="Auto, 3, *, 3, Auto, Auto, 3, Auto, Auto, 3, Auto">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
