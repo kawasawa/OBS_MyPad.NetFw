@@ -519,9 +519,6 @@ Definitions is reflected on restart. Do you want to continue?</value>
   <data name="Label_Show" xml:space="preserve">
     <value>Show</value>
   </data>
-  <data name="Label_Path" xml:space="preserve">
-    <value>Path</value>
-  </data>
   <data name="Label_Advanced" xml:space="preserve">
     <value>Advanced</value>
   </data>
@@ -558,17 +555,14 @@ Definitions is reflected on restart. Do you want to continue?</value>
   <data name="Label_AutoSaveInterval" xml:space="preserve">
     <value>Auto save interval in minutes</value>
   </data>
-  <data name="Label_Other" xml:space="preserve">
-    <value>Other</value>
-  </data>
   <data name="Label_TempDirectory" xml:space="preserve">
     <value>Temporary</value>
   </data>
   <data name="Text_EnableAutoSave" xml:space="preserve">
     <value>Enable auto save draft file to a temporary.</value>
   </data>
-  <data name="Label_WorkDirectory" xml:space="preserve">
-    <value>Working</value>
+  <data name="Label_ExecutionDirectory" xml:space="preserve">
+    <value>Execution</value>
   </data>
   <data name="Command_Encoding" xml:space="preserve">
     <value>Encoding</value>
@@ -651,11 +645,8 @@ Definitions is reflected on restart. Do you want to continue?</value>
   <data name="Text_ShowSideBar" xml:space="preserve">
     <value>Show side bar.</value>
   </data>
-  <data name="Command_Clipboard" xml:space="preserve">
-    <value>Clipboard</value>
-  </data>
-  <data name="Label_VisualLength" xml:space="preserve">
-    <value>Visual length</value>
+  <data name="Command_ClipboardHistory" xml:space="preserve">
+    <value>Clipboard history</value>
   </data>
   <data name="Label_ClipboardHistoryCount" xml:space="preserve">
     <value>Clipboard history count</value>

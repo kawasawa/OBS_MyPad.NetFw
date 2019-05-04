@@ -482,9 +482,6 @@
   <data name="Label_Show" xml:space="preserve">
     <value>表示</value>
   </data>
-  <data name="Label_Path" xml:space="preserve">
-    <value>パス</value>
-  </data>
   <data name="Label_Advanced" xml:space="preserve">
     <value>高度な設定</value>
   </data>
@@ -518,17 +515,14 @@
   <data name="Label_AutoSaveInterval" xml:space="preserve">
     <value>自動保存の間隔(分)</value>
   </data>
-  <data name="Label_Other" xml:space="preserve">
-    <value>その他</value>
-  </data>
   <data name="Label_TempDirectory" xml:space="preserve">
     <value>一時フォルダ</value>
   </data>
   <data name="Text_EnableAutoSave" xml:space="preserve">
     <value>編集中のファイルを一時フォルダに自動保存する。</value>
   </data>
-  <data name="Label_WorkDirectory" xml:space="preserve">
-    <value>作業フォルダ</value>
+  <data name="Label_ExecutionDirectory" xml:space="preserve">
+    <value>実行フォルダ</value>
   </data>
   <data name="Command_Encoding" xml:space="preserve">
     <value>文字コード</value>
@@ -611,11 +605,8 @@
   <data name="Text_ShowSideBar" xml:space="preserve">
     <value>サイドバーを表示する。</value>
   </data>
-  <data name="Command_Clipboard" xml:space="preserve">
-    <value>クリップボード</value>
-  </data>
-  <data name="Label_VisualLength" xml:space="preserve">
-    <value>見た目の長さ</value>
+  <data name="Command_ClipboardHistory" xml:space="preserve">
+    <value>クリップボード履歴</value>
   </data>
   <data name="Label_ClipboardHistoryCount" xml:space="preserve">
     <value>クリップボードの履歴数</value>
