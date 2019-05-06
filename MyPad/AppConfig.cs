@@ -32,7 +32,10 @@ namespace MyPad
         public static int CacheLifetime
             => int.TryParse(ConfigurationManager.AppSettings[nameof(CacheLifetime)], out var value) && 1 <= value ? value : 7;
 
-        public static long SizeThreshold
-            => long.TryParse(ConfigurationManager.AppSettings[nameof(SizeThreshold)], out var value) && 0 < value ? value : 100L * 1024 * 1024;
+        public static long LargeFileSize
+            => long.TryParse(ConfigurationManager.AppSettings[nameof(LargeFileSize)], out var value) && 0 < value ? value : 100L * 1024 * 1024;
+
+        public static int TerminalLineSize
+            => int.TryParse(ConfigurationManager.AppSettings[nameof(TerminalLineSize)], out var value) && 1 <= value ? value : 10000;
     }
 }

@@ -260,6 +260,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   Execute に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Execute {
+            get {
+                return ResourceManager.GetString("Command_Execute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   File に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_File {
@@ -431,6 +440,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   New terminal に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_NewTerminal {
+            get {
+                return ResourceManager.GetString("Command_NewTerminal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   New window に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_NewWindow {
@@ -485,11 +503,11 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Properties に類似しているローカライズされた文字列を検索します。
+        ///   Property に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string Command_Properties {
+        public static string Command_Property {
             get {
-                return ResourceManager.GetString("Command_Properties", resourceCulture);
+                return ResourceManager.GetString("Command_Property", resourceCulture);
             }
         }
         
@@ -728,6 +746,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   Terminal に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Terminal {
+            get {
+                return ResourceManager.GetString("Command_Terminal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Tools に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Tools {
@@ -927,6 +954,15 @@ namespace MyPad.Properties {
         public static string Label_ClipboardHistoryCount {
             get {
                 return ResourceManager.GetString("Label_ClipboardHistoryCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Command に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_Command {
+            get {
+                return ResourceManager.GetString("Label_Command", resourceCulture);
             }
         }
         

@@ -186,7 +186,7 @@
   <data name="Command_Paste" xml:space="preserve">
     <value>貼り付け</value>
   </data>
-  <data name="Command_Properties" xml:space="preserve">
+  <data name="Command_Property" xml:space="preserve">
     <value>プロパティ</value>
   </data>
   <data name="Command_Redo" xml:space="preserve">
@@ -616,5 +616,17 @@
   </data>
   <data name="Command_OpenParentDirectory" xml:space="preserve">
     <value>親フォルダを開く</value>
+  </data>
+  <data name="Command_Terminal" xml:space="preserve">
+    <value>ターミナル</value>
+  </data>
+  <data name="Command_NewTerminal" xml:space="preserve">
+    <value>新規ターミナル</value>
+  </data>
+  <data name="Command_Execute" xml:space="preserve">
+    <value>実行</value>
+  </data>
+  <data name="Label_Command" xml:space="preserve">
+    <value>コマンド</value>
   </data>
 </root>

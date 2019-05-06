@@ -7,18 +7,20 @@ using Prism.Commands;
 using Prism.Interactivity.InteractionRequest;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace MyPad.ViewModels
 {
-    public class MainWindowViewModel : ContainerViewModelBase<TextEditorViewModel>
+    public class MainWindowViewModel : ViewModelBase
     {
         #region スタティック
 
@@ -40,7 +42,7 @@ namespace MyPad.ViewModels
 
         public int Sequense { get; } = ++SEQUENSE;
 
-        public bool IsModified => this.Contents.Any(c => c.IsModified);
+        public bool IsModified => this.Editors.Any(c => c.IsModified);
 
         private bool _isWorking;
         public bool IsWorking
@@ -56,36 +58,64 @@ namespace MyPad.ViewModels
             set => this.SetProperty(ref this._flowDocument, value);
         }
 
+        private TextEditorViewModel _activeEditor;
+        public TextEditorViewModel ActiveEditor
+        {
+            get => this._activeEditor;
+            set => this.SetProperty(ref this._activeEditor, value);
+        }
+
+        private TerminalViewModel _activeTerminal;
+        public TerminalViewModel ActiveTerminal
+        {
+            get => this._activeTerminal;
+            set => this.SetProperty(ref this._activeTerminal, value);
+        }
+
+        public ObservableCollection<TextEditorViewModel> Editors { get; } = new ObservableCollection<TextEditorViewModel>();
+
+        public ObservableCollection<TerminalViewModel> Terminals { get; } = new ObservableCollection<TerminalViewModel>();
+
+        public Func<TextEditorViewModel> EditorFactory { get; } = () => new TextEditorViewModel();
+
+        public Func<TerminalViewModel> TerminalFactory =>
+            () =>
+            {
+                var terminal = new TerminalViewModel();
+                terminal.Disposed += this.Terminal_Disposed;
+                return terminal;
+            };
+
         #endregion
 
         #region コマンド
 
         public ICommand AddCommand
-            => new DelegateCommand(() => this.AddContent());
+            => new DelegateCommand(() => this.AddEditor());
 
         public ICommand OpenCommand
-            => new DelegateCommand(async () => await this.LoadContent());
+            => new DelegateCommand(async () => await this.LoadEditor());
 
         public ICommand SaveCommand
-            => new DelegateCommand(async () => await this.SaveContent(this.ActiveContent));
+            => new DelegateCommand(async () => await this.SaveEditor(this.ActiveEditor));
 
         public ICommand SaveAsCommand
-            => new DelegateCommand(async () => await this.SaveAsContent(this.ActiveContent));
+            => new DelegateCommand(async () => await this.SaveAsEditor(this.ActiveEditor));
 
         public ICommand SaveAllCommand
             => new DelegateCommand(async () =>
             {
-                for (var i = 0; i < this.Contents.Count; i++)
+                for (var i = 0; i < this.Editors.Count; i++)
                 {
-                    if (this.Contents[i].IsReadOnly)
+                    if (this.Editors[i].IsReadOnly)
                         continue;
-                    if (await this.SaveContent(this.Contents[i]) == false)
+                    if (await this.SaveEditor(this.Editors[i]) == false)
                         return;
                 }
             });
 
         public ICommand PrintPreviewCommand
-            => new DelegateCommand(async () => this.FlowDocument = await this.ActiveContent.CreateFlowDocument());
+            => new DelegateCommand(async () => this.FlowDocument = await this.ActiveEditor.CreateFlowDocument());
 
         public ICommand PrintCommand
             => new DelegateCommand(() => this.PrintRequest.Raise(new PrintDocumentNotification(this.FlowDocument)));
@@ -105,10 +135,10 @@ namespace MyPad.ViewModels
         public ICommand CloseCommand
             => new DelegateCommand(async () =>
             {
-                if (await this.SaveChangesIfAndRemove(this.ActiveContent) == false)
+                if (await this.SaveChangesIfAndRemove(this.ActiveEditor) == false)
                     return;
-                if (this.Contents.Any() == false)
-                    this.AddContent();
+                if (this.Editors.Any() == false)
+                    this.AddEditor();
             });
 
         public ICommand CloseAllCommand
@@ -116,40 +146,51 @@ namespace MyPad.ViewModels
             {
                 if (await this.SaveChangesIfAndRemove() == false)
                     return;
-                if (this.Contents.Any() == false)
-                    this.AddContent();
+                if (this.Editors.Any() == false)
+                    this.AddEditor();
             });
 
         public ICommand CloseOtherCommand
             => new DelegateCommand(async () =>
             {
-                var currentContent = this.ActiveContent;
-                for (var i = this.Contents.Count - 1; 0 <= i; i--)
+                var currentEditor = this.ActiveEditor;
+                for (var i = this.Editors.Count - 1; 0 <= i; i--)
                 {
-                    if (this.Contents[i].Equals(currentContent))
+                    if (this.Editors[i].Equals(currentEditor))
                         continue;
-                    if (await this.SaveChangesIfAndRemove(this.Contents[i]) == false)
+                    if (await this.SaveChangesIfAndRemove(this.Editors[i]) == false)
                         return;
                 }
             });
 
         public ICommand ActivateCommand
-            => new DelegateCommand<TextEditorViewModel>(content =>
+            => new DelegateCommand<TextEditorViewModel>(editor =>
             {
-                if (content != null && this.Contents.Contains(content))
-                    this.ActiveContent = content;
+                if (editor != null && this.Editors.Contains(editor))
+                    this.ActiveEditor = editor;
                 else
                     this.TransitionRequest.Raise(new TransitionNotification(TransitionKind.Activate));
             });
 
         public ICommand ReloadCommand
-            => new DelegateCommand<Tuple<Encoding, string>>(async tuple => await this.ReloadContent(this.ActiveContent, tuple.Item1, tuple.Item2));
+            => new DelegateCommand<Tuple<Encoding, string>>(async tuple =>
+                await this.ReloadEditor(this.ActiveEditor, tuple.Item1, tuple.Item2));
+
+        public ICommand AddTerminalCommand
+            => new DelegateCommand(() => this.AddTerminal());
+
+        public ICommand CloseTerminalCommand
+            => new DelegateCommand(() =>
+            {
+                if (this.ActiveTerminal != null)
+                    this.RemoveTerminal(this.ActiveTerminal);
+            });
 
         public ICommand ActivatedHandler
             => new DelegateCommand<EventArgs>(e =>
             {
                 if (WorkspaceViewModel.Instance != null)
-                    WorkspaceViewModel.Instance.ActiveContent = this;
+                    WorkspaceViewModel.Instance.ActiveWindow = this;
             });
 
         public ICommand DropHandler
@@ -157,7 +198,7 @@ namespace MyPad.ViewModels
             {
                 if (e.Data.GetData(DataFormats.FileDrop) is IEnumerable<string> paths && paths.Any())
                 {
-                    await this.LoadContent(paths);
+                    await this.LoadEditor(paths);
                     e.Handled = true;
                 }
             });
@@ -180,8 +221,8 @@ namespace MyPad.ViewModels
                     return;
                 if (await this.SaveChangesIfAndRemove(content) == false)
                     e.Cancel();
-                if (this.Contents.Any() == false)
-                    this.AddContent();
+                if (this.Editors.Any() == false)
+                    this.AddEditor();
             });
 
         #endregion
@@ -190,39 +231,43 @@ namespace MyPad.ViewModels
 
         public MainWindowViewModel()
         {
+            BindingOperations.EnableCollectionSynchronization(this.Editors, new object());
+            BindingOperations.EnableCollectionSynchronization(this.Terminals, new object());
         }
 
         protected override void Dispose(bool disposing)
         {
-            for (var i = this.Contents.Count - 1; 0 <= i; i--)
-                this.RemoveContent(this.Contents[i]);
+            for (var i = this.Editors.Count - 1; 0 <= i; i--)
+                this.RemoveEditor(this.Editors[i]);
+            for (var i = this.Terminals.Count - 1; 0 <= i; i--)
+                this.RemoveTerminal(this.Terminals[i]);
             base.Dispose(disposing);
         }
 
-        public TextEditorViewModel AddContent()
+        public TextEditorViewModel AddEditor()
         {
-            var content = this.ContentFactory.Invoke();
-            this.AddContent(content);
-            return content;
+            var editor = this.EditorFactory.Invoke();
+            this.AddEditor(editor);
+            return editor;
         }
 
-        public void AddContent(TextEditorViewModel content)
+        public void AddEditor(TextEditorViewModel editor)
         {
-            this.Contents.Add(content);
-            this.ActiveContent = content;
+            this.Editors.Add(editor);
+            this.ActiveEditor = editor;
         }
 
-        public bool RemoveContent(TextEditorViewModel content)
+        public bool RemoveEditor(TextEditorViewModel editor)
         {
-            if (this.Contents.Contains(content) == false)
+            if (this.Editors.Contains(editor) == false)
                 return false;
 
-            this.Contents.Remove(content);
-            content.Dispose();
+            this.Editors.Remove(editor);
+            editor.Dispose();
             return true;
         }
 
-        public async Task LoadContent(IEnumerable<string> paths = null)
+        public async Task LoadEditor(IEnumerable<string> paths = null)
         {
             bool decideConditions(string root, out IEnumerable<string> fileNames, out string filter, out Encoding encoding)
             {
@@ -280,9 +325,9 @@ namespace MyPad.ViewModels
                     var definition = Consts.SYNTAX_DEFINITIONS.ContainsKey(filter) ?
                         Consts.SYNTAX_DEFINITIONS[filter] :
                         Consts.SYNTAX_DEFINITIONS.Values.FirstOrDefault(d => d.Extensions.Contains(Path.GetExtension(path)));
-                    var content = await this.ReadFile(path, encoding, definition);
-                    if (content != null)
-                        this.ActiveContent = content;
+                    var editor = await this.ReadFile(path, encoding, definition);
+                    if (editor != null)
+                        this.ActiveEditor = editor;
                 }
             }
             else
@@ -295,9 +340,9 @@ namespace MyPad.ViewModels
                 {
                     var encoding = SettingsService.Instance.System.AutoDetectEncoding ? null : SettingsService.Instance.System.Encoding;
                     var definition = Consts.SYNTAX_DEFINITIONS.Values.FirstOrDefault(d => d.Extensions.Contains(Path.GetExtension(path)));
-                    var content = await this.ReadFile(path, encoding, definition);
-                    if (content != null)
-                        this.ActiveContent = content;
+                    var editor = await this.ReadFile(path, encoding, definition);
+                    if (editor != null)
+                        this.ActiveEditor = editor;
                 }
 
                 foreach (var path in paths.Where(path => Directory.Exists(path)))
@@ -310,28 +355,28 @@ namespace MyPad.ViewModels
                         var definition = Consts.SYNTAX_DEFINITIONS.ContainsKey(filter) ?
                             Consts.SYNTAX_DEFINITIONS[filter] :
                             Consts.SYNTAX_DEFINITIONS.Values.FirstOrDefault(d => d.Extensions.Contains(Path.GetExtension(fileName)));
-                        var content = await this.ReadFile(fileName, encoding, definition);
-                        if (content != null)
-                            this.ActiveContent = content;
+                        var editor = await this.ReadFile(fileName, encoding, definition);
+                        if (editor != null)
+                            this.ActiveEditor = editor;
                     }
                 }
             }
         }
 
-        public async Task<bool> ReloadContent(TextEditorViewModel content, Encoding encoding, string lanugage = "")
+        public async Task<bool> ReloadEditor(TextEditorViewModel editor, Encoding encoding, string lanugage = "")
         {
             var definition =
                 string.IsNullOrEmpty(lanugage) ? null :
                 Consts.SYNTAX_DEFINITIONS.ContainsKey(lanugage) ? Consts.SYNTAX_DEFINITIONS[lanugage] : null;
-            if (content.IsNewFile)
+            if (editor.IsNewFile)
             {
-                content.Encoding = encoding;
-                content.SyntaxDefinition = definition;
+                editor.Encoding = encoding;
+                editor.SyntaxDefinition = definition;
                 return true;
             }
             else
             {
-                return await this.ReadFile(content.FileName, encoding, definition) != null;
+                return await this.ReadFile(editor.FileName, encoding, definition) != null;
             }
         }
 
@@ -340,17 +385,17 @@ namespace MyPad.ViewModels
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentException("空のパスが指定されています。", nameof(path));
 
-            var sameContent = this.Contents.FirstOrDefault(m => m.FileName.Equals(path));
-            if (sameContent != null)
+            var sameEditor = this.Editors.FirstOrDefault(m => m.FileName.Equals(path));
+            if (sameEditor != null)
             {
                 // 同名ファイルを占有しているコンテンツをアクティブにする
-                this.ActiveContent = sameContent;
+                this.ActiveEditor = sameEditor;
 
                 // 文字コードが異なる場合はリロードする
-                if (sameContent.Encoding?.Equals(encoding) != true)
+                if (sameEditor.Encoding?.Equals(encoding) != true)
                 {
                     // 変更がある場合は確認する
-                    if (sameContent.IsModified)
+                    if (sameEditor.IsModified)
                     {
                         var r = false;
                         this.MessageRequest.Raise(
@@ -364,7 +409,7 @@ namespace MyPad.ViewModels
                     try
                     {
                         this.IsWorking = true;
-                        await sameContent.Reload(encoding);
+                        await sameEditor.Reload(encoding);
                     }
                     catch (Exception e)
                     {
@@ -378,18 +423,18 @@ namespace MyPad.ViewModels
                 }
 
                 // シンタックス定義を設定する
-                sameContent.SyntaxDefinition = definition;
-                return sameContent;
+                sameEditor.SyntaxDefinition = definition;
+                return sameEditor;
             }
             else
             {
                 // 他のウィンドウが同名ファイルを占有している場合は処理を委譲する
-                if (WorkspaceViewModel.Instance.DelegateReloadContent(this, path, encoding))
+                if (WorkspaceViewModel.Instance.DelegateReloadEditor(this, path, encoding))
                     return null;
 
                 // ファイルサイズを確認する
                 var info = new FileInfo(path);
-                if (AppConfig.SizeThreshold <= info.Length)
+                if (AppConfig.LargeFileSize <= info.Length)
                 {
                     var ready = false;
                     this.MessageRequest.Raise(
@@ -422,12 +467,12 @@ namespace MyPad.ViewModels
                 }
 
                 // ファイルを読み込む
-                TextEditorViewModel content;
+                TextEditorViewModel editor;
                 try
                 {
                     this.IsWorking = true;
-                    content = this.AddContent();
-                    await content.Load(stream, encoding);
+                    editor = this.AddEditor();
+                    await editor.Load(stream, encoding);
                 }
                 catch (Exception e)
                 {
@@ -440,31 +485,31 @@ namespace MyPad.ViewModels
                 }
 
                 // シンタックス定義を設定する
-                content.SyntaxDefinition = definition;
-                return content;
+                editor.SyntaxDefinition = definition;
+                return editor;
             }
         }
 
-        private async Task<bool> SaveContent(TextEditorViewModel content)
+        private async Task<bool> SaveEditor(TextEditorViewModel editor)
         {
-            if (content.IsNewFile || content.IsReadOnly)
-                return await this.SaveAsContent(content);
+            if (editor.IsNewFile || editor.IsReadOnly)
+                return await this.SaveAsEditor(editor);
             else
-                return await this.WriteFile(content, content.FileName, content.Encoding, content.SyntaxDefinition);
+                return await this.WriteFile(editor, editor.FileName, editor.Encoding, editor.SyntaxDefinition);
         }
 
-        private async Task<bool> SaveAsContent(TextEditorViewModel content)
+        private async Task<bool> SaveAsEditor(TextEditorViewModel editor)
         {
-            this.ActiveContent = content;
+            this.ActiveEditor = editor;
 
             var ready = false;
-            var path = content.FileName;
-            var filter = content.SyntaxDefinition?.Name;
-            var encoding = content.Encoding;
+            var path = editor.FileName;
+            var filter = editor.SyntaxDefinition?.Name;
+            var encoding = editor.Encoding;
             this.SaveFileRequest.Raise(
                 new SaveFileNotificationEx()
                 {
-                    DefaultDirectory = content.IsNewFile ? string.Empty : Path.GetDirectoryName(path),
+                    DefaultDirectory = editor.IsNewFile ? string.Empty : Path.GetDirectoryName(path),
                     FileName = Path.GetFileName(path),
                     FilterName = filter,
                     Encoding = encoding,
@@ -483,23 +528,23 @@ namespace MyPad.ViewModels
                 return false;
 
             var definition = Consts.SYNTAX_DEFINITIONS.Values.FirstOrDefault(d => d.Extensions.Contains(Path.GetExtension(path)));
-            return await this.WriteFile(content, path, encoding, definition);
+            return await this.WriteFile(editor, path, encoding, definition);
         }
 
-        public async Task<bool> SaveChangesIfAndRemove(TextEditorViewModel content)
+        public async Task<bool> SaveChangesIfAndRemove(TextEditorViewModel editor)
         {
-            if (content.IsModified)
+            if (editor.IsModified)
             {
-                this.ActiveContent = content;
+                this.ActiveEditor = editor;
 
                 bool? result = null;
                 this.MessageRequest.Raise(
-                    new MessageNotification(Resources.Message_ConfirmSaveChanges, content.FileName, MessageKind.CancelableConfirm),
+                    new MessageNotification(Resources.Message_ConfirmSaveChanges, editor.FileName, MessageKind.CancelableConfirm),
                     n => result = n.Result);
                 switch (result)
                 {
                     case true:
-                        if (await this.SaveContent(content) == false)
+                        if (await this.SaveEditor(editor) == false)
                             return false;
                         break;
                     case false:
@@ -509,33 +554,33 @@ namespace MyPad.ViewModels
                 }
             }
 
-            this.RemoveContent(content);
+            this.RemoveEditor(editor);
             return true;
         }
 
         public async Task<bool> SaveChangesIfAndRemove()
         {
-            for (var i = this.Contents.Count - 1; 0 <= i; i--)
+            for (var i = this.Editors.Count - 1; 0 <= i; i--)
             {
-                if (await this.SaveChangesIfAndRemove(this.Contents[i]) == false)
+                if (await this.SaveChangesIfAndRemove(this.Editors[i]) == false)
                     return false;
             }
             return true;
         }
 
-        private async Task<bool> WriteFile(TextEditorViewModel content, string path, Encoding encoding, XshdSyntaxDefinition definition)
+        private async Task<bool> WriteFile(TextEditorViewModel editor, string path, Encoding encoding, XshdSyntaxDefinition definition)
         {
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentException("空のパスが渡されました。", nameof(path));
 
-            var sameContent = this.Contents.FirstOrDefault(m => m.FileName.Equals(path));
-            if (sameContent != null)
+            var sameEditor = this.Editors.FirstOrDefault(m => m.FileName.Equals(path));
+            if (sameEditor != null)
             {
                 // 他のコンテンツが同名ファイルを占有している場合は、保存せずに終了する
-                if (sameContent.Equals(content) == false || sameContent.IsReadOnly)
+                if (sameEditor.Equals(editor) == false || sameEditor.IsReadOnly)
                 {
-                    this.ActiveContent = sameContent;
-                    this.MessageRequest.Raise(new MessageNotification(Resources.Message_NotifyFileLocked, sameContent.FileName, MessageKind.Warning));
+                    this.ActiveEditor = sameEditor;
+                    this.MessageRequest.Raise(new MessageNotification(Resources.Message_NotifyFileLocked, sameEditor.FileName, MessageKind.Warning));
                     return false;
                 }
 
@@ -543,7 +588,7 @@ namespace MyPad.ViewModels
                 try
                 {
                     this.IsWorking = true;
-                    await sameContent.Save(encoding);
+                    await sameEditor.Save(encoding);
                 }
                 catch (Exception e)
                 {
@@ -556,16 +601,16 @@ namespace MyPad.ViewModels
                 }
 
                 // シンタックス定義を設定する
-                sameContent.SyntaxDefinition = definition;
+                sameEditor.SyntaxDefinition = definition;
                 return true;
             }
             else
             {
                 // 他のウィンドウが同名ファイルを占有している場合は、保存せずに終了する
-                var otherSameContent = WorkspaceViewModel.Instance.DelegateActivateContent(this, path);
-                if (otherSameContent != null)
+                var otherSameEditor = WorkspaceViewModel.Instance.DelegateActivateEditor(this, path);
+                if (otherSameEditor != null)
                 {
-                    this.MessageRequest.Raise(new MessageNotification(Resources.Message_NotifyFileLocked, otherSameContent.FileName, MessageKind.Warning));
+                    this.MessageRequest.Raise(new MessageNotification(Resources.Message_NotifyFileLocked, otherSameEditor.FileName, MessageKind.Warning));
                     return false;
                 }
 
@@ -576,7 +621,7 @@ namespace MyPad.ViewModels
                     this.IsWorking = true;
                     Directory.CreateDirectory(Path.GetDirectoryName(path));
                     stream = new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.Read);
-                    await content.SaveAs(stream, encoding);
+                    await editor.SaveAs(stream, encoding);
                 }
                 catch (Exception e)
                 {
@@ -589,9 +634,37 @@ namespace MyPad.ViewModels
                 }
 
                 // シンタックス定義を設定する
-                content.SyntaxDefinition = definition;
+                editor.SyntaxDefinition = definition;
                 return true;
             }
+        }
+
+        private TerminalViewModel AddTerminal()
+        {
+            var terminal = this.TerminalFactory.Invoke();
+            terminal.Start();
+            this.Terminals.Add(terminal);
+            this.ActiveTerminal = terminal;
+            return terminal;
+        }
+
+        private bool RemoveTerminal(TerminalViewModel terminal)
+        {
+            var i = this.Terminals.IndexOf(terminal);
+            if (i < 0)
+                return false;
+
+            this.Terminals.RemoveAt(i);
+            terminal.Disposed -= this.Terminal_Disposed;
+            terminal.Dispose();
+            if (this.Terminals.Any())
+                this.ActiveTerminal = this.Terminals[Math.Max(i - 1, 0)];
+            return true;
+        }
+
+        private void Terminal_Disposed(object sender, EventArgs e)
+        {
+            this.RemoveTerminal((TerminalViewModel)sender);
         }
 
         #endregion

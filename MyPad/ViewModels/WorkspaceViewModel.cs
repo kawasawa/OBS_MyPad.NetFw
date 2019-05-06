@@ -18,7 +18,7 @@ using System.Windows.Threading;
 
 namespace MyPad.ViewModels
 {
-    public class WorkspaceViewModel : ContainerViewModelBase<MainWindowViewModel>
+    public class WorkspaceViewModel : ViewModelBase
     {
         #region スタティック
 
@@ -46,14 +46,23 @@ namespace MyPad.ViewModels
             set => this.SetProperty(ref this._selectedClipboardItem, value);
         }
 
+        private MainWindowViewModel _activeWindow;
+        public MainWindowViewModel ActiveWindow
+        {
+            get => this._activeWindow;
+            set => this.SetProperty(ref this._activeWindow, value);
+        }
+
+        public ObservableCollection<MainWindowViewModel> Windows { get; } = new ObservableCollection<MainWindowViewModel>();
+
         public ObservableCollection<string> ClipboardItems { get; } = new ObservableCollection<string>();
 
-        public override Func<MainWindowViewModel> ContentFactory =>
+        public Func<MainWindowViewModel> WindowFactory =>
             () =>
             {
-                var content = new MainWindowViewModel();
-                content.Disposed += this.Content_Disposed;
-                return content;
+                var window = new MainWindowViewModel();
+                window.Disposed += this.Window_Disposed;
+                return window;
             };
 
         #endregion
@@ -63,43 +72,43 @@ namespace MyPad.ViewModels
         public ICommand AddEditorCommand
             => new DelegateCommand(() =>
             {
-                MainWindowViewModel content = null;
-                if (this.Contents.Any())
+                MainWindowViewModel window = null;
+                if (this.Windows.Any())
                 {
-                    this.ActiveContent.AddContent();
-                    content = this.ActiveContent;
+                    this.ActiveWindow.AddEditor();
+                    window = this.ActiveWindow;
                 }
                 else
                 {
-                    content = this.AddContent();
+                    window = this.AddWindow();
                 }
-                content.TransitionRequest.Raise(new TransitionNotification(TransitionKind.Activate));
+                window.TransitionRequest.Raise(new TransitionNotification(TransitionKind.Activate));
             });
 
         public ICommand AddWindowCommand
-           => new DelegateCommand(() => this.AddContent().TransitionRequest.Raise(new TransitionNotification(TransitionKind.Activate)));
+           => new DelegateCommand(() => this.AddWindow().TransitionRequest.Raise(new TransitionNotification(TransitionKind.Activate)));
 
         public ICommand MergeWindowsCommand
-            => new DelegateCommand(() => this.MergeContents());
+            => new DelegateCommand(() => this.MergeEditors());
 
         public ICommand CloseNotificationIconCommand
             => new DelegateCommand(() =>
             {
                 SettingsService.Instance.System.EnableNotificationIcon = false;
-                if (this.Contents.Any() == false)
+                if (this.Windows.Any() == false)
                     this.Dispose();
             });
 
         public ICommand CloseAllWindowCommand
             => new DelegateCommand(async () =>
             {
-                if (this.Contents.Any())
+                if (this.Windows.Any())
                 {
-                    for (var i = this.Contents.Count - 1; 0 <= i; i--)
+                    for (var i = this.Windows.Count - 1; 0 <= i; i--)
                     {
-                        if (await this.Contents[i].SaveChangesIfAndRemove() == false)
+                        if (await this.Windows[i].SaveChangesIfAndRemove() == false)
                             return;
-                        this.Contents[i].Dispose();
+                        this.Windows[i].Dispose();
                     }
                 }
                 this.Dispose();
@@ -123,6 +132,7 @@ namespace MyPad.ViewModels
         {
             Instance = Instance == null ? this : throw new InvalidOperationException("このクラスのインスタンスを同時に複数生成することはできません。");
 
+            BindingOperations.EnableCollectionSynchronization(this.Windows, new object());
             BindingOperations.EnableCollectionSynchronization(this.ClipboardItems, new object());
 
             // 一時フォルダのクリーンアップ
@@ -164,52 +174,52 @@ namespace MyPad.ViewModels
             }
 
             // コンテンツを削除
-            for (var i = this.Contents.Count - 1; 0 <= i; i--)
-                this.RemoveContent(this.Contents[i]);
+            for (var i = this.Windows.Count - 1; 0 <= i; i--)
+                this.RemoveWindow(this.Windows[i]);
 
             Instance = null;
             base.Dispose(disposing);
         }
 
-        public MainWindowViewModel AddContent(IEnumerable<string> paths = null, bool doTransition = true, bool addEmptyEditor = true)
+        public MainWindowViewModel AddWindow(IEnumerable<string> paths = null, bool doTransition = true, bool addEmptyEditor = true)
         {
-            var content = this.ContentFactory.Invoke();
+            var window = this.WindowFactory.Invoke();
             if (paths?.Any() == true)
-                content.LoadContent(paths);
+                window.LoadEditor(paths);
             else if (addEmptyEditor)
-                content.AddContent();
-            this.AddContent(content, doTransition);
-            return content;
+                window.AddEditor();
+            this.AddWindow(window, doTransition);
+            return window;
         }
 
-        public MainWindowViewModel AddContent(TextEditorViewModel editor, bool doTransition)
+        public MainWindowViewModel AddWindow(TextEditorViewModel editor, bool doTransition)
         {
-            var content = this.ContentFactory.Invoke();
-            content.AddContent(editor);
-            content.ActiveContent = editor;
-            this.AddContent(content, doTransition);
-            return content;
+            var window = this.WindowFactory.Invoke();
+            window.AddEditor(editor);
+            window.ActiveEditor = editor;
+            this.AddWindow(window, doTransition);
+            return window;
         }
 
-        public void AddContent(MainWindowViewModel content, bool doTransition)
+        public void AddWindow(MainWindowViewModel window, bool doTransition)
         {
-            this.Contents.Add(content);
+            this.Windows.Add(window);
             if (doTransition)
-                this.TransitionRequest.Raise(new TransitionNotification(content));
+                this.TransitionRequest.Raise(new TransitionNotification(window));
         }
 
-        public bool RemoveContent(MainWindowViewModel content)
+        public bool RemoveWindow(MainWindowViewModel window)
         {
-            if (this.Contents.Contains(content) == false)
+            if (this.Windows.Contains(window) == false)
                 return false;
 
-            this.Contents.Remove(content);
-            content.Disposed -= this.Content_Disposed;
-            content.Dispose();
+            this.Windows.Remove(window);
+            window.Disposed -= this.Window_Disposed;
+            window.Dispose();
             return true;
         }
 
-        public void AddClipboardHistory(string text)
+        public void AddClipboardItem(string text)
         {
             if (string.IsNullOrEmpty(text) || this.ClipboardItems.FirstOrDefault()?.Equals(text) == true)
                 return;
@@ -218,57 +228,57 @@ namespace MyPad.ViewModels
             this.ClipboardItems.Insert(0, text);
         }
 
-        public TextEditorViewModel DelegateActivateContent(MainWindowViewModel sender, string path)
+        public TextEditorViewModel DelegateActivateEditor(MainWindowViewModel sender, string path)
         {
-            foreach (var window in this.Contents.Where(c => c.Equals(sender) == false))
+            foreach (var window in this.Windows.Where(w => w.Equals(sender) == false))
             {
-                var editor = window.Contents.FirstOrDefault(m => m.FileName.Equals(path));
+                var editor = window.Editors.FirstOrDefault(e => e.FileName.Equals(path));
                 if (editor == null)
                     continue;
-                window.ActiveContent = editor;
+                window.ActiveEditor = editor;
                 return editor;
             }
             return null;
         }
 
-        public bool DelegateReloadContent(MainWindowViewModel sender, string path, Encoding encoding)
+        public bool DelegateReloadEditor(MainWindowViewModel sender, string path, Encoding encoding)
         {
-            foreach (var window in this.Contents.Where(c => c.Equals(sender) == false))
+            foreach (var window in this.Windows.Where(w => w.Equals(sender) == false))
             {
-                var editor = window.Contents.FirstOrDefault(m => m.FileName.Equals(path));
+                var editor = window.Editors.FirstOrDefault(e => e.FileName.Equals(path));
                 if (editor == null)
                     continue;
-                window.ReloadContent(editor, encoding);
+                window.ReloadEditor(editor, encoding);
                 window.TransitionRequest.Raise(new TransitionNotification(TransitionKind.Activate));
                 return true;
             }
             return false;
         }
 
-        private void MergeContents()
+        private void MergeEditors()
         {
-            var mainWindow = this.ActiveContent ?? this.Contents.First();
-            for (var i = this.Contents.Count - 1; 0 <= i; i--)
+            var mainWindow = this.ActiveWindow ?? this.Windows.First();
+            for (var i = this.Windows.Count - 1; 0 <= i; i--)
             {
-                var window = this.Contents[i];
+                var window = this.Windows[i];
                 if (window.Equals(mainWindow))
                     continue;
 
-                for (var j = window.Contents.Count - 1; 0 <= j; j--)
+                for (var j = window.Editors.Count - 1; 0 <= j; j--)
                 {
-                    var editor = window.Contents[j];
-                    window.Contents.RemoveAt(j);
-                    mainWindow.AddContent(editor);
+                    var editor = window.Editors[j];
+                    window.Editors.RemoveAt(j);
+                    mainWindow.AddEditor(editor);
                 }
                 window.Dispose();
             }
         }
 
-        private void Content_Disposed(object sender, EventArgs e)
+        private void Window_Disposed(object sender, EventArgs e)
         {
-            var content = (MainWindowViewModel)sender;
-            this.RemoveContent(content);
-            if (this.Contents.Any() == false &&
+            var window = (MainWindowViewModel)sender;
+            this.RemoveWindow(window);
+            if (this.Windows.Any() == false &&
                 (SettingsService.Instance.System.EnableNotificationIcon == false || SettingsService.Instance.System.EnableResident == false))
             {
                 this.Dispose();

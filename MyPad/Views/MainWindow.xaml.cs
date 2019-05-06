@@ -29,12 +29,18 @@ namespace MyPad.Views
             _Separater_ = 10,
         }
 
+        public readonly static ICommand ActivateTerminal
+            = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.OemTilde, ModifierKeys.Control, "Ctrl+@") });
+        public readonly static ICommand ActivateProperty
+            = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.P, ModifierKeys.Control | ModifierKeys.Shift) });
+        public readonly static ICommand ActivateClipboardHistory
+            = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.C, ModifierKeys.Control | ModifierKeys.Shift) });
+
         private User32_Gdi.MENUITEMINFO _lpmiiShowMenuBar;
         private User32_Gdi.MENUITEMINFO _lpmiiShowToolBar;
         private User32_Gdi.MENUITEMINFO _lpmiiShowSideBar;
         private User32_Gdi.MENUITEMINFO _lpmiiShowStatusBar;
         private HwndSource _handleSource;
-        private bool _isHamburgerMenuItemChanging;
 
         private TextEditor ActiveTextEditor
         {
@@ -80,12 +86,17 @@ namespace MyPad.Views
         public MainWindow()
         {
             this.InitializeComponent();
+
+            this.CommandBindings.Add(new CommandBinding(ActivateTerminal, (sender, e) => this.ActivateHamburgerMenuItem(this.TerminalItem)));
+            this.CommandBindings.Add(new CommandBinding(ActivateProperty, (sender, e) => this.ActivateHamburgerMenuItem(this.PropertyItem)));
+            this.CommandBindings.Add(new CommandBinding(ActivateClipboardHistory, (sender, e) => this.ActivateHamburgerMenuItem(this.ClipboardItem)));
+
             this.DataContextChanged += this.Window_DataContextChanged;
             this.Loaded += this.Window_Loaded;
             this.Closed += this.Window_Closed;
             ((Style)this.TabControl.Resources["__TextEditor"]).Setters.Add(new EventSetter() { Event = PreviewKeyDownEvent, Handler = new KeyEventHandler(this.TextEditor_PreviewKeyDown) });
             ((Style)this.TabControl.Resources["__DragablzItem"]).Setters.Add(new EventSetter() { Event = PreviewMouseRightButtonDownEvent, Handler = new MouseButtonEventHandler(this.TabItem_PreviewMouseRightButtonDown) });
-            ((Style)this.HamburgerMenu.Resources["__ClipboardItems"]).Setters.Add(new EventSetter() { Event = PreviewMouseDoubleClickEvent, Handler = new MouseButtonEventHandler(this.ClipboardItems_PreviewMouseDoubleClick) });
+            ((Style)this.HamburgerMenu.Resources["__ClipboardItem"]).Setters.Add(new EventSetter() { Event = PreviewMouseDoubleClickEvent, Handler = new MouseButtonEventHandler(this.ClipboardItems_PreviewMouseDoubleClick) });
             this.HamburgerMenu.ItemClick += this.HamburgerMenu_ItemClick;
             this.TabControl.SelectionChanged += this.TabControl_SelectionChanged;
             this.Flyouts.Items.Cast<Flyout>().ForEach(item => item.IsOpenChanged += this.Flyout_IsOpenChanged);
@@ -234,27 +245,14 @@ namespace MyPad.Views
 
         private void HamburgerMenu_ItemClick(object sender, ItemClickEventArgs e)
         {
-            // 多重リクエストを無視する
-            if (this._isHamburgerMenuItemChanging)
+            if (MouseButtonState.Released == Mouse.LeftButton &&
+                MouseButtonState.Released == Mouse.RightButton &&
+                MouseButtonState.Released == Mouse.MiddleButton &&
+                MouseButtonState.Released == Mouse.XButton1 &&
+                MouseButtonState.Released == Mouse.XButton2)
             {
-                e.Handled = true;
-                return;
+                this.ActivateHamburgerMenuItem(e.ClickedItem);
             }
-
-            this._isHamburgerMenuItemChanging = true;
-            this.Dispatcher.InvokeAsync(() =>
-            {
-                var menu = (HamburgerMenu)sender;
-                menu.Width =
-                e.ClickedItem?.Equals(menu.Content) == true ?
-                (double.IsNaN(menu.Width) == false ? double.NaN : menu.HamburgerWidth) :
-                (double.IsNaN(menu.Width) == false ? double.NaN : menu.Width);
-                menu.Content = e.ClickedItem;
-                menu.IsPaneOpen = false;
-                this.HamburgerMenuColumn.Width = GridLength.Auto;
-                this._isHamburgerMenuItemChanging = false;
-            },
-            DispatcherPriority.ApplicationIdle);
         }
 
         private void ClipboardItems_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -308,18 +306,36 @@ namespace MyPad.Views
 
             comboBox.IsDropDownOpen = false;
             if (comboBox.Equals(this.EncodingComboBox))
-                comboBox.SelectedIndex = comboBox.Items.IndexOf(this.ViewModel.ActiveContent.Encoding);
+                comboBox.SelectedIndex = comboBox.Items.IndexOf(this.ViewModel.ActiveEditor.Encoding);
             else if (comboBox.Equals(this.LanguageComboBox))
-                comboBox.SelectedIndex = comboBox.Items.IndexOf(this.ViewModel.ActiveContent.SyntaxDefinition?.Name);
+                comboBox.SelectedIndex = comboBox.Items.IndexOf(this.ViewModel.ActiveEditor.SyntaxDefinition?.Name);
 
             this.ViewModel.ReloadCommand.Execute(new Tuple<Encoding, string>(encoding, language));
+        }
+
+        private void ActivateHamburgerMenuItem(object targetItem)
+        {
+            this.Dispatcher.InvokeAsync(() =>
+                {
+                    var isWidthChanged = double.IsNaN(this.HamburgerMenu.Width);
+                    var isActivated = targetItem?.Equals(this.HamburgerMenu.Content) == true;
+
+                    SettingsService.Instance.Window.ShowSideBar = true;
+                    this.HamburgerMenu.Width =
+                        isWidthChanged == false ? double.NaN :
+                        isActivated ? this.HamburgerMenu.HamburgerWidth : this.HamburgerMenu.Width;
+                    this.HamburgerMenu.Content = targetItem;
+                    this.HamburgerMenu.IsPaneOpen = false;
+                    this.HamburgerMenuColumn.Width = GridLength.Auto;
+                },
+                DispatcherPriority.ApplicationIdle);
         }
 
         public class MainWindowInterTabClient : IInterTabClient
         {
             INewTabHost<Window> IInterTabClient.GetNewHost(IInterTabClient interTabClient, object partition, TabablzControl source)
             {
-                var viewModel = WorkspaceViewModel.Instance.AddContent(null, false, false);
+                var viewModel = WorkspaceViewModel.Instance.AddWindow(null, false, false);
                 var view = new MainWindow() { DataContext = viewModel, RestorePlacement = false };
                 if (SettingsService.Instance.Window.ShowSingleTab == false)
                 {
