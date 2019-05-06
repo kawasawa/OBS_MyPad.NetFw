@@ -33,8 +33,8 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>0.1.9.0</ApplicationVersion>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>0.2.0.1</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -143,8 +143,8 @@
     <Reference Include="MyLib, Version=0.1.0.2, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MyLib.Core.0.1.0-beta2\lib\net46\MyLib.dll</HintPath>
     </Reference>
-    <Reference Include="MyLib.Wpf, Version=1.1.0.8, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MyLib.Wpf.1.1.0-beta8\lib\net46\MyLib.Wpf.dll</HintPath>
+    <Reference Include="MyLib.Wpf, Version=1.1.0.10, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MyLib.Wpf.1.1.0-beta10\lib\net46\MyLib.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -223,6 +223,7 @@
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
     <None Include="Resources\PLSQL.xshd" />
+    <Compile Include="ViewModels\TerminalViewModel.cs" />
     <Compile Include="Views\Behaviors\MessageActionEx.cs" />
     <Compile Include="_common\UnhandledExceptionObserver.cs" />
     <Compile Include="AppConfig.cs" />
@@ -239,7 +240,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.ja-JP.resx</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\ContainerViewModelBase.cs" />
     <Compile Include="ViewModels\SaveFileNotificationEx.cs" />
     <Compile Include="ViewModels\OpenFileNotificationEx.cs" />
     <Compile Include="ViewModels\TextEditorViewModelCore.cs" />

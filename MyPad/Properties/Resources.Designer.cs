@@ -19,7 +19,7 @@ namespace MyPad.Properties {
     // または Visual Studio のようなツールを使用して自動生成されました。
     // メンバーを追加または削除するには、.ResX ファイルを編集して、/str オプションと共に
     // ResGen を実行し直すか、または VS プロジェクトをビルドし直します。
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -89,11 +89,11 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Clipboard に類似しているローカライズされた文字列を検索します。
+        ///   Clipboard history に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string Command_Clipboard {
+        public static string Command_ClipboardHistory {
             get {
-                return ResourceManager.GetString("Command_Clipboard", resourceCulture);
+                return ResourceManager.GetString("Command_ClipboardHistory", resourceCulture);
             }
         }
         
@@ -256,6 +256,15 @@ namespace MyPad.Properties {
         public static string Command_Encoding {
             get {
                 return ResourceManager.GetString("Command_Encoding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Execute に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Execute {
+            get {
+                return ResourceManager.GetString("Command_Execute", resourceCulture);
             }
         }
         
@@ -431,6 +440,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   New terminal に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_NewTerminal {
+            get {
+                return ResourceManager.GetString("Command_NewTerminal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   New window に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_NewWindow {
@@ -485,11 +503,11 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Properties に類似しているローカライズされた文字列を検索します。
+        ///   Property に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string Command_Properties {
+        public static string Command_Property {
             get {
-                return ResourceManager.GetString("Command_Properties", resourceCulture);
+                return ResourceManager.GetString("Command_Property", resourceCulture);
             }
         }
         
@@ -728,6 +746,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   Terminal に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Terminal {
+            get {
+                return ResourceManager.GetString("Command_Terminal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Tools に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Tools {
@@ -931,6 +958,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   Command に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_Command {
+            get {
+                return ResourceManager.GetString("Label_Command", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Creation date に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_CreationDate {
@@ -981,6 +1017,15 @@ namespace MyPad.Properties {
         public static string Label_Encoding {
             get {
                 return ResourceManager.GetString("Label_Encoding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Execution に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_ExecutionDirectory {
+            get {
+                return ResourceManager.GetString("Label_ExecutionDirectory", resourceCulture);
             }
         }
         
@@ -1093,24 +1138,6 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Other に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Label_Other {
-            get {
-                return ResourceManager.GetString("Label_Other", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Path に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Label_Path {
-            get {
-                return ResourceManager.GetString("Label_Path", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Permission に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Permission {
@@ -1210,29 +1237,11 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Visual length に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Label_VisualLength {
-            get {
-                return ResourceManager.GetString("Label_VisualLength", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Window に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Window {
             get {
                 return ResourceManager.GetString("Label_Window", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Working に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Label_WorkDirectory {
-            get {
-                return ResourceManager.GetString("Label_WorkDirectory", resourceCulture);
             }
         }
         

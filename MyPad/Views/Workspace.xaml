@@ -51,10 +51,10 @@
                         <mi:Material Kind="WindowMaximize"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem ItemsSource="{Binding Contents}" Header="{Binding Resources.Command_WindowList, Source={x:Static models:ResourceService.Instance}}" IsEnabled="{qc:Binding '$P.CompareTo(0) == 1', P={Binding Contents.Count}}">
+                <MenuItem ItemsSource="{Binding Windows}" Header="{Binding Resources.Command_WindowList, Source={x:Static models:ResourceService.Instance}}" IsEnabled="{qc:Binding '$P.CompareTo(0) == 1', P={Binding Windows.Count}}">
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource MetroMenuItem}">
-                            <Setter Property="Header" Value="{qc:MultiBinding '\'Window\-\' + $P0 + \': \' + $P1', P0={Binding Sequense}, P1={Binding ActiveContent.FileName}}"/>
+                            <Setter Property="Header" Value="{qc:MultiBinding '\'Window\-\' + $P0 + \': \' + $P1', P0={Binding Sequense}, P1={Binding ActiveEditor.FileName}}"/>
                             <Setter Property="Command" Value="{Binding ActivateCommand}"/>
                         </Style>
                     </MenuItem.ItemContainerStyle>

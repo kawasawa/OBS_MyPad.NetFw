@@ -52,26 +52,26 @@ namespace MyPad.Views
             {
                 case User32_Gdi.WindowMessage.WM_COPYDATA:
                     {
-                        MainWindowViewModel content = null;
+                        MainWindowViewModel window = null;
                         var structure = (COPYDATASTRUCT)Marshal.PtrToStructure(lParam, typeof(COPYDATASTRUCT));
                         if (string.IsNullOrEmpty(structure.lpData) == false)
                         {
                             var paths = structure.lpData.Split('|');
-                            if (this.ViewModel.Contents.Any())
+                            if (this.ViewModel.Windows.Any())
                             {
-                                content = this.ViewModel.ActiveContent;
-                                content.LoadContent(paths);
+                                window = this.ViewModel.ActiveWindow;
+                                window.LoadEditor(paths);
                             }
                             else
                             {
-                                content = this.ViewModel.AddContent(paths);
+                                window = this.ViewModel.AddWindow(paths);
                             }
                         }
                         else
                         {
-                            content = this.ViewModel.Contents.Any() ? this.ViewModel.ActiveContent : this.ViewModel.AddContent();
+                            window = this.ViewModel.Windows.Any() ? this.ViewModel.ActiveWindow : this.ViewModel.AddWindow();
                         }
-                        content.TransitionRequest.Raise(new TransitionNotification(TransitionKind.Activate));
+                        window.TransitionRequest.Raise(new TransitionNotification(TransitionKind.Activate));
                         break;
                     }
             }
@@ -86,7 +86,7 @@ namespace MyPad.Views
             this._clipboardViewer.DrawClipboard += this.ClipboardViewer_DrawClipboard;
 
             this.Hide();
-            this.ViewModel.AddContent(this._initialArgs);
+            this.ViewModel.AddWindow(this._initialArgs);
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -102,7 +102,7 @@ namespace MyPad.Views
             if (windows.Any())
                 windows.ForEach(window => window.SetForegroundWindow());
             else
-                this.ViewModel.AddContent();
+                this.ViewModel.AddWindow();
         }
 
         private void ClipboardViewer_DrawClipboard(object sender, EventArgs e)
@@ -116,7 +116,7 @@ namespace MyPad.Views
             thread.Start();
             thread.Join();
             if (string.IsNullOrEmpty(text) == false)
-                this.ViewModel.AddClipboardHistory(text);
+                this.ViewModel.AddClipboardItem(text);
         }
     }
 }

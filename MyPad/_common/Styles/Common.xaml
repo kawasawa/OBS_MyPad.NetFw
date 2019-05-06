@@ -68,6 +68,8 @@
     <s:Double x:Key="Const.Scale">1.2</s:Double>
     <s:Double x:Key="Const.Opacity1">0.95</s:Double>
     <s:Double x:Key="Const.Opacity2">0.90</s:Double>
+    <s:Double x:Key="Const.Opacity3">0.85</s:Double>
+    <s:Double x:Key="Const.Opacity4">0.80</s:Double>
     <Thickness x:Key="Const.Gap1W"   Left="{StaticResource Const.Gap1}" Top="{StaticResource Const.Gap0}" Right="{StaticResource Const.Gap1}" Bottom="{StaticResource Const.Gap0}"/>
     <Thickness x:Key="Const.Gap1H"   Left="{StaticResource Const.Gap0}" Top="{StaticResource Const.Gap1}" Right="{StaticResource Const.Gap0}" Bottom="{StaticResource Const.Gap1}"/>
     <Thickness x:Key="Const.Gap1W1H" Left="{StaticResource Const.Gap1}" Top="{StaticResource Const.Gap1}" Right="{StaticResource Const.Gap1}" Bottom="{StaticResource Const.Gap1}"/>
@@ -92,8 +94,12 @@
     -->
 
     <Style x:Key="Default.ResizeGrip" TargetType="{x:Type ResizeGrip}" BasedOn="{StaticResource {x:Type ResizeGrip}}">
-        <!-- 領域を残すため Hidden とする -->
         <Setter Property="Visibility" Value="Hidden"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" Value="Maximized">
+                <Setter Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
     <Style x:Key="Default.PackIconModern" TargetType="{x:Type mi:PackIconModern}" BasedOn="{StaticResource {x:Type mi:PackIconModern}}">
@@ -474,13 +480,6 @@
         <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StatusBar}}}"/>
         <Setter Property="Padding" Value="0"/>
         <Style.Resources>
-            <Style TargetType="{x:Type ResizeGrip}" BasedOn="{StaticResource Default.ResizeGrip}">
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" Value="Maximized">
-                        <Setter Property="Visibility" Value="Collapsed"/>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
             <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.StatusTextBlock}"/>
             <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource Common.StatusComboBox}"/>
             <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Common.StatusToggleButton}"/>
