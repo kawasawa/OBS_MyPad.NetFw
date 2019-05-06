@@ -428,6 +428,7 @@
                             <Setter Property="Focusable" Value="False"/>
                             <Setter Property="VerticalContentAlignment" Value="Top"/>
                             <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+                            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
                         </Style>
                     </m:HamburgerMenu.Resources>
                     <m:HamburgerMenu.ItemTemplate>
@@ -452,41 +453,39 @@
                                     <mi:Material Kind="Console"/>
                                 </m:HamburgerMenuIconItem.Icon>
                                 <m:HamburgerMenuIconItem.Tag>
-                                    <ScrollViewer>
-                                        <Grid ge:GridEx.RowDefinition="Auto, 5, *, Auto" DataContext="{Binding Data, Source={StaticResource Proxy}}">
-                                            <Grid.InputBindings>
-                                                <KeyBinding Command="{Binding AddTerminalCommand}" Key="OemTilde" Modifiers="Ctrl+Shift"/>
-                                            </Grid.InputBindings>
-                                            <Grid ge:GridEx.ColumnDefinition="*, 5, Auto, Auto">
-                                                <ComboBox Grid.Column="0" ItemsSource="{Binding Terminals}" SelectedItem="{Binding ActiveTerminal}" DisplayMemberPath="TerminalName"/>
-                                                <Button Grid.Column="2" Command="{Binding AddTerminalCommand}" ToolTip="{qc:Binding '$P + \' (Ctrl+Shift+@)\'', P={Binding Resources.Command_NewTerminal, Source={x:Static models:ResourceService.Instance}}}" Style="{StaticResource IconButton}">
-                                                    <mi:Material Kind="Console"/>
-                                                </Button>
-                                                <Button Grid.Column="3" Command="{Binding CloseTerminalCommand}" ToolTip="{Binding Resources.Command_Close, Source={x:Static models:ResourceService.Instance}}" Style="{StaticResource IconButton}">
-                                                    <mi:Material Kind="Close"/>
-                                                </Button>
-                                            </Grid>
-                                            <TextBox Grid.Row="2" Text="{Binding ActiveTerminal.DataLinesText, Mode=OneWay}" Style="{StaticResource ReadOnlyTextBox}">
+                                    <Grid ge:GridEx.RowDefinition="Auto, 5, *, Auto" DataContext="{Binding Data, Source={StaticResource Proxy}}">
+                                        <Grid.InputBindings>
+                                            <KeyBinding Command="{Binding AddTerminalCommand}" Key="OemTilde" Modifiers="Ctrl+Shift"/>
+                                        </Grid.InputBindings>
+                                        <Grid ge:GridEx.ColumnDefinition="*, 5, Auto, Auto">
+                                            <ComboBox Grid.Column="0" ItemsSource="{Binding Terminals}" SelectedItem="{Binding ActiveTerminal}" DisplayMemberPath="TerminalName"/>
+                                            <Button Grid.Column="2" Command="{Binding AddTerminalCommand}" ToolTip="{qc:Binding '$P + \' (Ctrl+Shift+@)\'', P={Binding Resources.Command_NewTerminal, Source={x:Static models:ResourceService.Instance}}}" Style="{StaticResource IconButton}">
+                                                <mi:Material Kind="Console"/>
+                                            </Button>
+                                            <Button Grid.Column="3" Command="{Binding CloseTerminalCommand}" ToolTip="{Binding Resources.Command_Close, Source={x:Static models:ResourceService.Instance}}" Style="{StaticResource IconButton}">
+                                                <mi:Material Kind="Close"/>
+                                            </Button>
+                                        </Grid>
+                                        <TextBox Grid.Row="2" Text="{Binding ActiveTerminal.DataLinesText, Mode=OneWay}" Style="{StaticResource ReadOnlyTextBox}">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="TextChanged">
+                                                    <mlwb:CallElementMethodAction MethodName="ScrollToEnd"/>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </TextBox>
+                                        <Grid Grid.Row="3" ge:GridEx.ColumnDefinition="*, Auto">
+                                            <TextBox Grid.Column="0" Text="{Binding ActiveTerminal.Value, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{Binding Resources.Label_Command, Source={x:Static models:ResourceService.Instance}}">
                                                 <i:Interaction.Triggers>
-                                                    <i:EventTrigger EventName="TextChanged">
-                                                        <mlwb:CallElementMethodAction MethodName="ScrollToEnd"/>
-                                                    </i:EventTrigger>
+                                                    <ei:KeyTrigger ActiveOnFocus="True" Key="Return">
+                                                        <p:InvokeCommandAction Command="{Binding ActiveTerminal.SendValueCommand}"/>
+                                                    </ei:KeyTrigger>
                                                 </i:Interaction.Triggers>
                                             </TextBox>
-                                            <Grid Grid.Row="3" ge:GridEx.ColumnDefinition="*, Auto">
-                                                <TextBox Grid.Column="0" Text="{Binding ActiveTerminal.Value, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{Binding Resources.Label_Command, Source={x:Static models:ResourceService.Instance}}">
-                                                    <i:Interaction.Triggers>
-                                                        <ei:KeyTrigger ActiveOnFocus="True" Key="Return">
-                                                            <p:InvokeCommandAction Command="{Binding ActiveTerminal.SendValueCommand}"/>
-                                                        </ei:KeyTrigger>
-                                                    </i:Interaction.Triggers>
-                                                </TextBox>
-                                                <Button Grid.Column="1" Command="{Binding ActiveTerminal.SendValueCommand}" ToolTip="{qc:Binding '$P + \' (Enter)\'', P={Binding Resources.Command_Execute, Source={x:Static models:ResourceService.Instance}}}" Style="{StaticResource IconButton}">
-                                                    <mi:Material Kind="Play"/>
-                                                </Button>
-                                            </Grid>
+                                            <Button Grid.Column="1" Command="{Binding ActiveTerminal.SendValueCommand}" ToolTip="{qc:Binding '$P + \' (Enter)\'', P={Binding Resources.Command_Execute, Source={x:Static models:ResourceService.Instance}}}" Style="{StaticResource IconButton}">
+                                                <mi:Material Kind="Play"/>
+                                            </Button>
                                         </Grid>
-                                    </ScrollViewer>
+                                    </Grid>
                                 </m:HamburgerMenuIconItem.Tag>
                             </m:HamburgerMenuIconItem>
                             <m:HamburgerMenuIconItem x:Name="PropertyItem" Label="{Binding Resources.Command_Property, Source={x:Static models:ResourceService.Instance}}">
@@ -526,27 +525,25 @@
                                     <mi:Modern Kind="Clipboard"/>
                                 </m:HamburgerMenuIconItem.Icon>
                                 <m:HamburgerMenuIconItem.Tag>
-                                    <ScrollViewer>
-                                        <Grid ge:GridEx.RowDefinition="Auto, 5, *(50-), Auto, 100(50-)">
-                                            <Grid ge:GridEx.ColumnDefinition="Auto, 5, Auto">
-                                                <Button Grid.Column="0" Command="{Binding ClearClipboardItemCommand, Source={x:Static viewModels:WorkspaceViewModel.Instance}}" ToolTip="{Binding Resources.Command_Delete, Source={x:Static models:ResourceService.Instance}}" Style="{StaticResource IconButton}">
-                                                    <mi:Material Kind="Broom"/>
-                                                </Button>
-                                                <Button Grid.Column="2" Command="{Binding ClearAllClipboardItemsCommand, Source={x:Static viewModels:WorkspaceViewModel.Instance}}" ToolTip="{Binding Resources.Command_DeleteAll, Source={x:Static models:ResourceService.Instance}}" Style="{StaticResource IconButton}">
-                                                    <mi:Modern Kind="Clean"/>
-                                                </Button>
-                                            </Grid>
-                                            <ListBox Grid.Row="2" ItemsSource="{Binding ClipboardItems, Source={x:Static viewModels:WorkspaceViewModel.Instance}}" SelectedItem="{Binding SelectedClipboardItem, Source={x:Static viewModels:WorkspaceViewModel.Instance}}" ItemContainerStyle="{StaticResource __ClipboardItem}">
-                                                <ListBox.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <TextBlock Text="{qc:Binding '$P.Replace(ControlChars.Cr.ToString(), string.Empty).Replace(ControlChars.Lf.ToString(), string.Empty)', P={Binding}}"/>
-                                                    </DataTemplate>
-                                                </ListBox.ItemTemplate>
-                                            </ListBox>
-                                            <GridSplitter Grid.Row="3" HorizontalAlignment="Stretch" Height="5"/>
-                                            <TextBox Grid.Row="4" Text="{Binding Children[1].(ListBox.SelectedItem), RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}" Style="{StaticResource ReadOnlyTextBox}"/>
+                                    <Grid ge:GridEx.RowDefinition="Auto, 5, *(50-), Auto, 100(50-)">
+                                        <Grid ge:GridEx.ColumnDefinition="Auto, 5, Auto">
+                                            <Button Grid.Column="0" Command="{Binding ClearClipboardItemCommand, Source={x:Static viewModels:WorkspaceViewModel.Instance}}" ToolTip="{Binding Resources.Command_Delete, Source={x:Static models:ResourceService.Instance}}" Style="{StaticResource IconButton}">
+                                                <mi:Material Kind="Broom"/>
+                                            </Button>
+                                            <Button Grid.Column="2" Command="{Binding ClearAllClipboardItemsCommand, Source={x:Static viewModels:WorkspaceViewModel.Instance}}" ToolTip="{Binding Resources.Command_DeleteAll, Source={x:Static models:ResourceService.Instance}}" Style="{StaticResource IconButton}">
+                                                <mi:Modern Kind="Clean"/>
+                                            </Button>
                                         </Grid>
-                                    </ScrollViewer>
+                                        <ListBox Grid.Row="2" ItemsSource="{Binding ClipboardItems, Source={x:Static viewModels:WorkspaceViewModel.Instance}}" SelectedItem="{Binding SelectedClipboardItem, Source={x:Static viewModels:WorkspaceViewModel.Instance}}" ItemContainerStyle="{StaticResource __ClipboardItem}">
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{qc:Binding '$P.Replace(ControlChars.Cr.ToString(), string.Empty).Replace(ControlChars.Lf.ToString(), string.Empty)', P={Binding}}"/>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                        <GridSplitter Grid.Row="3" HorizontalAlignment="Stretch" Height="5"/>
+                                        <TextBox Grid.Row="4" Text="{Binding Children[1].(ListBox.SelectedItem), RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}" Style="{StaticResource ReadOnlyTextBox}"/>
+                                    </Grid>
                                 </m:HamburgerMenuIconItem.Tag>
                             </m:HamburgerMenuIconItem>
                         </m:HamburgerMenuItemCollection>
