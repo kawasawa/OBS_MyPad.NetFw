@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Threading;
 
 /// <summary>
-/// ハンドルされていない例外の発生を監視するサービスクラスを表します。
+/// ハンドルされていない例外の発生を監視します。
 /// </summary>
 public static class UnhandledExceptionObserver
 {
