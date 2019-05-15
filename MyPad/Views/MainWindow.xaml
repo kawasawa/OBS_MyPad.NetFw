@@ -806,10 +806,11 @@
 
         <!-- オーバーレイ -->
         <Border d:IsHidden="True" Style="{StaticResource Common.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsWorking}}">
-            <Grid ge:GridEx.RowDefinition="Auto, 30, Auto">
+            <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="{StaticResource Const.Gap1W}">
                 <TextBlock Text="{Binding Resources.Message_Working, Source={x:Static models:ResourceService.Instance}}"/>
-                <m:ProgressRing Grid.Row="2"/>
-            </Grid>
+                <Border Height="{StaticResource Const.Gap2}"/>
+                <m:ProgressRing/>
+            </StackPanel>
         </Border>
     </Grid>
 
@@ -957,17 +958,40 @@
                                     </Expander>
 
                                     <Expander Header="{Binding Resources.Label_File, Source={x:Static models:ResourceService.Instance}}">
-                                        <Grid ge:GridEx.ColumnDefinition="Auto, *" ge:GridEx.RowDefinition="Auto, Auto">
+                                        <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto" ge:GridEx.RowDefinition="Auto, Auto">
+                                            <Grid.Resources>
+                                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Buton}">
+                                                    <Setter Property="Width" Value="30"/>
+                                                    <Setter Property="Height" Value="30"/>
+                                                    <Setter Property="Padding" Value="2"/>
+                                                </Style>
+                                            </Grid.Resources>
+                                            
                                             <Label   Grid.Row="0" Grid.Column="0" Content="{Binding Resources.Label_ExecutionFile, Source={x:Static models:ResourceService.Instance}}"/>
                                             <TextBox Grid.Row="0" Grid.Column="1" Text="{x:Static ml:ProductInfo.Location}" IsReadOnly="True"/>
+                                            <Button  Grid.Row="0" Grid.Column="3" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}}">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="Click">
+                                                        <mlwb:ProcessStartAction FileName="explorer.exe" Argument="{qc:Binding '\'/select, \' + $P', P={Binding Source={x:Static ml:ProductInfo.Location}}}" ThrowException="False"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                                <mi:Modern Kind="FolderOpen"/>
+                                            </Button>
                                             <Label   Grid.Row="1" Grid.Column="0" Content="{Binding Resources.Label_SettingFile, Source={x:Static models:ResourceService.Instance}}"/>
                                             <TextBox Grid.Row="1" Grid.Column="1" Text="{x:Static models:SettingsService.SettingsFilePath}" IsReadOnly="True"/>
+                                            <Button  Grid.Row="1" Grid.Column="3" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}}">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="Click">
+                                                        <mlwb:ProcessStartAction FileName="explorer.exe" Argument="{qc:Binding '\'/select, \' + $P', P={Binding Source={x:Static models:SettingsService.SettingsFilePath}}}" ThrowException="False"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                                <mi:Modern Kind="FolderOpen"/>
+                                            </Button>
                                         </Grid>
                                     </Expander>
 
                                     <Expander Header="{Binding Resources.Label_Directory, Source={x:Static models:ResourceService.Instance}}">
-                                        <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto, 5, Auto"
-                                              ge:GridEx.RowDefinition="Auto, Auto, Auto, Auto, Auto">
+                                        <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto, 5, Auto" ge:GridEx.RowDefinition="Auto, Auto, Auto, Auto, Auto">
                                             <Grid.Resources>
                                                 <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Buton}">
                                                     <Setter Property="Width" Value="30"/>
@@ -981,32 +1005,35 @@
                                             <Button  Grid.Row="0" Grid.Column="3" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}}">
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName="Click">
-                                                        <mlwb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Working}"/>
+                                                        <mlwb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Working}" ThrowException="False"/>
                                                     </i:EventTrigger>
                                                 </i:Interaction.Triggers>
                                                 <mi:Modern Kind="FolderOpen"/>
                                             </Button>
 
-                                            <Label   Grid.Row="1" Grid.Column="0" Content="{Binding Resources.Label_TempDirectory, Source={x:Static models:ResourceService.Instance}}"/>
-                                            <TextBox Grid.Row="1" Grid.Column="1" Text="{x:Static ml:ProductInfo.Temporary}" IsReadOnly="True"/>
+                                            <Label   Grid.Row="1" Grid.Column="0" Content="{Binding Resources.Label_RoamingDirectory, Source={x:Static models:ResourceService.Instance}}"/>
+                                            <TextBox Grid.Row="1" Grid.Column="1" Text="{x:Static ml:ProductInfo.Roaming}" IsReadOnly="True"/>
                                             <Button  Grid.Row="1" Grid.Column="3" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}}">
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName="Click">
-                                                        <mlwb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Temporary}"/>
+                                                        <mlwb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Roaming}" ThrowException="False"/>
                                                     </i:EventTrigger>
                                                 </i:Interaction.Triggers>
                                                 <mi:Modern Kind="FolderOpen"/>
                                             </Button>
 
-                                            <Label   Grid.Row="2" Grid.Column="0" Content="{Binding Resources.Label_RoamingDirectory, Source={x:Static models:ResourceService.Instance}}"/>
-                                            <TextBox Grid.Row="2" Grid.Column="1" Text="{x:Static ml:ProductInfo.Roaming}" IsReadOnly="True"/>
+                                            <Label   Grid.Row="2" Grid.Column="0" Content="{Binding Resources.Label_XshdDirectory, Source={x:Static models:ResourceService.Instance}}"/>
+                                            <TextBox Grid.Row="2" Grid.Column="1" Text="{x:Static models:ResourceService.XshdDirectoryPath}" IsReadOnly="True"/>
                                             <Button  Grid.Row="2" Grid.Column="3" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}}">
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName="Click">
-                                                        <mlwb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Roaming}"/>
+                                                        <mlwb:ProcessStartAction FileName="{x:Static models:ResourceService.XshdDirectoryPath}" ThrowException="False"/>
                                                     </i:EventTrigger>
                                                 </i:Interaction.Triggers>
                                                 <mi:Modern Kind="FolderOpen"/>
+                                            </Button>
+                                            <Button  Grid.Row="2" Grid.Column="5" Command="{Binding InitializeXshdCommand}" ToolTip="{Binding Resources.Command_Initialize, Source={x:Static models:ResourceService.Instance}}">
+                                                <mi:Modern Kind="New"/>
                                             </Button>
 
                                             <Label   Grid.Row="3" Grid.Column="0" Content="{Binding Resources.Label_LogDirectory, Source={x:Static models:ResourceService.Instance}}"/>
@@ -1020,18 +1047,15 @@
                                                 <mi:Modern Kind="FolderOpen"/>
                                             </Button>
 
-                                            <Label   Grid.Row="4" Grid.Column="0" Content="{Binding Resources.Label_XshdDirectory, Source={x:Static models:ResourceService.Instance}}"/>
-                                            <TextBox Grid.Row="4" Grid.Column="1" Text="{x:Static models:ResourceService.XshdDirectoryPath}" IsReadOnly="True"/>
+                                            <Label   Grid.Row="4" Grid.Column="0" Content="{Binding Resources.Label_TempDirectory, Source={x:Static models:ResourceService.Instance}}"/>
+                                            <TextBox Grid.Row="4" Grid.Column="1" Text="{x:Static ml:ProductInfo.Temporary}" IsReadOnly="True"/>
                                             <Button  Grid.Row="4" Grid.Column="3" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}}">
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName="Click">
-                                                        <mlwb:ProcessStartAction FileName="{x:Static models:ResourceService.XshdDirectoryPath}" ThrowException="False"/>
+                                                        <mlwb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Temporary}" ThrowException="False"/>
                                                     </i:EventTrigger>
                                                 </i:Interaction.Triggers>
                                                 <mi:Modern Kind="FolderOpen"/>
-                                            </Button>
-                                            <Button  Grid.Row="4" Grid.Column="5" Command="{Binding InitializeXshdCommand}" ToolTip="{Binding Resources.Command_Initialize, Source={x:Static models:ResourceService.Instance}}">
-                                                <mi:Modern Kind="New"/>
                                             </Button>
                                         </Grid>
                                     </Expander>

@@ -29,12 +29,12 @@
     <ProductName>MyPad</ProductName>
     <PublisherName>Kazuki Awasawa</PublisherName>
     <SuiteName>MyPad</SuiteName>
-    <MinimumRequiredVersion>0.1.9.0</MinimumRequiredVersion>
+    <MinimumRequiredVersion>0.2.0.3</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>1</ApplicationRevision>
-    <ApplicationVersion>0.2.0.1</ApplicationVersion>
+    <ApplicationRevision>3</ApplicationRevision>
+    <ApplicationVersion>0.2.0.3</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -140,11 +140,11 @@
     <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.3.3, Culture=neutral, PublicKeyToken=8985beaab7ea3f04, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft-WindowsAPICodePack-Shell.1.1.3.3\lib\net452\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
     </Reference>
-    <Reference Include="MyLib, Version=0.1.0.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MyLib.Core.0.1.0-beta2\lib\net46\MyLib.dll</HintPath>
+    <Reference Include="MyLib, Version=0.1.0.4, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MyLib.Core.0.1.0.1\lib\net46\MyLib.dll</HintPath>
     </Reference>
-    <Reference Include="MyLib.Wpf, Version=1.1.0.10, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MyLib.Wpf.1.1.0-beta10\lib\net46\MyLib.Wpf.dll</HintPath>
+    <Reference Include="MyLib.Wpf, Version=1.1.0.13, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MyLib.Wpf.1.1.0.2\lib\net46\MyLib.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>

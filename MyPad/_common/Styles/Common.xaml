@@ -644,18 +644,13 @@
     </Style>
 
     <Style x:Key="Common.Overlay" TargetType="{x:Type Border}" BasedOn="{StaticResource Default.Border}">
+        <Setter Property="Opacity" Value="{StaticResource Const.Opacity2}"/>
         <Setter Property="Background" Value="{DynamicResource GrayBrush8}"/>
-        <Setter Property="Opacity" Value="{StaticResource Const.Opacity1}"/>
         <Style.Resources>
-            <Style TargetType="{x:Type Grid}" BasedOn="{StaticResource Default.Panel}">
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="Margin" Value="{StaticResource Const.Gap1W}"/>
-            </Style>
             <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
-                <Setter Property="HorizontalAlignment" Value="Center"/>
-                <Setter Property="TextAlignment" Value="Center"/>
                 <Setter Property="Foreground" Value="{DynamicResource Foreground}"/>
                 <Setter Property="FontSize" Value="{StaticResource FlyoutHeaderFontSize}"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
             </Style>
         </Style.Resources>
     </Style>

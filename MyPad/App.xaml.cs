@@ -117,13 +117,17 @@ namespace MyPad
         /// </summary>
         private void InitializeQuickConverter()
         {
-            EquationTokenizer.AddNamespace(typeof(System.Object));
-            EquationTokenizer.AddNamespace(typeof(System.IO.Path));
-            EquationTokenizer.AddNamespace(typeof(System.Reflection.Assembly));
-            EquationTokenizer.AddNamespace(typeof(System.Windows.UIElement));
-            EquationTokenizer.AddNamespace(typeof(Microsoft.VisualBasic.ControlChars));
+            // System
+            EquationTokenizer.AddNamespace(typeof(System.Object));                 // mscorlib              : System
+            EquationTokenizer.AddNamespace(typeof(System.IO.Path));                // mscorlib              : System.IO
+            EquationTokenizer.AddNamespace(typeof(System.Reflection.Assembly));    // mscorlib              : System.Reflection
+            EquationTokenizer.AddNamespace(typeof(System.Windows.Point));          // WindowsBase           : System.Windows
+            EquationTokenizer.AddNamespace(typeof(System.Windows.UIElement));      // PresentationCore      : System.Windows
+            EquationTokenizer.AddNamespace(typeof(Microsoft.VisualBasic.Globals)); // Microsoft.VisualBasic : Microsoft.VisualBasic
+            EquationTokenizer.AddExtensionMethods(typeof(System.Linq.Enumerable)); // System.Core           : System.Linq
+
+            // Additional
             EquationTokenizer.AddNamespace(typeof(MyLib.Wpf.Interactions.InteractionNotification));
-            EquationTokenizer.AddExtensionMethods(typeof(System.Linq.Enumerable));
         }
     }
 }
