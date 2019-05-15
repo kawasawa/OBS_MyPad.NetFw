@@ -806,10 +806,11 @@
 
         <!-- オーバーレイ -->
         <Border d:IsHidden="True" Style="{StaticResource Common.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsWorking}}">
-            <Grid ge:GridEx.RowDefinition="Auto, 30, Auto">
+            <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="{StaticResource Const.Gap1W}">
                 <TextBlock Text="{Binding Resources.Message_Working, Source={x:Static models:ResourceService.Instance}}"/>
-                <m:ProgressRing Grid.Row="2"/>
-            </Grid>
+                <Border Height="{StaticResource Const.Gap2}"/>
+                <m:ProgressRing/>
+            </StackPanel>
         </Border>
     </Grid>
 
