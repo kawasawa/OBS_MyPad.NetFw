@@ -297,16 +297,35 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="Common.CircleButton" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource MetroCircleButtonStyle}">
+    <Style x:Key="Common.CircleButton" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
         <Setter Property="Width" Value="50"/>
         <Setter Property="Height" Value="50"/>
-        <Setter Property="Margin" Value="5"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxPopupBorderBrush}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Foreground" Value="{DynamicResource SemiTransparentWhiteBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+        <Style.Resources>
+            <Style TargetType="{x:Type mi:PackIconModern}" BasedOn="{StaticResource Common.PackIconModernGrayMiddle}"/>
+            <Style TargetType="{x:Type mi:PackIconMaterial}" BasedOn="{StaticResource Common.PackIconMaterialGrayMiddle}"/>
+        </Style.Resources>
+    </Style>
+
+    <Style x:Key="Common.CircleToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource MahApps.Metro.Styles.MetroCircleToggleButtonStyle}">
+        <Setter Property="Width" Value="50"/>
+        <Setter Property="Height" Value="50"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxPopupBorderBrush}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource SemiTransparentWhiteBrush}"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Foreground" Value="White"/>
             </Trigger>
         </Style.Triggers>
         <Style.Resources>
