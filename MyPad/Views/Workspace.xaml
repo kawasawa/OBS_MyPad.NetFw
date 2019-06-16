@@ -55,7 +55,7 @@
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource MetroMenuItem}">
                             <Setter Property="Header" Value="{qc:MultiBinding '\'Window\-\' + $P0 + \': \' + $P1', P0={Binding Sequense}, P1={Binding ActiveEditor.FileName}}"/>
-                            <Setter Property="Command" Value="{Binding ActivateCommand}"/>
+                            <Setter Property="Command" Value="{Binding ActivateEditorCommand}"/>
                         </Style>
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>

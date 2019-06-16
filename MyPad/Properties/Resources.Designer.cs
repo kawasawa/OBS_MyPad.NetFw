@@ -251,6 +251,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   List of editors に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Editors {
+            get {
+                return ResourceManager.GetString("Command_Editors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Encoding に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Encoding {
@@ -737,20 +746,20 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   List of tabs に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Command_TabList {
-            get {
-                return ResourceManager.GetString("Command_TabList", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Terminal に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Terminal {
             get {
                 return ResourceManager.GetString("Command_Terminal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   List of terminals に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Terminals {
+            get {
+                return ResourceManager.GetString("Command_Terminals", resourceCulture);
             }
         }
         
@@ -1134,6 +1143,15 @@ namespace MyPad.Properties {
         public static string Label_Opacity {
             get {
                 return ResourceManager.GetString("Label_Opacity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Other に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_Other {
+            get {
+                return ResourceManager.GetString("Label_Other", resourceCulture);
             }
         }
         

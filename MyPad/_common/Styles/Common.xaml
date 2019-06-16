@@ -62,23 +62,30 @@
     ************************************************************
     -->
 
-    <s:Double x:Key="Const.Gap0">0.0</s:Double>
-    <s:Double x:Key="Const.Gap1">5.0</s:Double>
-    <s:Double x:Key="Const.Gap2">10.0</s:Double>
-    <s:Double x:Key="Const.Scale">1.2</s:Double>
     <s:Double x:Key="Const.Opacity1">0.95</s:Double>
     <s:Double x:Key="Const.Opacity2">0.90</s:Double>
     <s:Double x:Key="Const.Opacity3">0.85</s:Double>
     <s:Double x:Key="Const.Opacity4">0.80</s:Double>
-    <Thickness x:Key="Const.Gap1W"   Left="{StaticResource Const.Gap1}" Top="{StaticResource Const.Gap0}" Right="{StaticResource Const.Gap1}" Bottom="{StaticResource Const.Gap0}"/>
-    <Thickness x:Key="Const.Gap1H"   Left="{StaticResource Const.Gap0}" Top="{StaticResource Const.Gap1}" Right="{StaticResource Const.Gap0}" Bottom="{StaticResource Const.Gap1}"/>
+    <s:Double x:Key="Const.Opacity5">0.75</s:Double>
+    <s:Double x:Key="Const.Opacity6">0.70</s:Double>
+    <s:Double x:Key="Const.Opacity7">0.65</s:Double>
+    <s:Double x:Key="Const.Opacity8">0.60</s:Double>
+    <s:Double x:Key="Const.Opacity9">0.55</s:Double>
+    <s:Double x:Key="Const.OpacityH">0.50</s:Double>
+
+    <s:Double x:Key="Const.Gap1">5.0</s:Double>
+    <s:Double x:Key="Const.Gap2">10.0</s:Double>
+    <Thickness x:Key="Const.Gap1W"   Left="{StaticResource Const.Gap1}" Top="0.0"                         Right="{StaticResource Const.Gap1}" Bottom="0.0"                        />
+    <Thickness x:Key="Const.Gap1H"   Left="0.0"                         Top="{StaticResource Const.Gap1}" Right="0.0"                         Bottom="{StaticResource Const.Gap1}"/>
     <Thickness x:Key="Const.Gap1W1H" Left="{StaticResource Const.Gap1}" Top="{StaticResource Const.Gap1}" Right="{StaticResource Const.Gap1}" Bottom="{StaticResource Const.Gap1}"/>
-    <Thickness x:Key="Const.Gap2W"   Left="{StaticResource Const.Gap2}" Top="{StaticResource Const.Gap0}" Right="{StaticResource Const.Gap2}" Bottom="{StaticResource Const.Gap0}"/>
-    <Thickness x:Key="Const.Gap2H"   Left="{StaticResource Const.Gap0}" Top="{StaticResource Const.Gap2}" Right="{StaticResource Const.Gap0}" Bottom="{StaticResource Const.Gap2}"/>
+    <Thickness x:Key="Const.Gap2W"   Left="{StaticResource Const.Gap2}" Top="0.0"                         Right="{StaticResource Const.Gap2}" Bottom="0.0"                        />
+    <Thickness x:Key="Const.Gap2H"   Left="0.0"                         Top="{StaticResource Const.Gap2}" Right="0.0"                         Bottom="{StaticResource Const.Gap2}"/>
     <Thickness x:Key="Const.Gap1W2H" Left="{StaticResource Const.Gap1}" Top="{StaticResource Const.Gap2}" Right="{StaticResource Const.Gap1}" Bottom="{StaticResource Const.Gap2}"/>
     <Thickness x:Key="Const.Gap2W1H" Left="{StaticResource Const.Gap2}" Top="{StaticResource Const.Gap1}" Right="{StaticResource Const.Gap2}" Bottom="{StaticResource Const.Gap1}"/>
     <Thickness x:Key="Const.Gap2W2H" Left="{StaticResource Const.Gap2}" Top="{StaticResource Const.Gap2}" Right="{StaticResource Const.Gap2}" Bottom="{StaticResource Const.Gap2}"/>
-    <ScaleTransform x:Key="Const.ScaleTransform" ScaleX="{StaticResource Const.Scale}" ScaleY="{StaticResource Const.Scale}"/>
+
+    <ScaleTransform x:Key="Const.ScaleTransform1" ScaleX="1.1" ScaleY="1.1"/>
+    <ScaleTransform x:Key="Const.ScaleTransform2" ScaleX="1.2" ScaleY="1.2"/>
 
 
 
@@ -145,7 +152,7 @@
         <Setter Property="CalendarStyle">
             <Setter.Value>
                 <Style TargetType="{x:Type Calendar}" BasedOn="{StaticResource MetroCalendar}">
-                    <Setter Property="LayoutTransform" Value="{StaticResource Const.ScaleTransform}"/>
+                    <Setter Property="LayoutTransform" Value="{StaticResource Const.ScaleTransform2}"/>
                 </Style>
             </Setter.Value>
         </Setter>
@@ -217,14 +224,14 @@
     </Style>
 
     <Style x:Key="Default.CheckBox" TargetType="{x:Type CheckBox}" BasedOn="{StaticResource MetroCheckBox}">
-        <Setter Property="LayoutTransform" Value="{StaticResource Const.ScaleTransform}"/>
+        <Setter Property="LayoutTransform" Value="{StaticResource Const.ScaleTransform2}"/>
         <Setter Property="Margin" Value="{StaticResource Const.Gap1W}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
         <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{DynamicResource AccentColorBrush2}"/>
     </Style>
 
     <Style x:Key="Default.RadioButton" TargetType="{x:Type RadioButton}" BasedOn="{StaticResource MetroRadioButton}">
-        <Setter Property="LayoutTransform" Value="{StaticResource Const.ScaleTransform}"/>
+        <Setter Property="LayoutTransform" Value="{StaticResource Const.ScaleTransform2}"/>
         <Setter Property="Margin" Value="{StaticResource Const.Gap1W}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
         <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{DynamicResource AccentColorBrush2}"/>
@@ -298,8 +305,8 @@
     </Style>
 
     <Style x:Key="Common.CircleButton" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
-        <Setter Property="Width" Value="50"/>
-        <Setter Property="Height" Value="50"/>
+        <Setter Property="Width" Value="40"/>
+        <Setter Property="Height" Value="40"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxPopupBorderBrush}"/>
@@ -315,8 +322,9 @@
     </Style>
 
     <Style x:Key="Common.CircleToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource MahApps.Metro.Styles.MetroCircleToggleButtonStyle}">
-        <Setter Property="Width" Value="50"/>
-        <Setter Property="Height" Value="50"/>
+        <Setter Property="Width" Value="40"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Foreground" Value="{DynamicResource GrayBrush3}"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxPopupBorderBrush}"/>
@@ -415,6 +423,7 @@
         <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="Focusable" Value="False"/>
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
     </Style>
 
     <Style x:Key="Default.TabItem" TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
@@ -513,6 +522,7 @@
     <Style x:Key="Default.HamburgerMenu" TargetType="{x:Type m:HamburgerMenu}" BasedOn="{StaticResource {x:Type m:HamburgerMenu}}">
         <Setter Property="Foreground" Value="{DynamicResource BlackColorBrush}"/>
         <Setter Property="PaneBackground" Value="{x:Null}"/>
+        <Setter Property="IsTabStop" Value="False"/>
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource HamburgerMenuItemStyle}">
@@ -677,18 +687,16 @@
     <Style x:Key="Default.Menu" TargetType="{x:Type Menu}" BasedOn="{StaticResource {x:Type Menu}}">
         <Setter Property="Background" Value="{DynamicResource LightBackground}"/>
         <Setter Property="Opacity" Value="{StaticResource Const.Opacity1}"/>
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
         <Style.Resources>
             <SolidColorBrush x:Key="MenuBorderBrush" Color="{DynamicResource Gray2}"/>
             <SolidColorBrush x:Key="SubMenuBorderBrush" Color="{DynamicResource Gray2}"/>
-            <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource Default.MenuItem}"/>
         </Style.Resources>
     </Style>
 
     <Style x:Key="Default.ToolBar" TargetType="{x:Type ToolBar}" BasedOn="{StaticResource {x:Type ToolBar}}">
         <Setter Property="ToolBarTray.IsLocked" Value="True"/>
-        <Style.Resources>
-            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Common.ToolButton}"/>
-        </Style.Resources>
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
     </Style>
 
     <Style x:Key="Common.Window" TargetType="{x:Type m:MetroWindow}" BasedOn="{StaticResource {x:Type m:MetroWindow}}">

@@ -29,40 +29,35 @@ namespace MyPad.Views
             _Separater_ = 10,
         }
 
-        public readonly static ICommand ActivateTerminal
-            = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.OemTilde, ModifierKeys.Control, "Ctrl+@") });
-        public readonly static ICommand ActivateProperty
-            = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.P, ModifierKeys.Control | ModifierKeys.Shift) });
-        public readonly static ICommand ActivateClipboardHistory
-            = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.C, ModifierKeys.Control | ModifierKeys.Shift) });
-
+        private HwndSource _handleSource;
         private User32_Gdi.MENUITEMINFO _lpmiiShowMenuBar;
         private User32_Gdi.MENUITEMINFO _lpmiiShowToolBar;
         private User32_Gdi.MENUITEMINFO _lpmiiShowSideBar;
         private User32_Gdi.MENUITEMINFO _lpmiiShowStatusBar;
-        private HwndSource _handleSource;
+
+        public static readonly ICommand SwitchFocus
+            = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.F6, ModifierKeys.None, "F6") });
+        public static readonly ICommand ActivateTerminal
+            = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.OemTilde, ModifierKeys.Control, "Ctrl+@") });
+        public static readonly ICommand ActivateProperty
+            = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.P, ModifierKeys.Control | ModifierKeys.Shift) });
+        public static readonly ICommand ActivateClipboardHistory
+            = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.C, ModifierKeys.Control | ModifierKeys.Shift) });
+
+        private static readonly DependencyProperty IsVisibleTerminalContentProperty
+            = Interactor.RegisterDependencyProperty();
+
+        public bool IsVisibleTerminalContent
+        {
+            get => (bool)this.GetValue(IsVisibleTerminalContentProperty);
+            set => this.SetValue(IsVisibleTerminalContentProperty, value);
+        }
 
         private TextEditor ActiveTextEditor
-        {
-            get
-            {
-                try
-                {
-                    // HACK: 選択されたタブ内のコントロールを取得
-                    // ItemsSource を使用する (具体的には ViewModel 等をバインドする) 場合、
-                    // Item に関係するあらゆるプロパティに上記の要素の参照が設定されるため、
-                    // 子要素の UIElement のインスタンスを直接取得する方法が無い。(仕様)
-                    // 親要素の VisualTree をたどり ContentPreseneter を取得し、内包する UIElement を要素名から探す。
-                    // ただし VisualTree からは一度も描画されていないエレメントを取得できないため注意が必要。
-                    var presenter = this.TabControl.GetVisualChild<ContentPresenter>(this.TabControl.SelectedIndex);
-                    return presenter?.ContentTemplate?.FindName("TextEditor", presenter) as TextEditor;
-                }
-                catch
-                {
-                    return null;
-                }
-            }
-        }
+            => this.GetTextEditor(this.TextEditorTabControl.SelectedIndex);
+
+        private ComboBox ActiveCommandBox
+            => this.GetCommandBox(this.TerminalTabControl.SelectedIndex);
 
         private ComboBox ActiveStatusComboBox
         {
@@ -78,7 +73,6 @@ namespace MyPad.Views
         }
 
         public MainWindowViewModel ViewModel => this.DataContext as MainWindowViewModel;
-
         public IInterTabClient InterTabClient { get; } = new MainWindowInterTabClient();
         public ICSharpCode.AvalonEdit.Search.Localization Localization { get; } = new LocalizationWrapper();
         public bool RestorePlacement { get; set; } = true;
@@ -87,22 +81,26 @@ namespace MyPad.Views
         {
             this.InitializeComponent();
 
-            this.CommandBindings.Add(new CommandBinding(ActivateTerminal, (sender, e) => this.ActivateHamburgerMenuItem(this.TerminalItem)));
+            this.CommandBindings.Add(new CommandBinding(SwitchFocus, (sender, e) => this.SwitchActiveContent()));
+            this.CommandBindings.Add(new CommandBinding(ActivateTerminal, (sender, e) => this.SwitchTerminalVisibility()));
             this.CommandBindings.Add(new CommandBinding(ActivateProperty, (sender, e) => this.ActivateHamburgerMenuItem(this.PropertyItem)));
             this.CommandBindings.Add(new CommandBinding(ActivateClipboardHistory, (sender, e) => this.ActivateHamburgerMenuItem(this.ClipboardItem)));
 
             this.DataContextChanged += this.Window_DataContextChanged;
             this.Loaded += this.Window_Loaded;
             this.Closed += this.Window_Closed;
-            ((Style)this.TabControl.Resources["__TextEditor"]).Setters.Add(new EventSetter() { Event = PreviewKeyDownEvent, Handler = new KeyEventHandler(this.TextEditor_PreviewKeyDown) });
-            ((Style)this.TabControl.Resources["__DragablzItem"]).Setters.Add(new EventSetter() { Event = PreviewMouseRightButtonDownEvent, Handler = new MouseButtonEventHandler(this.TabItem_PreviewMouseRightButtonDown) });
-            ((Style)this.HamburgerMenu.Resources["__ClipboardItem"]).Setters.Add(new EventSetter() { Event = PreviewMouseDoubleClickEvent, Handler = new MouseButtonEventHandler(this.ClipboardItems_PreviewMouseDoubleClick) });
+            ((Style)this.HamburgerMenu.Resources["__ClipboardItem"]).Setters.Add(new EventSetter() { Event = PreviewMouseDoubleClickEvent, Handler = new MouseButtonEventHandler(this.ClipboardItem_PreviewMouseDoubleClick) });
+            ((Style)this.TerminalTabControl.Resources["__TerminalTabItem"]).Setters.Add(new EventSetter() { Event = PreviewMouseRightButtonDownEvent, Handler = new MouseButtonEventHandler(this.TabItem_PreviewMouseRightButtonDown) });
+            ((Style)this.TextEditorTabControl.Resources["__TextEditorTabItem"]).Setters.Add(new EventSetter() { Event = PreviewMouseRightButtonDownEvent, Handler = new MouseButtonEventHandler(this.TabItem_PreviewMouseRightButtonDown) });
+            ((Style)this.TextEditorTabControl.Resources["__TextEditor"]).Setters.Add(new EventSetter() { Event = PreviewKeyDownEvent, Handler = new KeyEventHandler(this.TextEditor_PreviewKeyDown) });
             this.HamburgerMenu.ItemClick += this.HamburgerMenu_ItemClick;
-            this.TabControl.SelectionChanged += this.TabControl_SelectionChanged;
-            this.Flyouts.Items.Cast<Flyout>().ForEach(item => item.IsOpenChanged += this.Flyout_IsOpenChanged);
-            this.GoToLineInput.ValueChanged += this.GoToLineInput_ValueChanged;
+            this.ContentSplitter.DragCompleted += this.ContentSplitter_DragCompleted;
+            this.TextEditorTabControl.SelectionChanged += this.TextEditorTabControl_SelectionChanged;
+            this.TerminalTabControl.SelectionChanged += this.TerminalTabControl_SelectionChanged; ;
             this.EncodingComboBox.SelectionChanged += this.StatusComboBox_SelectionChanged;
             this.LanguageComboBox.SelectionChanged += this.StatusComboBox_SelectionChanged;
+            this.GoToLineInput.ValueChanged += this.GoToLineInput_ValueChanged;
+            this.Flyouts.Items.Cast<Flyout>().ForEach(item => item.IsOpenChanged += this.Flyout_IsOpenChanged);
         }
 
         private void Window_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -117,47 +115,6 @@ namespace MyPad.Views
         {
             ((ViewModelBase)sender).Disposed -= this.ViewModel_Disposed;
             this.Dispatcher.InvokeAsync(() => this.Close(), DispatcherPriority.ApplicationIdle);
-        }
-
-        private IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-        {
-            switch ((User32_Gdi.WindowMessage)msg)
-            {
-                case User32_Gdi.WindowMessage.WM_INITMENUPOPUP:
-                    {
-                        var settings = SettingsService.Instance.Window;
-                        var hMenu = User32_Gdi.GetSystemMenu(this._handleSource.Handle, false);
-                        this._lpmiiShowMenuBar.dwTypeData.Assign(Properties.Resources.Command_ShowMenuBar);
-                        this._lpmiiShowToolBar.dwTypeData.Assign(Properties.Resources.Command_ShowToolBar);
-                        this._lpmiiShowSideBar.dwTypeData.Assign(Properties.Resources.Command_ShowSideBar);
-                        this._lpmiiShowStatusBar.dwTypeData.Assign(Properties.Resources.Command_ShowStatusBar);
-                        this._lpmiiShowMenuBar.fState = settings.ShowMenuBar ? User32_Gdi.MenuItemState.MFS_CHECKED : User32_Gdi.MenuItemState.MFS_ENABLED;
-                        this._lpmiiShowToolBar.fState = settings.ShowToolBar ? User32_Gdi.MenuItemState.MFS_CHECKED : User32_Gdi.MenuItemState.MFS_ENABLED;
-                        this._lpmiiShowSideBar.fState = settings.ShowSideBar ? User32_Gdi.MenuItemState.MFS_CHECKED : User32_Gdi.MenuItemState.MFS_ENABLED;
-                        this._lpmiiShowStatusBar.fState = settings.ShowStatusBar ? User32_Gdi.MenuItemState.MFS_CHECKED : User32_Gdi.MenuItemState.MFS_ENABLED;
-                        User32_Gdi.SetMenuItemInfo(hMenu, (uint)SystemMenuIndex.ShowMenuBar, true, in this._lpmiiShowMenuBar);
-                        User32_Gdi.SetMenuItemInfo(hMenu, (uint)SystemMenuIndex.ShowToolBar, true, in this._lpmiiShowToolBar);
-                        User32_Gdi.SetMenuItemInfo(hMenu, (uint)SystemMenuIndex.ShowSideBar, true, in this._lpmiiShowSideBar);
-                        User32_Gdi.SetMenuItemInfo(hMenu, (uint)SystemMenuIndex.ShowStatusBar, true, in this._lpmiiShowStatusBar);
-                        break;
-                    }
-
-                case User32_Gdi.WindowMessage.WM_SYSCOMMAND:
-                    {
-                        var settings = SettingsService.Instance.Window;
-                        var wID = wParam.ToInt32();
-                        if (this._lpmiiShowMenuBar.wID == wID)
-                            settings.ShowMenuBar = !settings.ShowMenuBar;
-                        if (this._lpmiiShowToolBar.wID == wID)
-                            settings.ShowToolBar = !settings.ShowToolBar;
-                        if (this._lpmiiShowSideBar.wID == wID)
-                            settings.ShowSideBar = !settings.ShowSideBar;
-                        if (this._lpmiiShowStatusBar.wID == wID)
-                            settings.ShowStatusBar = !settings.ShowStatusBar;
-                        break;
-                    }
-            }
-            return IntPtr.Zero;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -228,6 +185,20 @@ namespace MyPad.Views
             }
         }
 
+        private void ClipboardItem_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var text = ((ListBoxItem)sender).Content.ToString();
+            if (string.IsNullOrEmpty(text) == false)
+                this.ActiveTextEditor?.TextArea.Selection.ReplaceSelectionWithText(text);
+            this.ActiveTextEditor?.ScrollToCaret();
+            this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus(), DispatcherPriority.Input);
+        }
+
+        private void TabItem_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ((DragablzItem)sender).GetParent<DraggableTabControl>().SelectedItem = ((DragablzItem)sender).Content;
+        }
+
         private void TextEditor_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key)
@@ -255,38 +226,28 @@ namespace MyPad.Views
             }
         }
 
-        private void ClipboardItems_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void ContentSplitter_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
         {
-            var text = ((ListBoxItem)sender).Content.ToString();
-            if (string.IsNullOrEmpty(text) == false)
-                this.ActiveTextEditor?.TextArea.Selection.ReplaceSelectionWithText(text);
-            this.ActiveTextEditor?.ScrollToCaret();
-            this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus(), DispatcherPriority.Input);
-        }
-
-        private void TabItem_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            this.TabControl.SelectedItem = ((DragablzItem)sender).Content;
-        }
-
-        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus(), DispatcherPriority.Input);
-        }
-
-        private void Flyout_IsOpenChanged(object sender, RoutedEventArgs e)
-        {
-            if ((sender as Flyout)?.IsOpen == false)
-                this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus(), DispatcherPriority.Input);
-        }
-
-        private void GoToLineInput_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
-        {
-            if (this.GoToLineFlyout.IsOpen && e.NewValue.HasValue)
+            if (this.ToolContentRow.Height.Value == 0)
             {
-                this.ActiveTextEditor.Line = (int)e.NewValue.Value;
-                this.ActiveTextEditor.ScrollToCaret();
+                this.IsVisibleTerminalContent = !this.IsVisibleTerminalContent;
+                this.ToolContentRow.Height = new GridLength(100, GridUnitType.Star);
             }
+        }
+
+        private void TextEditorTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.Source != e.OriginalSource)
+                return;
+            this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus(), DispatcherPriority.Input);
+        }
+
+        private void TerminalTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // HACK: ComboBox.SelectionChanged が伝播してくるためイベントの発生源を確認
+            if (e.Source != e.OriginalSource)
+                return;
+            this.Dispatcher.InvokeAsync(() => this.ActiveCommandBox?.Focus(), DispatcherPriority.Input);
         }
 
         private void StatusComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -313,6 +274,53 @@ namespace MyPad.Views
             this.ViewModel.ReloadCommand.Execute(new Tuple<Encoding, string>(encoding, language));
         }
 
+        private void GoToLineInput_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            if (this.GoToLineFlyout.IsOpen && e.NewValue.HasValue)
+            {
+                this.ActiveTextEditor.Line = (int)e.NewValue.Value;
+                this.ActiveTextEditor.ScrollToCaret();
+            }
+        }
+
+        private void Flyout_IsOpenChanged(object sender, RoutedEventArgs e)
+        {
+            if ((sender as Flyout)?.IsOpen == false)
+                this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus(), DispatcherPriority.Input);
+        }
+
+        private TextEditor GetTextEditor(int index)
+        {
+            try
+            {
+                // HACK: 選択されたタブ内のコントロールを取得
+                // ItemsSource を使用する (具体的には ViewModel 等をバインドする) 場合、
+                // Item に関係するあらゆるプロパティに上記の要素の参照が設定されるため、
+                // 子要素の UIElement のインスタンスを直接取得する方法が無い。(仕様)
+                // 親要素の VisualTree をたどり ContentPreseneter を取得し、内包する UIElement を要素名から探す。
+                // ただし VisualTree からは一度も描画されていないエレメントを取得できないため注意が必要。
+                var presenter = this.TextEditorTabControl.GetChild<ContentPresenter>(index);
+                return presenter?.ContentTemplate?.FindName("TextEditor", presenter) as TextEditor;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private ComboBox GetCommandBox(int index)
+        {
+            try
+            {
+                var presenter = this.TerminalTabControl.GetChild<ContentPresenter>(index);
+                return presenter?.ContentTemplate?.FindName("CommandBox", presenter) as ComboBox;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         private void ActivateHamburgerMenuItem(object targetItem)
         {
             this.Dispatcher.InvokeAsync(() =>
@@ -329,6 +337,72 @@ namespace MyPad.Views
                     this.HamburgerMenuColumn.Width = GridLength.Auto;
                 },
                 DispatcherPriority.ApplicationIdle);
+        }
+
+        private void SwitchActiveContent()
+        {
+            if (Keyboard.FocusedElement != this.ActiveTextEditor?.TextArea)
+                this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus(), DispatcherPriority.Input);
+            else
+                this.Dispatcher.InvokeAsync(() => this.ActiveCommandBox?.Focus(), DispatcherPriority.Input);
+        }
+
+        private void SwitchTerminalVisibility()
+        {
+            if (Keyboard.FocusedElement != this.ActiveCommandBox?.Template.FindName("PART_EditableTextBox", this.ActiveCommandBox) as TextBox)
+            {
+                this.IsVisibleTerminalContent = true;
+                if (this.ViewModel.Terminals.Any() == false)
+                    this.ViewModel.AddTerminalCommand.Execute(null);
+                else
+                    this.Dispatcher.InvokeAsync(() => this.ActiveCommandBox?.Focus(), DispatcherPriority.Input);
+            }
+            else
+            {
+                this.IsVisibleTerminalContent = false;
+                this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus(), DispatcherPriority.Input);
+            }
+        }
+
+        private IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            switch ((User32_Gdi.WindowMessage)msg)
+            {
+                case User32_Gdi.WindowMessage.WM_INITMENUPOPUP:
+                {
+                    var settings = SettingsService.Instance.Window;
+                    var hMenu = User32_Gdi.GetSystemMenu(this._handleSource.Handle, false);
+                    this._lpmiiShowMenuBar.dwTypeData.Assign(Properties.Resources.Command_ShowMenuBar);
+                    this._lpmiiShowToolBar.dwTypeData.Assign(Properties.Resources.Command_ShowToolBar);
+                    this._lpmiiShowSideBar.dwTypeData.Assign(Properties.Resources.Command_ShowSideBar);
+                    this._lpmiiShowStatusBar.dwTypeData.Assign(Properties.Resources.Command_ShowStatusBar);
+                    this._lpmiiShowMenuBar.fState = settings.ShowMenuBar ? User32_Gdi.MenuItemState.MFS_CHECKED : User32_Gdi.MenuItemState.MFS_ENABLED;
+                    this._lpmiiShowToolBar.fState = settings.ShowToolBar ? User32_Gdi.MenuItemState.MFS_CHECKED : User32_Gdi.MenuItemState.MFS_ENABLED;
+                    this._lpmiiShowSideBar.fState = settings.ShowSideBar ? User32_Gdi.MenuItemState.MFS_CHECKED : User32_Gdi.MenuItemState.MFS_ENABLED;
+                    this._lpmiiShowStatusBar.fState = settings.ShowStatusBar ? User32_Gdi.MenuItemState.MFS_CHECKED : User32_Gdi.MenuItemState.MFS_ENABLED;
+                    User32_Gdi.SetMenuItemInfo(hMenu, (uint)SystemMenuIndex.ShowMenuBar, true, in this._lpmiiShowMenuBar);
+                    User32_Gdi.SetMenuItemInfo(hMenu, (uint)SystemMenuIndex.ShowToolBar, true, in this._lpmiiShowToolBar);
+                    User32_Gdi.SetMenuItemInfo(hMenu, (uint)SystemMenuIndex.ShowSideBar, true, in this._lpmiiShowSideBar);
+                    User32_Gdi.SetMenuItemInfo(hMenu, (uint)SystemMenuIndex.ShowStatusBar, true, in this._lpmiiShowStatusBar);
+                    break;
+                }
+
+                case User32_Gdi.WindowMessage.WM_SYSCOMMAND:
+                {
+                    var settings = SettingsService.Instance.Window;
+                    var wID = wParam.ToInt32();
+                    if (this._lpmiiShowMenuBar.wID == wID)
+                        settings.ShowMenuBar = !settings.ShowMenuBar;
+                    if (this._lpmiiShowToolBar.wID == wID)
+                        settings.ShowToolBar = !settings.ShowToolBar;
+                    if (this._lpmiiShowSideBar.wID == wID)
+                        settings.ShowSideBar = !settings.ShowSideBar;
+                    if (this._lpmiiShowStatusBar.wID == wID)
+                        settings.ShowStatusBar = !settings.ShowStatusBar;
+                    break;
+                }
+            }
+            return IntPtr.Zero;
         }
 
         public class MainWindowInterTabClient : IInterTabClient
@@ -356,7 +430,7 @@ namespace MyPad.Views
                     view.PreviewMouseLeftButtonUp += View_MoveEnd;
                     view.Closed += View_MoveEnd;
                 }
-                return new NewTabHost<Window>(view, view.TabControl);
+                return new NewTabHost<Window>(view, view.TextEditorTabControl);
             }
 
 

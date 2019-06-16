@@ -88,6 +88,18 @@
         <Style TargetType="{x:Type StatusBar}" BasedOn="{StaticResource Default.StatusBar}">
             <Setter Property="Visibility" Value="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding Window.ShowStatusBar, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}}"/>
         </Style>
+        <Style x:Key="IconButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Buton}">
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Padding" Value="2"/>
+        </Style>
+        <Style x:Key="ReadOnlyTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="VerticalContentAlignment" Value="Top"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+        </Style>
         <ContextMenu x:Key="ContextMenu">
             <MenuItem IsCheckable="True" IsChecked="{Binding Window.ShowMenuBar, Source={x:Static models:SettingsService.Instance}, Mode=TwoWay}" Header="{Binding Resources.Command_ShowMenuBar, Source={x:Static models:ResourceService.Instance}}"/>
             <MenuItem IsCheckable="True" IsChecked="{Binding Window.ShowToolBar, Source={x:Static models:SettingsService.Instance}, Mode=TwoWay}" Header="{Binding Resources.Command_ShowToolBar, Source={x:Static models:ResourceService.Instance}}"/>
@@ -124,12 +136,12 @@
 
             <!-- 共通キーバインディング -->
             <Grid.InputBindings>
-                <KeyBinding Command="{Binding AddCommand}"     Key="N"  Modifiers="Ctrl"/>
+                <KeyBinding Command="{Binding AddEditorCommand}"     Key="N"  Modifiers="Ctrl"/>
                 <KeyBinding Command="{Binding OpenCommand}"    Key="O"  Modifiers="Ctrl"/>
                 <KeyBinding Command="{Binding SaveCommand}"    Key="S"  Modifiers="Ctrl"/>
                 <KeyBinding Command="{Binding SaveAsCommand}"  Key="S"  Modifiers="Ctrl+Shift"/>
                 <KeyBinding Command="{Binding SaveAllCommand}" Key="K"  Modifiers="Ctrl+Shift"/>
-                <KeyBinding Command="{Binding CloseCommand}"   Key="F4" Modifiers="Ctrl"/>
+                <KeyBinding Command="{Binding CloseEditorCommand}"   Key="F4" Modifiers="Ctrl"/>
                 <KeyBinding Command="{Binding AddWindowCommand,      Source={x:Static viewModels:WorkspaceViewModel.Instance}}" Key="N"  Modifiers="Ctrl+Shift"/>
                 <KeyBinding Command="{Binding CloseAllWindowCommand, Source={x:Static viewModels:WorkspaceViewModel.Instance}}" Key="F4" Modifiers="Ctrl+Alt"/>
             </Grid.InputBindings>
@@ -137,7 +149,7 @@
             <!-- メニューバー -->
             <Menu Grid.Row="0">
                 <MenuItem Header="{Binding Resources.Command_File, Source={x:Static models:ResourceService.Instance}}">
-                    <MenuItem Command="{Binding AddCommand}" Header="{Binding Resources.Command_New, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Ctrl+N">
+                    <MenuItem Command="{Binding AddEditorCommand}" Header="{Binding Resources.Command_New, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Ctrl+N">
                         <MenuItem.Icon>
                             <mi:Modern Kind="PageNew"/>
                         </MenuItem.Icon>
@@ -273,6 +285,37 @@
                     </MenuItem>
                 </MenuItem>
                 <MenuItem Header="{Binding Resources.Command_View, Source={x:Static models:ResourceService.Instance}}">
+                    <MenuItem Command="{x:Static views:MainWindow.ActivateProperty}" Header="{Binding Resources.Command_Property, Source={x:Static models:ResourceService.Instance}}">
+                        <MenuItem.Icon>
+                            <mi:Material Kind="File"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Command="{x:Static views:MainWindow.ActivateClipboardHistory}" Header="{Binding Resources.Command_ClipboardHistory, Source={x:Static models:ResourceService.Instance}}">
+                        <MenuItem.Icon>
+                            <mi:Modern Kind="Clipboard"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator/>
+                    <MenuItem Command="{x:Static views:MainWindow.ActivateTerminal}" Header="{Binding Resources.Command_Terminal, Source={x:Static models:ResourceService.Instance}}">
+                        <MenuItem.Icon>
+                            <mi:Material Kind="Console"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Command="{Binding AddTerminalCommand}" Header="{Binding Resources.Command_NewTerminal, Source={x:Static models:ResourceService.Instance}}" IsEnabled="{Binding IsVisibleTerminalContent, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" InputGestureText="Ctrl+Shift+@">
+                        <MenuItem.Icon>
+                            <mi:Modern Kind="New"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem ItemsSource="{Binding Terminals}" Header="{Binding Resources.Command_Terminals, Source={x:Static models:ResourceService.Instance}}" IsEnabled="{qc:MultiBinding '$P0.CompareTo(0) == 1 ## $P1', P0={Binding Terminals.Count}, P1={Binding IsVisibleTerminalContent, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}}">
+                        <MenuItem.ItemContainerStyle>
+                            <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource Default.MenuItem}">
+                                <Setter Property="Header" Value="{Binding TerminalName}"/>
+                                <Setter Property="Command" Value="{Binding DataContext.ActivateTerminalCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
+                                <Setter Property="CommandParameter" Value="{Binding}"/>
+                            </Style>
+                        </MenuItem.ItemContainerStyle>
+                    </MenuItem>
+                    <Separator/>
                     <MenuItem Command="{Binding MergeWindowsCommand, Source={x:Static viewModels:WorkspaceViewModel.Instance}}" Header="{Binding Resources.Command_MergeWindows, Source={x:Static models:ResourceService.Instance}}">
                         <MenuItem.Icon>
                             <mi:Material Kind="VectorCombine"/>
@@ -282,35 +325,18 @@
                         <MenuItem.ItemContainerStyle>
                             <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource Default.MenuItem}">
                                 <Setter Property="Header" Value="{qc:MultiBinding '\'Window\-\' + $P0 + \': \' + $P1', P0={Binding Sequense}, P1={Binding ActiveEditor.FileName}}"/>
-                                <Setter Property="Command" Value="{Binding ActivateCommand}"/>
+                                <Setter Property="Command" Value="{Binding ActivateEditorCommand}"/>
                             </Style>
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>
-                    <MenuItem ItemsSource="{Binding Editors}" Header="{Binding Resources.Command_TabList, Source={x:Static models:ResourceService.Instance}}" IsEnabled="{qc:Binding '$P.CompareTo(0) == 1', P={Binding Editors.Count}}">
+                    <MenuItem ItemsSource="{Binding Editors}" Header="{Binding Resources.Command_Editors, Source={x:Static models:ResourceService.Instance}}" IsEnabled="{qc:Binding '$P.CompareTo(0) == 1', P={Binding Editors.Count}}">
                         <MenuItem.ItemContainerStyle>
                             <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource Default.MenuItem}">
                                 <Setter Property="Header" Value="{Binding FileName}"/>
-                                <Setter Property="Command" Value="{Binding DataContext.ActivateCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
+                                <Setter Property="Command" Value="{Binding DataContext.ActivateEditorCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
                                 <Setter Property="CommandParameter" Value="{Binding}"/>
                             </Style>
                         </MenuItem.ItemContainerStyle>
-                    </MenuItem>
-                    <MenuItem Header="{Binding Resources.Command_ShowSideBar, Source={x:Static models:ResourceService.Instance}}">
-                        <MenuItem Command="{x:Static views:MainWindow.ActivateTerminal}" Header="{Binding Resources.Command_Terminal, Source={x:Static models:ResourceService.Instance}}">
-                            <MenuItem.Icon>
-                                <mi:Material Kind="Console"/>
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <MenuItem Command="{x:Static views:MainWindow.ActivateProperty}" Header="{Binding Resources.Command_Property, Source={x:Static models:ResourceService.Instance}}">
-                            <MenuItem.Icon>
-                                <mi:Material Kind="File"/>
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <MenuItem Command="{x:Static views:MainWindow.ActivateClipboardHistory}" Header="{Binding Resources.Command_ClipboardHistory, Source={x:Static models:ResourceService.Instance}}">
-                            <MenuItem.Icon>
-                                <mi:Modern Kind="Clipboard"/>
-                            </MenuItem.Icon>
-                        </MenuItem>
                     </MenuItem>
                     <MenuItem Header="{Binding Resources.Command_Zoom, Source={x:Static models:ResourceService.Instance}}">
                         <MenuItem Command="components:TextEditorCommands.ZoomIn" Header="{Binding Resources.Command_ZoomIn, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Ctrl+Plus"/>
@@ -355,7 +381,7 @@
 
             <!-- ツールバー -->
             <ToolBar Grid.Row="1">
-                <Button Command="{Binding AddCommand}" ToolTip="{Binding Resources.Command_New, Source={x:Static models:ResourceService.Instance}}">
+                <Button Command="{Binding AddEditorCommand}" ToolTip="{Binding Resources.Command_New, Source={x:Static models:ResourceService.Instance}}">
                     <mi:Modern Kind="PageNew"/>
                 </Button>
                 <Button Command="{Binding OpenCommand}" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}}">
@@ -396,7 +422,7 @@
                 </Button>
             </ToolBar>
 
-            <!-- メインコンテンツ -->
+            <!-- コンテンツエリア -->
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition x:Name="HamburgerMenuColumn"
@@ -407,6 +433,7 @@
                     <ColumnDefinition Width="3*"/>
                 </Grid.ColumnDefinitions>
                 
+                <!-- ハンバーガーメニュー -->
                 <m:HamburgerMenu x:Name="HamburgerMenu" Grid.Column="0" Width="48" HamburgerWidth="48">
                     <i:Interaction.Triggers>
                         <ei:PropertyChangedTrigger Binding="{Binding Visibility, ElementName=HamburgerMenu}">
@@ -416,19 +443,6 @@
                     <m:HamburgerMenu.Resources>
                         <Style x:Key="__ClipboardItem" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource Default.ListBoxItem}">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        </Style>
-                        <Style x:Key="IconButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Buton}">
-                            <Setter Property="Width" Value="30"/>
-                            <Setter Property="Height" Value="30"/>
-                            <Setter Property="Padding" Value="2"/>
-                        </Style>
-                        <Style x:Key="ReadOnlyTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
-                            <Setter Property="IsReadOnly" Value="True"/>
-                            <Setter Property="IsTabStop" Value="False"/>
-                            <Setter Property="Focusable" Value="False"/>
-                            <Setter Property="VerticalContentAlignment" Value="Top"/>
-                            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-                            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
                         </Style>
                     </m:HamburgerMenu.Resources>
                     <m:HamburgerMenu.ItemTemplate>
@@ -448,46 +462,6 @@
                     </m:HamburgerMenu.ContentTemplate>
                     <m:HamburgerMenu.ItemsSource>
                         <m:HamburgerMenuItemCollection>
-                            <m:HamburgerMenuIconItem x:Name="TerminalItem" Label="{Binding Resources.Command_Terminal, Source={x:Static models:ResourceService.Instance}}">
-                                <m:HamburgerMenuIconItem.Icon>
-                                    <mi:Material Kind="Console"/>
-                                </m:HamburgerMenuIconItem.Icon>
-                                <m:HamburgerMenuIconItem.Tag>
-                                    <Grid ge:GridEx.RowDefinition="Auto, 5, *, Auto" DataContext="{Binding Data, Source={StaticResource Proxy}}">
-                                        <Grid.InputBindings>
-                                            <KeyBinding Command="{Binding AddTerminalCommand}" Key="OemTilde" Modifiers="Ctrl+Shift"/>
-                                        </Grid.InputBindings>
-                                        <Grid ge:GridEx.ColumnDefinition="*, 5, Auto, Auto">
-                                            <ComboBox Grid.Column="0" ItemsSource="{Binding Terminals}" SelectedItem="{Binding ActiveTerminal}" DisplayMemberPath="TerminalName"/>
-                                            <Button Grid.Column="2" Command="{Binding AddTerminalCommand}" ToolTip="{qc:Binding '$P + \' (Ctrl+Shift+@)\'', P={Binding Resources.Command_NewTerminal, Source={x:Static models:ResourceService.Instance}}}" Style="{StaticResource IconButton}">
-                                                <mi:Material Kind="Console"/>
-                                            </Button>
-                                            <Button Grid.Column="3" Command="{Binding CloseTerminalCommand}" ToolTip="{Binding Resources.Command_Close, Source={x:Static models:ResourceService.Instance}}" Style="{StaticResource IconButton}">
-                                                <mi:Material Kind="Close"/>
-                                            </Button>
-                                        </Grid>
-                                        <TextBox Grid.Row="2" Text="{Binding ActiveTerminal.DataLinesText, Mode=OneWay}" Style="{StaticResource ReadOnlyTextBox}">
-                                            <i:Interaction.Triggers>
-                                                <i:EventTrigger EventName="TextChanged">
-                                                    <mlwb:CallElementMethodAction MethodName="ScrollToEnd"/>
-                                                </i:EventTrigger>
-                                            </i:Interaction.Triggers>
-                                        </TextBox>
-                                        <Grid Grid.Row="3" ge:GridEx.ColumnDefinition="*, Auto">
-                                            <TextBox Grid.Column="0" Text="{Binding ActiveTerminal.Value, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{Binding Resources.Label_Command, Source={x:Static models:ResourceService.Instance}}">
-                                                <i:Interaction.Triggers>
-                                                    <ei:KeyTrigger ActiveOnFocus="True" Key="Return">
-                                                        <p:InvokeCommandAction Command="{Binding ActiveTerminal.SendValueCommand}"/>
-                                                    </ei:KeyTrigger>
-                                                </i:Interaction.Triggers>
-                                            </TextBox>
-                                            <Button Grid.Column="1" Command="{Binding ActiveTerminal.SendValueCommand}" ToolTip="{qc:Binding '$P + \' (Enter)\'', P={Binding Resources.Command_Execute, Source={x:Static models:ResourceService.Instance}}}" Style="{StaticResource IconButton}">
-                                                <mi:Material Kind="Play"/>
-                                            </Button>
-                                        </Grid>
-                                    </Grid>
-                                </m:HamburgerMenuIconItem.Tag>
-                            </m:HamburgerMenuIconItem>
                             <m:HamburgerMenuIconItem x:Name="PropertyItem" Label="{Binding Resources.Command_Property, Source={x:Static models:ResourceService.Instance}}">
                                 <m:HamburgerMenuIconItem.Icon>
                                     <mi:Material Kind="File"/>
@@ -525,8 +499,8 @@
                                     <mi:Modern Kind="Clipboard"/>
                                 </m:HamburgerMenuIconItem.Icon>
                                 <m:HamburgerMenuIconItem.Tag>
-                                    <Grid ge:GridEx.RowDefinition="Auto, 5, *(50-), Auto, 100(50-)">
-                                        <Grid ge:GridEx.ColumnDefinition="Auto, 5, Auto">
+                                    <Grid ge:GridEx.RowDefinition="Auto, 5, 3*(50-), Auto, *(50-)">
+                                        <Grid Grid.Row="0" ge:GridEx.ColumnDefinition="Auto, 5, Auto">
                                             <Button Grid.Column="0" Command="{Binding ClearClipboardItemCommand, Source={x:Static viewModels:WorkspaceViewModel.Instance}}" ToolTip="{Binding Resources.Command_Delete, Source={x:Static models:ResourceService.Instance}}" Style="{StaticResource IconButton}">
                                                 <mi:Material Kind="Broom"/>
                                             </Button>
@@ -550,220 +524,332 @@
                     </m:HamburgerMenu.ItemsSource>
                 </m:HamburgerMenu>
 
-                <GridSplitter Grid.Column="1" HorizontalAlignment="Center" Width="{qc:MultiBinding '$P0 ## double.IsNaN($P1) ? 10 : 0', P0={Binding Window.ShowSideBar, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}, P1={Binding Width, ElementName=HamburgerMenu, Mode=OneWay}}"/>
+                <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Width="{qc:MultiBinding '$P0 ## double.IsNaN($P1) ? 10 : 0', P0={Binding Window.ShowSideBar, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}, P1={Binding Width, ElementName=HamburgerMenu, Mode=OneWay}}"/>
 
-                <components:DraggableTabControl x:Name="TabControl" Grid.Column="2" ItemsSource="{Binding Editors}" SelectedItem="{Binding ActiveEditor}" NewItemFactory="{Binding EditorFactory}" ClosingItemCallback="{Binding ClosingContentHandler}">
-                    <dr:TabablzControl.InterTabController>
-                        <dr:InterTabController InterTabClient="{Binding InterTabClient, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
-                    </dr:TabablzControl.InterTabController>
-                    <dr:TabablzControl.Resources>
-                        <Style TargetType="{x:Type components:DraggableTabControl}" BasedOn="{StaticResource Default.TabablzControl}">
-                            <Style.Resources>
-                                <!-- MahApps との競合を解消 -->
-                                <Style TargetType="{x:Type ScrollViewer}"/>
-                            </Style.Resources>
-                            <Setter Property="IsHeaderPanelVisible"
-                                    Value="{qc:MultiBinding '$P0 || $P1.CompareTo(1) == 1 ? true : false',
-                                            P0={Binding Window.ShowSingleTab, Source={x:Static models:SettingsService.Instance}},
-                                            P1={Binding Items.Count, RelativeSource={RelativeSource Self}}}"/>
-                        </Style>
-                        <Style x:Key="__DragablzItem" TargetType="{x:Type dr:DragablzItem}" BasedOn="{StaticResource Default.DragablzItem}">
-                            <Setter Property="ToolTipService.IsEnabled" Value="{qc:Binding '!$P', P={Binding IsNewFile}}"/>
-                            <Setter Property="ToolTip" Value="{Binding FileName}"/>
-                            <Style.Triggers>
-                                <MultiDataTrigger>
-                                    <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding IsReadOnly}" Value="True"/>
-                                        <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True"/>
-                                    </MultiDataTrigger.Conditions>
-                                    <Setter Property="Background" Value="{DynamicResource PurpleColorBrush}"/>
-                                </MultiDataTrigger>
-                                <MultiDataTrigger>
-                                    <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding IsReadOnly}" Value="True"/>
-                                        <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="True"/>
-                                    </MultiDataTrigger.Conditions>
-                                    <Setter Property="Background" Value="{DynamicResource PurpleColorBrush}"/>
-                                </MultiDataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                        <Style x:Key="__TextEditor" TargetType="{x:Type components:TextEditor}" BasedOn="{StaticResource Default.TextEditor}">
-                            <Style.Resources>
-                                <!-- Dragablz との競合を解消 -->
-                                <Style TargetType="{x:Type ScrollViewer}" BasedOn="{StaticResource Default.ScrollViewer}"/>
-                            </Style.Resources>
-                            <Setter Property="Settings" Value="{Binding TextEditor, Source={x:Static models:SettingsService.Instance}}"/>
-                            <Setter Property="Document" Value="{Binding Document, Mode=OneWay}"/>
-                            <Setter Property="IsReadOnly" Value="{Binding IsReadOnly, Mode=TwoWay}"/>
-                            <Setter Property="IsModified" Value="{Binding IsModified, Mode=TwoWay}"/>
-                            <Setter Property="SyntaxDefinition" Value="{Binding SyntaxDefinition, Mode=TwoWay}"/>
-                            <Setter Property="OverstrikeMode" Value="{Binding OverstrikeMode, Mode=TwoWay}"/>
-                            <Setter Property="mlwm:PushBindingManager.StylePushBindings">
-                                <Setter.Value>
-                                    <mlwm:PushBindingCollection>
-                                        <mlwm:PushBinding TargetProperty="ActualFontSize"       Path="ActualFontSize"/>
-                                        <mlwm:PushBinding TargetProperty="ZoomIncrement"        Path="ZoomIncrement"/>
-                                        <mlwm:PushBinding TargetProperty="Line"                 Path="Line"/>
-                                        <mlwm:PushBinding TargetProperty="Column"               Path="Column"/>
-                                        <mlwm:PushBinding TargetProperty="VisualColumn"         Path="VisualColumn"/>
-                                        <mlwm:PushBinding TargetProperty="VisualLength"         Path="VisualLength"/>
-                                        <mlwm:PushBinding TargetProperty="TextLength"           Path="TextLength"/>
-                                        <mlwm:PushBinding TargetProperty="SelectionLength"      Path="SelectionLength"/>
-                                        <mlwm:PushBinding TargetProperty="SelectionStart"       Path="SelectionStart"/>
-                                        <mlwm:PushBinding TargetProperty="SelectionEnd"         Path="SelectionEnd"/>
-                                        <mlwm:PushBinding TargetProperty="SelectionStartLine"   Path="SelectionStartLine"/>
-                                        <mlwm:PushBinding TargetProperty="SelectionEndLine"     Path="SelectionEndLine"/>
-                                        <mlwm:PushBinding TargetProperty="SelectionLineCount"   Path="SelectionLineCount"/>
-                                        <mlwm:PushBinding TargetProperty="SelectedText"         Path="SelectedText"/>
-                                        <mlwm:PushBinding TargetProperty="CharName"             Path="CharName"/>
-                                        <mlwm:PushBinding TargetProperty="IsAtEndOfLine"        Path="IsAtEndOfLine"/>
-                                        <mlwm:PushBinding TargetProperty="IsInVirtualSpace"     Path="IsInVirtualSpace"/>
-                                        <mlwm:PushBinding TargetProperty="EnableAutoCompletion" Path="EnableAutoCompletion"/>
-                                    </mlwm:PushBindingCollection>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                        <Style TargetType="{x:Type a:SearchPanel}" BasedOn="{StaticResource Default.SearchPanel}">
-                            <Setter Property="Localization" Value="{Binding Localization, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
-                        </Style>
-                    </dr:TabablzControl.Resources>
-                    <dr:TabablzControl.ItemContainerStyle>
-                        <Style TargetType="{x:Type dr:DragablzItem}" BasedOn="{StaticResource __DragablzItem}"/>
-                    </dr:TabablzControl.ItemContainerStyle>
-                    <dr:TabablzControl.HeaderItemTemplate>
-                        <DataTemplate>
-                            <TextBlock DataContext="{Binding}" Text="{qc:MultiBinding 'string.Concat($P0 ? \'\[R\/O\] \' : null, Path.GetFileName($P1), $P2 ? \'*\' : null)', P0={Binding IsReadOnly}, P1={Binding FileName}, P2={Binding IsModified}}"/>
-                        </DataTemplate>
-                    </dr:TabablzControl.HeaderItemTemplate>
-                    <dr:TabablzControl.HeaderSuffixContent>
-                        <Grid ge:GridEx.ColumnDefinition="5, Auto, *">
-                            <Button Grid.Column="1" Command="{x:Static dr:TabablzControl.AddItemCommand}" Style="{StaticResource Common.ToolButton}" IsTabStop="False" Focusable="False">
-                                <mi:Material Kind="Plus" Height="12" Width="12"/>
-                            </Button>
-                            <Border Grid.Column="2" ContextMenu="{StaticResource ContextMenu}">
-                                <TextBlock VerticalAlignment="Stretch"/>
+                <!-- メインコンテンツ -->
+                <Grid Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="3*" MinHeight="50"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition x:Name="ToolContentRow" Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- テキストエディター -->
+                    <components:DraggableTabControl x:Name="TextEditorTabControl" Grid.Row="0" Grid.RowSpan="{qc:Binding '$P ? 1 : 3', P={Binding IsVisibleTerminalContent, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}}"
+                                                    ItemsSource="{Binding Editors}" SelectedItem="{Binding ActiveEditor}" NewItemFactory="{Binding EditorFactory}" ClosingItemCallback="{Binding ClosingEditorHandler}">
+                        <dr:TabablzControl.InterTabController>
+                            <dr:InterTabController InterTabClient="{Binding InterTabClient, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
+                        </dr:TabablzControl.InterTabController>
+                        <dr:TabablzControl.Resources>
+                            <Style TargetType="{x:Type components:DraggableTabControl}" BasedOn="{StaticResource Default.TabablzControl}">
+                                <Style.Resources>
+                                    <!-- MahApps との競合を解消 -->
+                                    <Style TargetType="{x:Type ScrollViewer}"/>
+                                </Style.Resources>
+                                <Setter Property="IsHeaderPanelVisible" Value="{qc:MultiBinding '$P0 || $P1.CompareTo(1) == 1', P0={Binding Window.ShowSingleTab, Source={x:Static models:SettingsService.Instance}}, P1={Binding Items.Count, RelativeSource={RelativeSource Self}}}"/>
+                            </Style>
+                            <Style x:Key="__TextEditorTabItem" TargetType="{x:Type dr:DragablzItem}" BasedOn="{StaticResource Default.DragablzItem}">
+                                <Setter Property="ToolTipService.IsEnabled" Value="{qc:Binding '!$P', P={Binding IsNewFile}}"/>
+                                <Setter Property="ToolTip" Value="{Binding FileName}"/>
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding IsReadOnly}" Value="True"/>
+                                            <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Background" Value="{DynamicResource PurpleColorBrush}"/>
+                                    </MultiDataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding IsReadOnly}" Value="True"/>
+                                            <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="True"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Background" Value="{DynamicResource PurpleColorBrush}"/>
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                            <Style x:Key="__TextEditor" TargetType="{x:Type components:TextEditor}" BasedOn="{StaticResource Default.TextEditor}">
+                                <Style.Resources>
+                                    <!-- Dragablz との競合を解消 -->
+                                    <Style TargetType="{x:Type ScrollViewer}" BasedOn="{StaticResource Default.ScrollViewer}"/>
+                                </Style.Resources>
+                                <Setter Property="Settings" Value="{Binding TextEditor, Source={x:Static models:SettingsService.Instance}}"/>
+                                <Setter Property="Document" Value="{Binding Document, Mode=OneWay}"/>
+                                <Setter Property="IsReadOnly" Value="{Binding IsReadOnly, Mode=TwoWay}"/>
+                                <Setter Property="IsModified" Value="{Binding IsModified, Mode=TwoWay}"/>
+                                <Setter Property="SyntaxDefinition" Value="{Binding SyntaxDefinition, Mode=TwoWay}"/>
+                                <Setter Property="OverstrikeMode" Value="{Binding OverstrikeMode, Mode=TwoWay}"/>
+                                <Setter Property="mlwm:PushBindingManager.StylePushBindings">
+                                    <Setter.Value>
+                                        <mlwm:PushBindingCollection>
+                                            <mlwm:PushBinding TargetProperty="ActualFontSize"       Path="ActualFontSize"/>
+                                            <mlwm:PushBinding TargetProperty="ZoomIncrement"        Path="ZoomIncrement"/>
+                                            <mlwm:PushBinding TargetProperty="Line"                 Path="Line"/>
+                                            <mlwm:PushBinding TargetProperty="Column"               Path="Column"/>
+                                            <mlwm:PushBinding TargetProperty="VisualColumn"         Path="VisualColumn"/>
+                                            <mlwm:PushBinding TargetProperty="VisualLength"         Path="VisualLength"/>
+                                            <mlwm:PushBinding TargetProperty="TextLength"           Path="TextLength"/>
+                                            <mlwm:PushBinding TargetProperty="SelectionLength"      Path="SelectionLength"/>
+                                            <mlwm:PushBinding TargetProperty="SelectionStart"       Path="SelectionStart"/>
+                                            <mlwm:PushBinding TargetProperty="SelectionEnd"         Path="SelectionEnd"/>
+                                            <mlwm:PushBinding TargetProperty="SelectionStartLine"   Path="SelectionStartLine"/>
+                                            <mlwm:PushBinding TargetProperty="SelectionEndLine"     Path="SelectionEndLine"/>
+                                            <mlwm:PushBinding TargetProperty="SelectionLineCount"   Path="SelectionLineCount"/>
+                                            <mlwm:PushBinding TargetProperty="SelectedText"         Path="SelectedText"/>
+                                            <mlwm:PushBinding TargetProperty="CharName"             Path="CharName"/>
+                                            <mlwm:PushBinding TargetProperty="IsAtEndOfLine"        Path="IsAtEndOfLine"/>
+                                            <mlwm:PushBinding TargetProperty="IsInVirtualSpace"     Path="IsInVirtualSpace"/>
+                                            <mlwm:PushBinding TargetProperty="EnableAutoCompletion" Path="EnableAutoCompletion"/>
+                                        </mlwm:PushBindingCollection>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                            <Style TargetType="{x:Type a:SearchPanel}" BasedOn="{StaticResource Default.SearchPanel}">
+                                <Setter Property="Localization" Value="{Binding Localization, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
+                            </Style>
+                        </dr:TabablzControl.Resources>
+                        <dr:TabablzControl.ItemContainerStyle>
+                            <Style TargetType="{x:Type dr:DragablzItem}" BasedOn="{StaticResource __TextEditorTabItem}"/>
+                        </dr:TabablzControl.ItemContainerStyle>
+                        <dr:TabablzControl.HeaderItemTemplate>
+                            <DataTemplate>
+                                <TextBlock DataContext="{Binding}" Text="{qc:MultiBinding 'string.Concat($P0 ? \'\[R\/O\] \' : null, Path.GetFileName($P1), $P2 ? \'*\' : null)', P0={Binding IsReadOnly}, P1={Binding FileName}, P2={Binding IsModified}}"/>
+                            </DataTemplate>
+                        </dr:TabablzControl.HeaderItemTemplate>
+                        <dr:TabablzControl.HeaderSuffixContent>
+                            <Grid ge:GridEx.ColumnDefinition="Auto, *" Margin="5,0,0,0">
+                                <Button Grid.Column="0" Command="{x:Static dr:TabablzControl.AddItemCommand}" Style="{StaticResource Common.ToolButton}" Focusable="False">
+                                    <mi:Material Kind="Plus" Height="12" Width="12"/>
+                                </Button>
+                                <Border Grid.Column="1" ContextMenu="{StaticResource ContextMenu}">
+                                    <TextBlock VerticalAlignment="Stretch"/>
+                                </Border>
+                            </Grid>
+                        </dr:TabablzControl.HeaderSuffixContent>
+                        <dr:TabablzControl.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding CloseEditorCommand}" Header="{Binding Resources.Command_Close, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Ctrl+F4">
+                                    <MenuItem.Icon>
+                                        <mi:Material Kind="Close"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Command="{Binding CloseAllEditorCommand}" Header="{Binding Resources.Command_CloseAll, Source={x:Static models:ResourceService.Instance}}">
+                                    <MenuItem.Icon>
+                                        <mi:Modern Kind="LayerDelete"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Command="{Binding CloseOtherEditorCommand}" Header="{Binding Resources.Command_CloseOther, Source={x:Static models:ResourceService.Instance}}"/>
+                                <MenuItem ItemsSource="{Binding Editors}" Header="{Binding Resources.Command_Editors, Source={x:Static models:ResourceService.Instance}}" IsEnabled="{qc:Binding '$P.CompareTo(0) == 1', P={Binding Editors.Count}}">
+                                    <MenuItem.ItemContainerStyle>
+                                        <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource Default.MenuItem}">
+                                            <Setter Property="Header" Value="{Binding FileName}"/>
+                                            <Setter Property="Command" Value="{Binding DataContext.ActivateEditorCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
+                                            <Setter Property="CommandParameter" Value="{Binding}"/>
+                                        </Style>
+                                    </MenuItem.ItemContainerStyle>
+                                </MenuItem>
+                                <MenuItem Header="{Binding Resources.Command_OpenParentDirectory, Source={x:Static models:ResourceService.Instance}}" Visibility="{qc:Binding '!$P ? Visibility.Visible : Visibility.Collapsed', P={Binding ActiveEditor.IsNewFile}}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Click">
+                                            <mlwb:ProcessStartAction FileName="explorer.exe" Argument="{qc:Binding '\'/select, \' + $P', P={Binding ActiveEditor.FileName}}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <MenuItem.Icon>
+                                        <mi:Material Kind="FolderOpen"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </ContextMenu>
+                        </dr:TabablzControl.ContextMenu>
+                        <dr:TabablzControl.ContentTemplate>
+                            <DataTemplate>
+                                <components:TextEditor x:Name="TextEditor" DataContext="{Binding}" Style="{StaticResource __TextEditor}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Loaded">
+                                            <mlwb:CallElementMethodAction MethodName="Focus"/>
+                                            <mlwb:CallElementMethodAction MethodName="Redraw"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <components:TextEditor.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Command="Undo" Header="{Binding Resources.Command_Undo, Source={x:Static models:ResourceService.Instance}}">
+                                                <MenuItem.Icon>
+                                                    <mi:Modern Kind="UndoCurve"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            <MenuItem Command="Redo" Header="{Binding Resources.Command_Redo, Source={x:Static models:ResourceService.Instance}}">
+                                                <MenuItem.Icon>
+                                                    <mi:Modern Kind="RedoCurve"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            <Separator/>
+                                            <MenuItem Command="Cut" Header="{Binding Resources.Command_Cut, Source={x:Static models:ResourceService.Instance}}">
+                                                <MenuItem.Icon>
+                                                    <mi:Modern Kind="Scissor"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            <MenuItem Command="Copy" Header="{Binding Resources.Command_Copy, Source={x:Static models:ResourceService.Instance}}">
+                                                <MenuItem.Icon>
+                                                    <mi:Modern Kind="PageCopy"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            <MenuItem Command="Paste" Header="{Binding Resources.Command_Paste, Source={x:Static models:ResourceService.Instance}}">
+                                                <MenuItem.Icon>
+                                                    <mi:Modern Kind="ClipboardPaste"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            <MenuItem Command="EditingCommands.Delete" Header="{Binding Resources.Command_Delete, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Del">
+                                                <MenuItem.Icon>
+                                                    <mi:Material Kind="Eraser"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            <MenuItem Command="SelectAll" Header="{Binding Resources.Command_SelectAll, Source={x:Static models:ResourceService.Instance}}">
+                                                <MenuItem.Icon>
+                                                    <mi:Modern Kind="CursorDefault"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            <Separator/>
+                                            <MenuItem Header="{Binding Resources.Command_Movement, Source={x:Static models:ResourceService.Instance}}">
+                                                <MenuItem Command="EditingCommands.MoveLeftByWord" Header="{Binding Resources.Command_MoveLeftByWord, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Ctrl+Left"/>
+                                                <MenuItem Command="EditingCommands.MoveRightByWord" Header="{Binding Resources.Command_MoveRightByWord, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Ctrl+Right"/>
+                                                <MenuItem Command="EditingCommands.MoveToLineStart" Header="{Binding Resources.Command_MoveToLineStart, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Home"/>
+                                                <MenuItem Command="EditingCommands.MoveToLineEnd" Header="{Binding Resources.Command_MoveToLineEnd, Source={x:Static models:ResourceService.Instance}}" InputGestureText="End"/>
+                                                <MenuItem Command="EditingCommands.MoveUpByPage" Header="{Binding Resources.Command_MoveUpByPage, Source={x:Static models:ResourceService.Instance}}" InputGestureText="PageUp"/>
+                                                <MenuItem Command="EditingCommands.MoveDownByPage" Header="{Binding Resources.Command_MoveDownByPage, Source={x:Static models:ResourceService.Instance}}" InputGestureText="PageDown"/>
+                                                <MenuItem Command="EditingCommands.MoveToDocumentStart" Header="{Binding Resources.Command_MoveToDocumentStart, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Ctrl+Home"/>
+                                                <MenuItem Command="EditingCommands.MoveToDocumentEnd" Header="{Binding Resources.Command_MoveToDocumentEnd, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Ctrl+End"/>
+                                            </MenuItem>
+                                            <MenuItem Header="{Binding Resources.Command_Selection, Source={x:Static models:ResourceService.Instance}}">
+                                                <MenuItem Command="EditingCommands.SelectLeftByWord" Header="{Binding Resources.Command_SelectLeftByWord, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Ctrl+Shift+Left"/>
+                                                <MenuItem Command="EditingCommands.SelectRightByWord" Header="{Binding Resources.Command_SelectRightByWord, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Ctrl+Shift+Right"/>
+                                                <MenuItem Command="EditingCommands.SelectToLineStart" Header="{Binding Resources.Command_SelectToLineStart, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Shift+Home"/>
+                                                <MenuItem Command="EditingCommands.SelectToLineEnd" Header="{Binding Resources.Command_SelectToLineEnd, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Shift+End"/>
+                                                <MenuItem Command="EditingCommands.SelectUpByPage" Header="{Binding Resources.Command_SelectUpByPage, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Shift+PageUp"/>
+                                                <MenuItem Command="EditingCommands.SelectDownByPage" Header="{Binding Resources.Command_SelectDownByPage, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Shift+PageDown"/>
+                                                <MenuItem Command="EditingCommands.SelectToDocumentStart" Header="{Binding Resources.Command_SelectToDocumentStart, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Ctrl+Shift+Home"/>
+                                                <MenuItem Command="EditingCommands.SelectToDocumentEnd" Header="{Binding Resources.Command_SelectToDocumentEnd, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Ctrl+Shift+End"/>
+                                            </MenuItem>
+                                            <MenuItem Header="{Binding Resources.Command_Formatting, Source={x:Static models:ResourceService.Instance}}">
+                                                <MenuItem Command="components:TextEditorCommands.ConvertToNarrow" Header="{Binding Resources.Command_ConvertToNarrow, Source={x:Static models:ResourceService.Instance}}"/>
+                                                <MenuItem Command="components:TextEditorCommands.ConvertToWide" Header="{Binding Resources.Command_ConvertToWide, Source={x:Static models:ResourceService.Instance}}"/>
+                                                <Separator/>
+                                                <MenuItem Command="a:AvalonEditCommands.ConvertToLowercase" Header="{Binding Resources.Command_ConvertToLowerCase, Source={x:Static models:ResourceService.Instance}}"/>
+                                                <MenuItem Command="a:AvalonEditCommands.ConvertToUppercase" Header="{Binding Resources.Command_ConvertToUpperCase, Source={x:Static models:ResourceService.Instance}}"/>
+                                                <MenuItem Command="a:AvalonEditCommands.ConvertToTitleCase" Header="{Binding Resources.Command_ConvertToTitleCase, Source={x:Static models:ResourceService.Instance}}"/>
+                                                <Separator/>
+                                                <MenuItem Command="a:AvalonEditCommands.ConvertTabsToSpaces" Header="{Binding Resources.Command_ConvertTabsToSpaces, Source={x:Static models:ResourceService.Instance}}"/>
+                                                <MenuItem Command="a:AvalonEditCommands.ConvertSpacesToTabs" Header="{Binding Resources.Command_ConvertSpacesToTabs, Source={x:Static models:ResourceService.Instance}}"/>
+                                            </MenuItem>
+                                        </ContextMenu>
+                                    </components:TextEditor.ContextMenu>
+                                </components:TextEditor>
+                            </DataTemplate>
+                        </dr:TabablzControl.ContentTemplate>
+                    </components:DraggableTabControl>
+
+                    <GridSplitter x:Name="ContentSplitter" Grid.Row="1" HorizontalAlignment="Stretch" Height="{StaticResource Const.Gap1}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsVisibleTerminalContent, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}}"/>
+
+                    <!-- ターミナル -->
+                    <components:DraggableTabControl x:Name="TerminalTabControl" Grid.Row="2" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsVisibleTerminalContent, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}}"
+                                                    ItemsSource="{Binding Terminals}" SelectedItem="{Binding ActiveTerminal}" NewItemFactory="{Binding TerminalFactory}" ClosingItemCallback="{Binding ClosingTerminalHandler}">
+                        <dr:TabablzControl.Resources>
+                            <Style TargetType="{x:Type components:DraggableTabControl}" BasedOn="{StaticResource Default.TabablzControl}">
+                                <Style.Resources>
+                                    <!-- MahApps との競合を解消 -->
+                                    <Style TargetType="{x:Type ScrollViewer}"/>
+                                </Style.Resources>
+                            </Style>
+                            <Style x:Key="__TerminalTabItem" TargetType="{x:Type dr:DragablzItem}" BasedOn="{StaticResource Default.DragablzItem}">
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Background" Value="{DynamicResource GrayBrush8}"/>
+                                    </MultiDataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="True"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Background" Value="{DynamicResource GrayBrush8}"/>
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </dr:TabablzControl.Resources>
+                        <dr:TabablzControl.ItemContainerStyle>
+                            <Style TargetType="{x:Type dr:DragablzItem}" BasedOn="{StaticResource __TerminalTabItem}"/>
+                        </dr:TabablzControl.ItemContainerStyle>
+                        <dr:TabablzControl.HeaderItemTemplate>
+                            <DataTemplate>
+                                <TextBlock DataContext="{Binding}" Text="{Binding TerminalName}"/>
+                            </DataTemplate>
+                        </dr:TabablzControl.HeaderItemTemplate>
+                        <dr:TabablzControl.HeaderPrefixContent>
+                            <Border Margin="0,0,10,0" Background="{DynamicResource AccentColorBrush2}">
+                                <TextBlock Text="{Binding Resources.Command_Terminal, Source={x:Static models:ResourceService.Instance}}" FontWeight="Bold" Margin="{StaticResource Const.Gap2W}"/>
                             </Border>
-                        </Grid>
-                    </dr:TabablzControl.HeaderSuffixContent>
-                    <dr:TabablzControl.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Command="{Binding CloseCommand}" Header="{Binding Resources.Command_Close, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Ctrl+F4">
-                                <MenuItem.Icon>
-                                    <mi:Material Kind="Close"/>
-                                </MenuItem.Icon>
-                            </MenuItem>
-                            <MenuItem Command="{Binding CloseAllCommand}" Header="{Binding Resources.Command_CloseAll, Source={x:Static models:ResourceService.Instance}}">
-                                <MenuItem.Icon>
-                                    <mi:Modern Kind="LayerDelete"/>
-                                </MenuItem.Icon>
-                            </MenuItem>
-                            <MenuItem Command="{Binding CloseOtherCommand}" Header="{Binding Resources.Command_CloseOther, Source={x:Static models:ResourceService.Instance}}"/>
-                            <MenuItem ItemsSource="{Binding Editors}" Header="{Binding Resources.Command_TabList, Source={x:Static models:ResourceService.Instance}}" IsEnabled="{qc:Binding '$P.CompareTo(0) == 1', P={Binding Editors.Count}}">
-                                <MenuItem.ItemContainerStyle>
-                                    <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource Default.MenuItem}">
-                                        <Setter Property="Header" Value="{Binding FileName}"/>
-                                        <Setter Property="Command" Value="{Binding DataContext.ActivateCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
-                                        <Setter Property="CommandParameter" Value="{Binding}"/>
-                                    </Style>
-                                </MenuItem.ItemContainerStyle>
-                            </MenuItem>
-                            <MenuItem Header="{Binding Resources.Command_OpenParentDirectory, Source={x:Static models:ResourceService.Instance}}" Visibility="{qc:Binding '!$P ? Visibility.Visible : Visibility.Collapsed', P={Binding ActiveEditor.IsNewFile}}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click">
-                                        <mlwb:ProcessStartAction FileName="explorer.exe" Argument="{qc:Binding '\'/select, \' + $P', P={Binding ActiveEditor.FileName}}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                <MenuItem.Icon>
-                                    <mi:Material Kind="FolderOpen"/>
-                                </MenuItem.Icon>
-                            </MenuItem>
-                        </ContextMenu>
-                    </dr:TabablzControl.ContextMenu>
-                    <dr:TabablzControl.ContentTemplate>
-                        <DataTemplate>
-                            <components:TextEditor x:Name="TextEditor" DataContext="{Binding}" Style="{StaticResource __TextEditor}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Loaded">
-                                        <mlwb:CallElementMethodAction MethodName="Focus"/>
-                                        <mlwb:CallElementMethodAction MethodName="Redraw"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                <components:TextEditor.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem Command="Undo" Header="{Binding Resources.Command_Undo, Source={x:Static models:ResourceService.Instance}}">
-                                            <MenuItem.Icon>
-                                                <mi:Modern Kind="UndoCurve"/>
-                                            </MenuItem.Icon>
-                                        </MenuItem>
-                                        <MenuItem Command="Redo" Header="{Binding Resources.Command_Redo, Source={x:Static models:ResourceService.Instance}}">
-                                            <MenuItem.Icon>
-                                                <mi:Modern Kind="RedoCurve"/>
-                                            </MenuItem.Icon>
-                                        </MenuItem>
-                                        <Separator/>
-                                        <MenuItem Command="Cut" Header="{Binding Resources.Command_Cut, Source={x:Static models:ResourceService.Instance}}">
-                                            <MenuItem.Icon>
-                                                <mi:Modern Kind="Scissor"/>
-                                            </MenuItem.Icon>
-                                        </MenuItem>
-                                        <MenuItem Command="Copy" Header="{Binding Resources.Command_Copy, Source={x:Static models:ResourceService.Instance}}">
-                                            <MenuItem.Icon>
-                                                <mi:Modern Kind="PageCopy"/>
-                                            </MenuItem.Icon>
-                                        </MenuItem>
-                                        <MenuItem Command="Paste" Header="{Binding Resources.Command_Paste, Source={x:Static models:ResourceService.Instance}}">
-                                            <MenuItem.Icon>
-                                                <mi:Modern Kind="ClipboardPaste"/>
-                                            </MenuItem.Icon>
-                                        </MenuItem>
-                                        <MenuItem Command="EditingCommands.Delete" Header="{Binding Resources.Command_Delete, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Del">
-                                            <MenuItem.Icon>
-                                                <mi:Material Kind="Eraser"/>
-                                            </MenuItem.Icon>
-                                        </MenuItem>
-                                        <MenuItem Command="SelectAll" Header="{Binding Resources.Command_SelectAll, Source={x:Static models:ResourceService.Instance}}">
-                                            <MenuItem.Icon>
-                                                <mi:Modern Kind="CursorDefault"/>
-                                            </MenuItem.Icon>
-                                        </MenuItem>
-                                        <Separator/>
-                                        <MenuItem Header="{Binding Resources.Command_Movement, Source={x:Static models:ResourceService.Instance}}">
-                                            <MenuItem Command="EditingCommands.MoveLeftByWord" Header="{Binding Resources.Command_MoveLeftByWord, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Ctrl+Left"/>
-                                            <MenuItem Command="EditingCommands.MoveRightByWord" Header="{Binding Resources.Command_MoveRightByWord, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Ctrl+Right"/>
-                                            <MenuItem Command="EditingCommands.MoveToLineStart" Header="{Binding Resources.Command_MoveToLineStart, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Home"/>
-                                            <MenuItem Command="EditingCommands.MoveToLineEnd" Header="{Binding Resources.Command_MoveToLineEnd, Source={x:Static models:ResourceService.Instance}}" InputGestureText="End"/>
-                                            <MenuItem Command="EditingCommands.MoveUpByPage" Header="{Binding Resources.Command_MoveUpByPage, Source={x:Static models:ResourceService.Instance}}" InputGestureText="PageUp"/>
-                                            <MenuItem Command="EditingCommands.MoveDownByPage" Header="{Binding Resources.Command_MoveDownByPage, Source={x:Static models:ResourceService.Instance}}" InputGestureText="PageDown"/>
-                                            <MenuItem Command="EditingCommands.MoveToDocumentStart" Header="{Binding Resources.Command_MoveToDocumentStart, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Ctrl+Home"/>
-                                            <MenuItem Command="EditingCommands.MoveToDocumentEnd" Header="{Binding Resources.Command_MoveToDocumentEnd, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Ctrl+End"/>
-                                        </MenuItem>
-                                        <MenuItem Header="{Binding Resources.Command_Selection, Source={x:Static models:ResourceService.Instance}}">
-                                            <MenuItem Command="EditingCommands.SelectLeftByWord" Header="{Binding Resources.Command_SelectLeftByWord, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Ctrl+Shift+Left"/>
-                                            <MenuItem Command="EditingCommands.SelectRightByWord" Header="{Binding Resources.Command_SelectRightByWord, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Ctrl+Shift+Right"/>
-                                            <MenuItem Command="EditingCommands.SelectToLineStart" Header="{Binding Resources.Command_SelectToLineStart, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Shift+Home"/>
-                                            <MenuItem Command="EditingCommands.SelectToLineEnd" Header="{Binding Resources.Command_SelectToLineEnd, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Shift+End"/>
-                                            <MenuItem Command="EditingCommands.SelectUpByPage" Header="{Binding Resources.Command_SelectUpByPage, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Shift+PageUp"/>
-                                            <MenuItem Command="EditingCommands.SelectDownByPage" Header="{Binding Resources.Command_SelectDownByPage, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Shift+PageDown"/>
-                                            <MenuItem Command="EditingCommands.SelectToDocumentStart" Header="{Binding Resources.Command_SelectToDocumentStart, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Ctrl+Shift+Home"/>
-                                            <MenuItem Command="EditingCommands.SelectToDocumentEnd" Header="{Binding Resources.Command_SelectToDocumentEnd, Source={x:Static models:ResourceService.Instance}}" InputGestureText="Ctrl+Shift+End"/>
-                                        </MenuItem>
-                                        <MenuItem Header="{Binding Resources.Command_Formatting, Source={x:Static models:ResourceService.Instance}}">
-                                            <MenuItem Command="components:TextEditorCommands.ConvertToNarrow" Header="{Binding Resources.Command_ConvertToNarrow, Source={x:Static models:ResourceService.Instance}}"/>
-                                            <MenuItem Command="components:TextEditorCommands.ConvertToWide" Header="{Binding Resources.Command_ConvertToWide, Source={x:Static models:ResourceService.Instance}}"/>
-                                            <Separator/>
-                                            <MenuItem Command="a:AvalonEditCommands.ConvertToLowercase" Header="{Binding Resources.Command_ConvertToLowerCase, Source={x:Static models:ResourceService.Instance}}"/>
-                                            <MenuItem Command="a:AvalonEditCommands.ConvertToUppercase" Header="{Binding Resources.Command_ConvertToUpperCase, Source={x:Static models:ResourceService.Instance}}"/>
-                                            <MenuItem Command="a:AvalonEditCommands.ConvertToTitleCase" Header="{Binding Resources.Command_ConvertToTitleCase, Source={x:Static models:ResourceService.Instance}}"/>
-                                            <Separator/>
-                                            <MenuItem Command="a:AvalonEditCommands.ConvertTabsToSpaces" Header="{Binding Resources.Command_ConvertTabsToSpaces, Source={x:Static models:ResourceService.Instance}}"/>
-                                            <MenuItem Command="a:AvalonEditCommands.ConvertSpacesToTabs" Header="{Binding Resources.Command_ConvertSpacesToTabs, Source={x:Static models:ResourceService.Instance}}"/>
-                                        </MenuItem>
-                                    </ContextMenu>
-                                </components:TextEditor.ContextMenu>
-                            </components:TextEditor>
-                        </DataTemplate>
-                    </dr:TabablzControl.ContentTemplate>
-                </components:DraggableTabControl>
+                        </dr:TabablzControl.HeaderPrefixContent>
+                        <dr:TabablzControl.HeaderSuffixContent>
+                            <Grid ge:GridEx.ColumnDefinition="Auto, *" Margin="5,0,0,0">
+                                <Button Grid.Column="0" Command="{x:Static dr:TabablzControl.AddItemCommand}" Style="{StaticResource Common.ToolButton}" Focusable="False">
+                                    <mi:Material Kind="Plus" Height="12" Width="12"/>
+                                </Button>
+                                <Border Grid.Column="1" ContextMenu="{StaticResource ContextMenu}">
+                                    <TextBlock VerticalAlignment="Stretch"/>
+                                </Border>
+                            </Grid>
+                        </dr:TabablzControl.HeaderSuffixContent>
+                        <dr:TabablzControl.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding CloseTerminalCommand}" Header="{Binding Resources.Command_Close, Source={x:Static models:ResourceService.Instance}}">
+                                    <MenuItem.Icon>
+                                        <mi:Material Kind="Close"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Command="{Binding CloseAllTerminalCommand}" Header="{Binding Resources.Command_CloseAll, Source={x:Static models:ResourceService.Instance}}">
+                                    <MenuItem.Icon>
+                                        <mi:Modern Kind="LayerDelete"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Command="{Binding CloseOtherTerminalCommand}" Header="{Binding Resources.Command_CloseOther, Source={x:Static models:ResourceService.Instance}}"/>
+                                <MenuItem ItemsSource="{Binding Terminals}" Header="{Binding Resources.Command_Terminals, Source={x:Static models:ResourceService.Instance}}" IsEnabled="{qc:Binding '$P.CompareTo(0) == 1', P={Binding Terminals.Count}}">
+                                    <MenuItem.ItemContainerStyle>
+                                        <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource Default.MenuItem}">
+                                            <Setter Property="Header" Value="{Binding TerminalName}"/>
+                                            <Setter Property="Command" Value="{Binding DataContext.ActivateTerminalCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
+                                            <Setter Property="CommandParameter" Value="{Binding}"/>
+                                        </Style>
+                                    </MenuItem.ItemContainerStyle>
+                                </MenuItem>
+                            </ContextMenu>
+                        </dr:TabablzControl.ContextMenu>
+                        <dr:TabablzControl.ContentTemplate>
+                            <DataTemplate>
+                                <Grid ge:GridEx.RowDefinition="*, Auto">
+                                    <TextBox Grid.Row="0" Text="{Binding DataLinesText, Mode=OneWay}" Style="{StaticResource ReadOnlyTextBox}" BorderThickness="0">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="TextChanged">
+                                                <mlwb:CallElementMethodAction MethodName="ScrollToEnd"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </TextBox>
+                                    <Grid Grid.Row="1" ge:GridEx.ColumnDefinition="Auto, *">
+                                        <Label Grid.Column="0" Content="{Binding LastLine, Mode=OneWay}"/>
+                                        <ComboBox Grid.Column="1" x:Name="CommandBox" ItemsSource="{Binding Histories}" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{Binding Resources.Label_Command, Source={x:Static models:ResourceService.Instance}}" BorderThickness="0" IsEditable="True">
+                                            <i:Interaction.Triggers>
+                                                <ei:KeyTrigger ActiveOnFocus="True" Key="Return">
+                                                    <p:InvokeCommandAction Command="{Binding SendValueCommand}"/>
+                                                </ei:KeyTrigger>
+                                            </i:Interaction.Triggers>
+                                        </ComboBox>
+                                    </Grid>
+                                </Grid>
+                            </DataTemplate>
+                        </dr:TabablzControl.ContentTemplate>
+                        <dr:TabablzControl.InputBindings>
+                            <KeyBinding Command="{Binding AddTerminalCommand}" Key="OemTilde" Modifiers="Ctrl+Shift"/>
+                        </dr:TabablzControl.InputBindings>
+                    </components:DraggableTabControl>
+                </Grid>
             </Grid>
             
             <!-- ステータスバー -->
@@ -956,109 +1042,6 @@
                                             </StackPanel>
                                         </StackPanel>
                                     </Expander>
-
-                                    <Expander Header="{Binding Resources.Label_File, Source={x:Static models:ResourceService.Instance}}">
-                                        <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto" ge:GridEx.RowDefinition="Auto, Auto">
-                                            <Grid.Resources>
-                                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Buton}">
-                                                    <Setter Property="Width" Value="30"/>
-                                                    <Setter Property="Height" Value="30"/>
-                                                    <Setter Property="Padding" Value="2"/>
-                                                </Style>
-                                            </Grid.Resources>
-                                            
-                                            <Label   Grid.Row="0" Grid.Column="0" Content="{Binding Resources.Label_ExecutionFile, Source={x:Static models:ResourceService.Instance}}"/>
-                                            <TextBox Grid.Row="0" Grid.Column="1" Text="{x:Static ml:ProductInfo.Location}" IsReadOnly="True"/>
-                                            <Button  Grid.Row="0" Grid.Column="3" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}}">
-                                                <i:Interaction.Triggers>
-                                                    <i:EventTrigger EventName="Click">
-                                                        <mlwb:ProcessStartAction FileName="explorer.exe" Argument="{qc:Binding '\'/select, \' + $P', P={Binding Source={x:Static ml:ProductInfo.Location}}}" ThrowException="False"/>
-                                                    </i:EventTrigger>
-                                                </i:Interaction.Triggers>
-                                                <mi:Modern Kind="FolderOpen"/>
-                                            </Button>
-                                            <Label   Grid.Row="1" Grid.Column="0" Content="{Binding Resources.Label_SettingFile, Source={x:Static models:ResourceService.Instance}}"/>
-                                            <TextBox Grid.Row="1" Grid.Column="1" Text="{x:Static models:SettingsService.SettingsFilePath}" IsReadOnly="True"/>
-                                            <Button  Grid.Row="1" Grid.Column="3" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}}">
-                                                <i:Interaction.Triggers>
-                                                    <i:EventTrigger EventName="Click">
-                                                        <mlwb:ProcessStartAction FileName="explorer.exe" Argument="{qc:Binding '\'/select, \' + $P', P={Binding Source={x:Static models:SettingsService.SettingsFilePath}}}" ThrowException="False"/>
-                                                    </i:EventTrigger>
-                                                </i:Interaction.Triggers>
-                                                <mi:Modern Kind="FolderOpen"/>
-                                            </Button>
-                                        </Grid>
-                                    </Expander>
-
-                                    <Expander Header="{Binding Resources.Label_Directory, Source={x:Static models:ResourceService.Instance}}">
-                                        <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto, 5, Auto" ge:GridEx.RowDefinition="Auto, Auto, Auto, Auto, Auto">
-                                            <Grid.Resources>
-                                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Buton}">
-                                                    <Setter Property="Width" Value="30"/>
-                                                    <Setter Property="Height" Value="30"/>
-                                                    <Setter Property="Padding" Value="2"/>
-                                                </Style>
-                                            </Grid.Resources>
-
-                                            <Label   Grid.Row="0" Grid.Column="0" Content="{Binding Resources.Label_ExecutionDirectory, Source={x:Static models:ResourceService.Instance}}"/>
-                                            <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Text="{x:Static ml:ProductInfo.Working}" IsReadOnly="True"/>
-                                            <Button  Grid.Row="0" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}}">
-                                                <i:Interaction.Triggers>
-                                                    <i:EventTrigger EventName="Click">
-                                                        <mlwb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Working}" ThrowException="False"/>
-                                                    </i:EventTrigger>
-                                                </i:Interaction.Triggers>
-                                                <mi:Modern Kind="FolderOpen"/>
-                                            </Button>
-
-                                            <Label   Grid.Row="1" Grid.Column="0" Content="{Binding Resources.Label_RoamingDirectory, Source={x:Static models:ResourceService.Instance}}"/>
-                                            <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Text="{x:Static ml:ProductInfo.Roaming}" IsReadOnly="True"/>
-                                            <Button  Grid.Row="1" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}}">
-                                                <i:Interaction.Triggers>
-                                                    <i:EventTrigger EventName="Click">
-                                                        <mlwb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Roaming}" ThrowException="False"/>
-                                                    </i:EventTrigger>
-                                                </i:Interaction.Triggers>
-                                                <mi:Modern Kind="FolderOpen"/>
-                                            </Button>
-
-                                            <Label   Grid.Row="2" Grid.Column="0" Content="{Binding Resources.Label_XshdDirectory, Source={x:Static models:ResourceService.Instance}}"/>
-                                            <TextBox Grid.Row="2" Grid.Column="1" Text="{x:Static models:ResourceService.XshdDirectoryPath}" IsReadOnly="True"/>
-                                            <Button  Grid.Row="2" Grid.Column="3" Command="{Binding DataContext.InitializeXshdCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" ToolTip="{Binding Resources.Command_Initialize, Source={x:Static models:ResourceService.Instance}}">
-                                                <mi:Modern Kind="New"/>
-                                            </Button>
-                                            <Button  Grid.Row="2" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}}">
-                                                <i:Interaction.Triggers>
-                                                    <i:EventTrigger EventName="Click">
-                                                        <mlwb:ProcessStartAction FileName="{x:Static models:ResourceService.XshdDirectoryPath}" ThrowException="False"/>
-                                                    </i:EventTrigger>
-                                                </i:Interaction.Triggers>
-                                                <mi:Modern Kind="FolderOpen"/>
-                                            </Button>
-
-                                            <Label   Grid.Row="3" Grid.Column="0" Content="{Binding Resources.Label_LogDirectory, Source={x:Static models:ResourceService.Instance}}"/>
-                                            <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Text="{x:Static ml:Logger.LogDirectoryPath}" IsReadOnly="True"/>
-                                            <Button  Grid.Row="3" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}}">
-                                                <i:Interaction.Triggers>
-                                                    <i:EventTrigger EventName="Click">
-                                                        <mlwb:ProcessStartAction FileName="{x:Static ml:Logger.LogDirectoryPath}" ThrowException="False"/>
-                                                    </i:EventTrigger>
-                                                </i:Interaction.Triggers>
-                                                <mi:Modern Kind="FolderOpen"/>
-                                            </Button>
-
-                                            <Label   Grid.Row="4" Grid.Column="0" Content="{Binding Resources.Label_TempDirectory, Source={x:Static models:ResourceService.Instance}}"/>
-                                            <TextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Text="{x:Static ml:ProductInfo.Temporary}" IsReadOnly="True"/>
-                                            <Button  Grid.Row="4" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}}">
-                                                <i:Interaction.Triggers>
-                                                    <i:EventTrigger EventName="Click">
-                                                        <mlwb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Temporary}" ThrowException="False"/>
-                                                    </i:EventTrigger>
-                                                </i:Interaction.Triggers>
-                                                <mi:Modern Kind="FolderOpen"/>
-                                            </Button>
-                                        </Grid>
-                                    </Expander>
                                 </StackPanel>
                             </ScrollViewer>
                         </TabItem>
@@ -1136,6 +1119,99 @@
                                 </StackPanel>
                             </ScrollViewer>
                         </TabItem>
+
+                        <TabItem Header="{Binding Resources.Label_Other, Source={x:Static models:ResourceService.Instance}}">
+                            <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                                <StackPanel>
+                                    <Expander Header="{Binding Resources.Label_File, Source={x:Static models:ResourceService.Instance}}">
+                                        <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto" ge:GridEx.RowDefinition="Auto, Auto">
+                                            <Label   Grid.Row="0" Grid.Column="0" Content="{Binding Resources.Label_ExecutionFile, Source={x:Static models:ResourceService.Instance}}"/>
+                                            <TextBox Grid.Row="0" Grid.Column="1" Text="{x:Static ml:ProductInfo.Location}" IsReadOnly="True"/>
+                                            <Button  Grid.Row="0" Grid.Column="3" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}}" Style="{StaticResource IconButton}">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="Click">
+                                                        <mlwb:ProcessStartAction FileName="explorer.exe" Argument="{qc:Binding '\'/select, \' + $P', P={Binding Source={x:Static ml:ProductInfo.Location}}}" ThrowException="False"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                                <mi:Modern Kind="FolderOpen"/>
+                                            </Button>
+                                            <Label   Grid.Row="1" Grid.Column="0" Content="{Binding Resources.Label_SettingFile, Source={x:Static models:ResourceService.Instance}}"/>
+                                            <TextBox Grid.Row="1" Grid.Column="1" Text="{x:Static models:SettingsService.SettingsFilePath}" IsReadOnly="True"/>
+                                            <Button  Grid.Row="1" Grid.Column="3" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}}" Style="{StaticResource IconButton}">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="Click">
+                                                        <mlwb:ProcessStartAction FileName="explorer.exe" Argument="{qc:Binding '\'/select, \' + $P', P={Binding Source={x:Static models:SettingsService.SettingsFilePath}}}" ThrowException="False"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                                <mi:Modern Kind="FolderOpen"/>
+                                            </Button>
+                                        </Grid>
+                                    </Expander>
+
+                                    <Expander Header="{Binding Resources.Label_Directory, Source={x:Static models:ResourceService.Instance}}">
+                                        <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto, 5, Auto" ge:GridEx.RowDefinition="Auto, Auto, Auto, Auto, Auto">
+                                            <Label   Grid.Row="0" Grid.Column="0" Content="{Binding Resources.Label_ExecutionDirectory, Source={x:Static models:ResourceService.Instance}}"/>
+                                            <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Text="{x:Static ml:ProductInfo.Working}" IsReadOnly="True"/>
+                                            <Button  Grid.Row="0" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}}" Style="{StaticResource IconButton}">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="Click">
+                                                        <mlwb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Working}" ThrowException="False"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                                <mi:Modern Kind="FolderOpen"/>
+                                            </Button>
+
+                                            <Label   Grid.Row="1" Grid.Column="0" Content="{Binding Resources.Label_RoamingDirectory, Source={x:Static models:ResourceService.Instance}}"/>
+                                            <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Text="{x:Static ml:ProductInfo.Roaming}" IsReadOnly="True"/>
+                                            <Button  Grid.Row="1" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}}" Style="{StaticResource IconButton}">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="Click">
+                                                        <mlwb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Roaming}" ThrowException="False"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                                <mi:Modern Kind="FolderOpen"/>
+                                            </Button>
+
+                                            <Label   Grid.Row="2" Grid.Column="0" Content="{Binding Resources.Label_XshdDirectory, Source={x:Static models:ResourceService.Instance}}"/>
+                                            <TextBox Grid.Row="2" Grid.Column="1" Text="{x:Static models:ResourceService.XshdDirectoryPath}" IsReadOnly="True"/>
+                                            <Button  Grid.Row="2" Grid.Column="3" Command="{Binding DataContext.InitializeXshdCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" ToolTip="{Binding Resources.Command_Initialize, Source={x:Static models:ResourceService.Instance}}" Style="{StaticResource IconButton}">
+                                                <mi:Modern Kind="New"/>
+                                            </Button>
+                                            <Button  Grid.Row="2" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}}" Style="{StaticResource IconButton}">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="Click">
+                                                        <mlwb:ProcessStartAction FileName="{x:Static models:ResourceService.XshdDirectoryPath}" ThrowException="False"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                                <mi:Modern Kind="FolderOpen"/>
+                                            </Button>
+
+                                            <Label   Grid.Row="3" Grid.Column="0" Content="{Binding Resources.Label_LogDirectory, Source={x:Static models:ResourceService.Instance}}"/>
+                                            <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Text="{x:Static ml:Logger.LogDirectoryPath}" IsReadOnly="True"/>
+                                            <Button  Grid.Row="3" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}}" Style="{StaticResource IconButton}">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="Click">
+                                                        <mlwb:ProcessStartAction FileName="{x:Static ml:Logger.LogDirectoryPath}" ThrowException="False"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                                <mi:Modern Kind="FolderOpen"/>
+                                            </Button>
+
+                                            <Label   Grid.Row="4" Grid.Column="0" Content="{Binding Resources.Label_TempDirectory, Source={x:Static models:ResourceService.Instance}}"/>
+                                            <TextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Text="{x:Static ml:ProductInfo.Temporary}" IsReadOnly="True"/>
+                                            <Button  Grid.Row="4" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}}" Style="{StaticResource IconButton}">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="Click">
+                                                        <mlwb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Temporary}" ThrowException="False"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                                <mi:Modern Kind="FolderOpen"/>
+                                            </Button>
+                                        </Grid>
+                                    </Expander>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </TabItem>
                     </TabControl>
                 </Grid>
             </m:Flyout>
@@ -1150,14 +1226,27 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="{Binding ActualHeight, ElementName=StatusBar}"/>
                     </Grid.RowDefinitions>
-                    <Grid ge:GridEx.RowDefinition="Auto, Auto, *">
-                        <StackPanel Grid.Row="0" Orientation="Horizontal">
-                            <TextBlock Text="{x:Static ml:ProductInfo.Product}" FontSize="{StaticResource FlyoutHeaderFontSize}"/>
-                            <Border Width="{StaticResource Const.Gap2}"/>
-                            <TextBlock Text="{qc:MultiBinding '\'Version \' + $P0 + ($P1 ? \' - Debug Build\' : null)', P0={Binding Source={x:Static ml:ProductInfo.Version}}, P1={Binding Source={x:Static ml:ProductInfo.IsDebugBuild}}}" VerticalAlignment="Bottom"/>
+                    <Grid ge:GridEx.RowDefinition="Auto, 20, Auto, 20, *" Margin="20,0">
+                        <StackPanel Grid.Row="0" Margin="20,0" Orientation="Horizontal">
+                            <TextBlock Text="{x:Static ml:ProductInfo.Product}" FontWeight="Bold" FontSize="32"/>
+                            <Border Width="20"/>
+                            <TextBlock>
+                                <Run Text="{qc:MultiBinding '\'Version \' + $P0 + ($P1 ? \' - Debug Build\' : null)', P0={Binding Source={x:Static ml:ProductInfo.Version}}, P1={Binding Source={x:Static ml:ProductInfo.IsDebugBuild}}}"/>
+                                <LineBreak/>
+                                <Run Text="{x:Static ml:ProductInfo.Copyright}"/>
+                            </TextBlock>
+                            <Border Width="20"/>
+                            <Button Style="{StaticResource Common.CircleButton}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <mlwb:ProcessStartAction FileName="{x:Static root:AppConfig.ProjectSite}" ThrowException="False"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <mi:Material Kind="GithubCircle"/>
+                            </Button>
                         </StackPanel>
-                        <TextBlock Grid.Row="1" Margin="20,10,0,0" Text="{x:Static ml:ProductInfo.Copyright}"/>
-                        <ListBox   Grid.Row="2" Margin="20,10,0,0" ItemsSource="{qc:Binding '$P.OrderBy(((AssemblyName)x) => (string)($x.Name))', P={Binding Source={x:Static ml:ProductInfo.ReferencedAssemblies}}}">
+                        <Border  Grid.Row="2" Height="1" Background="{DynamicResource GrayBrush5}"/>
+                        <ListBox Grid.Row="4" Margin="20,0" ItemsSource="{qc:Binding '$P.OrderBy(((AssemblyName)x) => (string)($x.Name))', P={Binding Source={x:Static ml:ProductInfo.ReferencedAssemblies}}}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{qc:Binding '$P.Name + \' - \' + $P.Version', P={Binding}}" ToolTip="{Binding FullName}"/>

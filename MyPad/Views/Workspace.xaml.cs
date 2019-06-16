@@ -53,7 +53,7 @@ namespace MyPad.Views
                 case User32_Gdi.WindowMessage.WM_COPYDATA:
                     {
                         MainWindowViewModel window = null;
-                        var structure = (COPYDATASTRUCT)Marshal.PtrToStructure(lParam, typeof(COPYDATASTRUCT));
+                        var structure = Marshal.PtrToStructure<COPYDATASTRUCT>(lParam);
                         if (string.IsNullOrEmpty(structure.lpData) == false)
                         {
                             var paths = structure.lpData.Split('|');

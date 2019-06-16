@@ -22,5 +22,13 @@ namespace MyPad.Views.Components
                 e.Handled = true;
             }
         }
+
+        public override void OnApplyTemplate()
+        {
+            // Style の設定が反映されないのでコードで
+            var dragablzItemsControl = (DragablzItemsControl)this.GetTemplateChild("PART_HeaderItemsControl");
+            dragablzItemsControl.IsTabStop = false;
+            base.OnApplyTemplate();
+        }
     }
 }
