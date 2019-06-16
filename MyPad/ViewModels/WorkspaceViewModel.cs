@@ -106,7 +106,7 @@ namespace MyPad.ViewModels
                 {
                     for (var i = this.Windows.Count - 1; 0 <= i; i--)
                     {
-                        if (await this.Windows[i].SaveChangesIfAndRemove() == false)
+                        if (await this.Windows[i].SaveChangesIfAndRemoveAll() == false)
                             return;
                         this.Windows[i].Dispose();
                     }

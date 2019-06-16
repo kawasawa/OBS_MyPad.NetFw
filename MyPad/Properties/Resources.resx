@@ -621,8 +621,8 @@ Definitions is reflected on restart. Do you want to continue?</value>
   <data name="Command_View" xml:space="preserve">
     <value>View</value>
   </data>
-  <data name="Command_TabList" xml:space="preserve">
-    <value>List of tabs</value>
+  <data name="Command_Editors" xml:space="preserve">
+    <value>List of editors</value>
   </data>
   <data name="Label_Permission" xml:space="preserve">
     <value>Permission</value>
@@ -663,13 +663,19 @@ Definitions is reflected on restart. Do you want to continue?</value>
   <data name="Command_Terminal" xml:space="preserve">
     <value>Terminal</value>
   </data>
-  <data name="Command_NewTerminal" xml:space="preserve">
-    <value>New terminal</value>
-  </data>
   <data name="Command_Execute" xml:space="preserve">
     <value>Execute</value>
   </data>
   <data name="Label_Command" xml:space="preserve">
     <value>Command</value>
+  </data>
+  <data name="Label_Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="Command_Terminals" xml:space="preserve">
+    <value>List of terminals</value>
+  </data>
+  <data name="Command_NewTerminal" xml:space="preserve">
+    <value>New terminal</value>
   </data>
 </root>

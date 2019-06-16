@@ -37,5 +37,8 @@ namespace MyPad
 
         public static int TerminalLineSize
             => int.TryParse(ConfigurationManager.AppSettings[nameof(TerminalLineSize)], out var value) && 1 <= value ? value : 10000;
+
+        public static string ProjectSite
+            => ConfigurationManager.AppSettings[nameof(ProjectSite)];
     }
 }

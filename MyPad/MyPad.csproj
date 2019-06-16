@@ -143,8 +143,8 @@
     <Reference Include="MyLib, Version=0.1.0.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MyLib.Core.0.1.0.1\lib\net46\MyLib.dll</HintPath>
     </Reference>
-    <Reference Include="MyLib.Wpf, Version=1.1.0.13, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MyLib.Wpf.1.1.0.2\lib\net46\MyLib.Wpf.dll</HintPath>
+    <Reference Include="MyLib.Wpf, Version=1.1.0.16, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MyLib.Wpf.1.1.0.5\lib\net46\MyLib.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -208,8 +208,8 @@
     <Reference Include="Vanara.PInvoke.Shared, Version=2.1.2.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
       <HintPath>..\packages\Vanara.PInvoke.Shared.2.1.2\lib\net45\Vanara.PInvoke.Shared.dll</HintPath>
     </Reference>
-    <Reference Include="Vanara.PInvoke.User32, Version=2.1.0.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
-      <HintPath>..\packages\Vanara.PInvoke.User32.2.1.0\lib\net45\Vanara.PInvoke.User32.dll</HintPath>
+    <Reference Include="Vanara.PInvoke.User32, Version=2.1.2.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\Vanara.PInvoke.User32.2.1.2\lib\net45\Vanara.PInvoke.User32.dll</HintPath>
     </Reference>
     <Reference Include="Vanara.PInvoke.User32.Gdi, Version=2.1.2.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
       <HintPath>..\packages\Vanara.PInvoke.User32.Gdi.2.1.2\lib\net45\Vanara.PInvoke.User32.Gdi.dll</HintPath>

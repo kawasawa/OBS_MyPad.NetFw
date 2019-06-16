@@ -581,8 +581,8 @@
   <data name="Command_View" xml:space="preserve">
     <value>表示</value>
   </data>
-  <data name="Command_TabList" xml:space="preserve">
-    <value>タブ一覧</value>
+  <data name="Command_Editors" xml:space="preserve">
+    <value>エディター一覧</value>
   </data>
   <data name="Label_Permission" xml:space="preserve">
     <value>権限</value>
@@ -620,13 +620,19 @@
   <data name="Command_Terminal" xml:space="preserve">
     <value>ターミナル</value>
   </data>
-  <data name="Command_NewTerminal" xml:space="preserve">
-    <value>新規ターミナル</value>
-  </data>
   <data name="Command_Execute" xml:space="preserve">
     <value>実行</value>
   </data>
   <data name="Label_Command" xml:space="preserve">
     <value>コマンド</value>
+  </data>
+  <data name="Label_Other" xml:space="preserve">
+    <value>その他</value>
+  </data>
+  <data name="Command_Terminals" xml:space="preserve">
+    <value>ターミナル一覧</value>
+  </data>
+  <data name="Command_NewTerminal" xml:space="preserve">
+    <value>新規ターミナル</value>
   </data>
 </root>

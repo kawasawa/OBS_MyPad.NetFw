@@ -24,7 +24,7 @@ namespace MyPad.ViewModels
     {
         #region スタティック
 
-        private static int SEQUENSE = 0;
+        private static int _SEQUENCE = 0;
 
         #endregion
 
@@ -40,7 +40,7 @@ namespace MyPad.ViewModels
 
         #region プロパティ
 
-        public int Sequense { get; } = ++SEQUENSE;
+        public int Sequense { get; } = ++_SEQUENCE;
 
         public bool IsModified => this.Editors.Any(c => c.IsModified);
 
@@ -76,12 +76,14 @@ namespace MyPad.ViewModels
 
         public ObservableCollection<TerminalViewModel> Terminals { get; } = new ObservableCollection<TerminalViewModel>();
 
-        public Func<TextEditorViewModel> EditorFactory { get; } = () => new TextEditorViewModel();
+        public Func<TextEditorViewModel> EditorFactory =>
+            () => new TextEditorViewModel();
 
         public Func<TerminalViewModel> TerminalFactory =>
             () =>
             {
                 var terminal = new TerminalViewModel();
+                terminal.Start();
                 terminal.Disposed += this.Terminal_Disposed;
                 return terminal;
             };
@@ -90,8 +92,8 @@ namespace MyPad.ViewModels
 
         #region コマンド
 
-        public ICommand AddCommand
-            => new DelegateCommand(() => this.AddEditor());
+        public ICommand ReloadCommand
+            => new DelegateCommand<Tuple<Encoding, string>>(async tuple => await this.ReloadEditor(this.ActiveEditor, tuple.Item1, tuple.Item2));
 
         public ICommand OpenCommand
             => new DelegateCommand(async () => await this.LoadEditor());
@@ -132,7 +134,10 @@ namespace MyPad.ViewModels
                     });
             });
 
-        public ICommand CloseCommand
+        public ICommand AddEditorCommand
+            => new DelegateCommand(() => this.AddEditor());
+
+        public ICommand CloseEditorCommand
             => new DelegateCommand(async () =>
             {
                 if (await this.SaveChangesIfAndRemove(this.ActiveEditor) == false)
@@ -141,16 +146,16 @@ namespace MyPad.ViewModels
                     this.AddEditor();
             });
 
-        public ICommand CloseAllCommand
+        public ICommand CloseAllEditorCommand
             => new DelegateCommand(async () =>
             {
-                if (await this.SaveChangesIfAndRemove() == false)
+                if (await this.SaveChangesIfAndRemoveAll() == false)
                     return;
                 if (this.Editors.Any() == false)
                     this.AddEditor();
             });
 
-        public ICommand CloseOtherCommand
+        public ICommand CloseOtherEditorCommand
             => new DelegateCommand(async () =>
             {
                 var currentEditor = this.ActiveEditor;
@@ -163,7 +168,7 @@ namespace MyPad.ViewModels
                 }
             });
 
-        public ICommand ActivateCommand
+        public ICommand ActivateEditorCommand
             => new DelegateCommand<TextEditorViewModel>(editor =>
             {
                 if (editor != null && this.Editors.Contains(editor))
@@ -171,10 +176,6 @@ namespace MyPad.ViewModels
                 else
                     this.TransitionRequest.Raise(new TransitionNotification(TransitionKind.Activate));
             });
-
-        public ICommand ReloadCommand
-            => new DelegateCommand<Tuple<Encoding, string>>(async tuple =>
-                await this.ReloadEditor(this.ActiveEditor, tuple.Item1, tuple.Item2));
 
         public ICommand AddTerminalCommand
             => new DelegateCommand(() => this.AddTerminal());
@@ -184,6 +185,34 @@ namespace MyPad.ViewModels
             {
                 if (this.ActiveTerminal != null)
                     this.RemoveTerminal(this.ActiveTerminal);
+            });
+
+        public ICommand CloseAllTerminalCommand
+            => new DelegateCommand(() =>
+            {
+                for (var i = this.Terminals.Count - 1; 0 <= i; i--)
+                    this.RemoveTerminal(this.Terminals[i]);
+            });
+
+        public ICommand CloseOtherTerminalCommand
+            => new DelegateCommand(() =>
+            {
+                var currentTerminal = this.ActiveTerminal;
+                for (var i = this.Terminals.Count - 1; 0 <= i; i--)
+                {
+                    if (this.Terminals[i].Equals(currentTerminal))
+                        continue;
+                    this.RemoveTerminal(this.Terminals[i]);
+                }
+            });
+
+        public ICommand ActivateTerminalCommand
+            => new DelegateCommand<TerminalViewModel>(terminal =>
+            {
+                if (terminal != null && this.Terminals.Contains(terminal))
+                    this.ActiveTerminal = terminal;
+                else
+                    this.TransitionRequest.Raise(new TransitionNotification(TransitionKind.Activate));
             });
 
         public ICommand ActivatedHandler
@@ -210,19 +239,27 @@ namespace MyPad.ViewModels
                     return;
 
                 e.Cancel = true;
-                if (await this.SaveChangesIfAndRemove())
+                if (await this.SaveChangesIfAndRemoveAll())
                     this.Dispose();
             });
 
-        public Delegate ClosingContentHandler
+        public Delegate ClosingEditorHandler
             => new ItemActionCallback(async e =>
             {
-                if (e.IsCancelled || !(e.DragablzItem?.DataContext is TextEditorViewModel content))
+                if (e.IsCancelled || !(e.DragablzItem?.DataContext is TextEditorViewModel editor))
                     return;
-                if (await this.SaveChangesIfAndRemove(content) == false)
+                if (await this.SaveChangesIfAndRemove(editor) == false)
                     e.Cancel();
                 if (this.Editors.Any() == false)
                     this.AddEditor();
+            });
+
+        public Delegate ClosingTerminalHandler
+            => new ItemActionCallback(e =>
+            {
+                if (e.IsCancelled || !(e.DragablzItem?.DataContext is TerminalViewModel terminal))
+                    return;
+                this.RemoveTerminal(terminal);
             });
 
         #endregion
@@ -558,7 +595,7 @@ namespace MyPad.ViewModels
             return true;
         }
 
-        public async Task<bool> SaveChangesIfAndRemove()
+        public async Task<bool> SaveChangesIfAndRemoveAll()
         {
             for (var i = this.Editors.Count - 1; 0 <= i; i--)
             {
@@ -639,26 +676,27 @@ namespace MyPad.ViewModels
             }
         }
 
-        private TerminalViewModel AddTerminal()
+        public TerminalViewModel AddTerminal()
         {
             var terminal = this.TerminalFactory.Invoke();
-            terminal.Start();
-            this.Terminals.Add(terminal);
-            this.ActiveTerminal = terminal;
+            this.AddTerminal(terminal);
             return terminal;
         }
 
-        private bool RemoveTerminal(TerminalViewModel terminal)
+        public void AddTerminal(TerminalViewModel terminal)
         {
-            var i = this.Terminals.IndexOf(terminal);
-            if (i < 0)
+            this.Terminals.Add(terminal);
+            this.ActiveTerminal = terminal;
+        }
+
+        public bool RemoveTerminal(TerminalViewModel terminal)
+        {
+            if (this.Terminals.Contains(terminal) == false)
                 return false;
 
-            this.Terminals.RemoveAt(i);
+            this.Terminals.Remove(terminal);
             terminal.Disposed -= this.Terminal_Disposed;
             terminal.Dispose();
-            if (this.Terminals.Any())
-                this.ActiveTerminal = this.Terminals[Math.Max(i - 1, 0)];
             return true;
         }
 

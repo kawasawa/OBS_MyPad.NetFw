@@ -21,14 +21,14 @@ namespace MyPad.ViewModels
 {
     public abstract class TextEditorViewModelCore : ViewModelBase
     {
-        private static readonly bool ENABLED_AUTO_SAVE = SettingsService.Instance.System.EnableAutoSave;
-        private static readonly TimeSpan AUTO_SAVE_INTERVAL = new TimeSpan(0, SettingsService.Instance.System.AutoSaveInterval, 0);
-        private static int SEQUENSE = 0;
+        private static readonly bool _ENABLED_AUTO_SAVE = SettingsService.Instance.System.EnableAutoSave;
+        private static readonly TimeSpan _AUTO_SAVE_INTERVAL = new TimeSpan(0, SettingsService.Instance.System.AutoSaveInterval, 0);
+        private static int _SEQUENCE = 0;
 
         private readonly DispatcherTimer _autoSaveTimer = new DispatcherTimer();
         private Tuple<string, ITextSourceVersion> _temporary;
 
-        public int Sequense { get; } = ++SEQUENSE;
+        public int Sequense { get; } = ++_SEQUENCE;
         public bool IsNewFile => this.FileStream == null;
         public string FileName => this.FileStream?.Name ?? $"{AppConfig.InitialFileName}-{this.Sequense}";
         public FileInfo FileInfo => this.IsNewFile ? null : new FileInfo(this.FileName);
@@ -245,7 +245,7 @@ namespace MyPad.ViewModels
 
         private async void AutoSaveTimer_Tick(object sender, EventArgs e)
         {
-            if (ENABLED_AUTO_SAVE == false || this.IsModified == false || this.Document.Version == this._temporary?.Item2)
+            if (_ENABLED_AUTO_SAVE == false || this.IsModified == false || this.Document.Version == this._temporary?.Item2)
                 return;
 
             await this.SuspendTimerDelegate(async () =>
@@ -301,7 +301,7 @@ namespace MyPad.ViewModels
         {
             this._autoSaveTimer.Stop();
             action.Invoke();
-            this._autoSaveTimer.Interval = AUTO_SAVE_INTERVAL;
+            this._autoSaveTimer.Interval = _AUTO_SAVE_INTERVAL;
             this._autoSaveTimer.Start();
         }
 
@@ -309,7 +309,7 @@ namespace MyPad.ViewModels
         {
             this._autoSaveTimer.Stop();
             await func.Invoke();
-            this._autoSaveTimer.Interval = AUTO_SAVE_INTERVAL;
+            this._autoSaveTimer.Interval = _AUTO_SAVE_INTERVAL;
             this._autoSaveTimer.Start();
         }
     }
