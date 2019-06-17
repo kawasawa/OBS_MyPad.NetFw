@@ -502,10 +502,10 @@
                                     <Grid ge:GridEx.RowDefinition="Auto, 5, 3*(50-), Auto, *(50-)">
                                         <Grid Grid.Row="0" ge:GridEx.ColumnDefinition="Auto, 5, Auto">
                                             <Button Grid.Column="0" Command="{Binding ClearClipboardItemCommand, Source={x:Static viewModels:WorkspaceViewModel.Instance}}" ToolTip="{Binding Resources.Command_Delete, Source={x:Static models:ResourceService.Instance}}" Style="{StaticResource IconButton}">
-                                                <mi:Material Kind="Broom"/>
+                                                <mi:Modern Kind="Clean"/>
                                             </Button>
                                             <Button Grid.Column="2" Command="{Binding ClearAllClipboardItemsCommand, Source={x:Static viewModels:WorkspaceViewModel.Instance}}" ToolTip="{Binding Resources.Command_DeleteAll, Source={x:Static models:ResourceService.Instance}}" Style="{StaticResource IconButton}">
-                                                <mi:Modern Kind="Clean"/>
+                                                <mi:Material Kind="Broom"/>
                                             </Button>
                                         </Grid>
                                         <ListBox Grid.Row="2" ItemsSource="{Binding ClipboardItems, Source={x:Static viewModels:WorkspaceViewModel.Instance}}" SelectedItem="{Binding SelectedClipboardItem, Source={x:Static viewModels:WorkspaceViewModel.Instance}}" ItemContainerStyle="{StaticResource __ClipboardItem}">
@@ -1226,7 +1226,7 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="{Binding ActualHeight, ElementName=StatusBar}"/>
                     </Grid.RowDefinitions>
-                    <Grid ge:GridEx.RowDefinition="Auto, 20, Auto, 20, *" Margin="20,0">
+                    <Grid ge:GridEx.RowDefinition="Auto, 15, Auto, 15, *" Margin="20,0">
                         <StackPanel Grid.Row="0" Margin="20,0" Orientation="Horizontal">
                             <TextBlock Text="{x:Static ml:ProductInfo.Product}" FontWeight="Bold" FontSize="32"/>
                             <Border Width="20"/>
