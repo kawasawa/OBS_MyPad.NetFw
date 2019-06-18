@@ -34,6 +34,7 @@
     <Style TargetType="{x:Type StackPanel}" BasedOn="{StaticResource Default.StackPanel}"/>
     <Style TargetType="{x:Type Grid}" BasedOn="{StaticResource Default.Grid}"/>
     <Style TargetType="{x:Type GridSplitter}" BasedOn="{StaticResource Default.GridSplitter}"/>
+    <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource Default.ScrollBar}"/>
     <Style TargetType="{x:Type ScrollViewer}" BasedOn="{StaticResource Default.ScrollViewer}"/>
     <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource Default.TabItem}"/>
     <Style TargetType="{x:Type TabControl}" BasedOn="{StaticResource Default.TabControl}"/>

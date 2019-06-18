@@ -419,11 +419,14 @@
         <Setter Property="Focusable" Value="False"/>
     </Style>
 
+    <Style x:Key="Default.ScrollBar" TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource {x:Type ScrollBar}}">
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+    </Style>
+    
     <Style x:Key="Default.ScrollViewer" TargetType="{x:Type ScrollViewer}" BasedOn="{StaticResource {x:Type ScrollViewer}}">
         <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="Focusable" Value="False"/>
-        <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
     </Style>
 
     <Style x:Key="Default.TabItem" TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
