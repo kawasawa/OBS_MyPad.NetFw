@@ -88,7 +88,7 @@
         <Style TargetType="{x:Type StatusBar}" BasedOn="{StaticResource Default.StatusBar}">
             <Setter Property="Visibility" Value="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding Window.ShowStatusBar, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}}"/>
         </Style>
-        <Style x:Key="IconButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Buton}">
+        <Style x:Key="IconButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
             <Setter Property="Width" Value="30"/>
             <Setter Property="Height" Value="30"/>
             <Setter Property="Padding" Value="2"/>
@@ -99,6 +99,18 @@
             <Setter Property="VerticalContentAlignment" Value="Top"/>
             <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
             <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+        </Style>
+        <Style x:Key="AddItemButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
+            <Setter Property="Background" Value="{x:Null}"/>
+            <Setter Property="BorderBrush" Value="{x:Null}"/>
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Padding" Value="2"/>
+            <Setter Property="Content">
+                <Setter.Value>
+                    <mi:Material Kind="Plus" Height="12" Width="12"/>
+                </Setter.Value>
+            </Setter>
         </Style>
         <ContextMenu x:Key="ContextMenu">
             <MenuItem IsCheckable="True" IsChecked="{Binding Window.ShowMenuBar, Source={x:Static models:SettingsService.Instance}, Mode=TwoWay}" Header="{Binding Resources.Command_ShowMenuBar, Source={x:Static models:ResourceService.Instance}}"/>
@@ -618,9 +630,7 @@
                         </dr:TabablzControl.HeaderItemTemplate>
                         <dr:TabablzControl.HeaderSuffixContent>
                             <Grid ge:GridEx.ColumnDefinition="Auto, *" Margin="5,0,0,0">
-                                <Button Grid.Column="0" Command="{x:Static dr:TabablzControl.AddItemCommand}" Style="{StaticResource Common.ToolButton}" Focusable="False">
-                                    <mi:Material Kind="Plus" Height="12" Width="12"/>
-                                </Button>
+                                <Button Grid.Column="0" Command="{x:Static dr:TabablzControl.AddItemCommand}" Style="{StaticResource AddItemButton}" Focusable="False"/>
                                 <Border Grid.Column="1" ContextMenu="{StaticResource ContextMenu}">
                                     <TextBlock VerticalAlignment="Stretch"/>
                                 </Border>
@@ -790,9 +800,7 @@
                         </dr:TabablzControl.HeaderPrefixContent>
                         <dr:TabablzControl.HeaderSuffixContent>
                             <Grid ge:GridEx.ColumnDefinition="Auto, *" Margin="5,0,0,0">
-                                <Button Grid.Column="0" Command="{x:Static dr:TabablzControl.AddItemCommand}" Style="{StaticResource Common.ToolButton}" Focusable="False">
-                                    <mi:Material Kind="Plus" Height="12" Width="12"/>
-                                </Button>
+                                <Button Grid.Column="0" Command="{x:Static dr:TabablzControl.AddItemCommand}" Style="{StaticResource AddItemButton}" Focusable="False"/>
                                 <Border Grid.Column="1" ContextMenu="{StaticResource ContextMenu}">
                                     <TextBlock VerticalAlignment="Stretch"/>
                                 </Border>
@@ -977,7 +985,7 @@
                         <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource Default.RadioButton}">
                             <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
                         </Style>
-                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Buton}">
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
                             <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
                         </Style>
                         <Style TargetType="{x:Type GroupBox}" BasedOn="{StaticResource Default.GroupBox}">

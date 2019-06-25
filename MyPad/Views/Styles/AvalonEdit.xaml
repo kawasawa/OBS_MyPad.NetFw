@@ -69,8 +69,29 @@
                                     <Setter Property="FontSize" Value="{Binding FontSize, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"/>
                                     <Setter Property="MinWidth" Value="150"/>
                                 </Style>
-                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Common.ToolButton}"/>
-                                <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Common.ToolToggleButton}"/>
+                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
+                                    <Setter Property="Background" Value="{x:Null}"/>
+                                    <Setter Property="BorderBrush" Value="{x:Null}"/>
+                                    <Setter Property="Width" Value="20"/>
+                                    <Setter Property="Height" Value="20"/>
+                                    <Setter Property="Padding" Value="2"/>
+                                </Style>
+                                <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Default.ToggleButton}">
+                                    <Setter Property="Background" Value="{x:Null}"/>
+                                    <Setter Property="BorderBrush" Value="{x:Null}"/>
+                                    <Setter Property="Width" Value="20"/>
+                                    <Setter Property="Height" Value="20"/>
+                                    <Setter Property="Padding" Value="2"/>
+                                    <Style.Triggers>
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="IsChecked" Value="True"/>
+                                                <Condition Property="IsPressed" Value="False"/>
+                                            </MultiTrigger.Conditions>
+                                            <Setter Property="Background" Value="{DynamicResource BackgroundSelected}"/>
+                                        </MultiTrigger>
+                                    </Style.Triggers>
+                                </Style>
                             </Grid.Resources>
 
                             <ToggleButton Grid.Row="0" Grid.Column="0" x:Name="ExpandButton" IsChecked="{Binding (components:TextArea.SearchPanelExpand)}" ToolTip="{qc:MultiBinding '$P0 ? $P1 : $P2', P0={Binding (components:TextArea.SearchPanelExpand)}, P1={Binding Resources.Command_SwitchToFindMode, Source={x:Static models:ResourceService.Instance}}, P2={Binding Resources.Command_SwitchToReplaceMode, Source={x:Static models:ResourceService.Instance}}}">
