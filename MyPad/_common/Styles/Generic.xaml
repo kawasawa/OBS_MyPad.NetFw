@@ -23,9 +23,9 @@
     <Style TargetType="{x:Type ListView}" BasedOn="{StaticResource Default.ListView}"/>
     <Style TargetType="{x:Type GridViewColumnHeader}" BasedOn="{StaticResource Default.GridViewColumnHeader}"/>
     <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource Default.CheckBox}"/>
-    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Buton}"/>
+    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}"/>
     <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource Default.RadioButton}"/>
-    <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Default.ToggleButon}"/>
+    <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Default.ToggleButton}"/>
     <Style TargetType="{x:Type GroupBox}" BasedOn="{StaticResource Default.GroupBox}"/>
     <Style TargetType="{x:Type Expander}" BasedOn="{StaticResource Default.Expander}"/>
     <Style TargetType="{x:Type Border}" BasedOn="{StaticResource Default.Border}"/>

@@ -237,7 +237,7 @@
         <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{DynamicResource AccentColorBrush2}"/>
     </Style>
 
-    <Style x:Key="Default.Buton" TargetType="{x:Type Button}" BasedOn="{StaticResource MetroFlatButton}">
+    <Style x:Key="Default.Button" TargetType="{x:Type Button}" BasedOn="{StaticResource MetroFlatButton}">
         <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
         <Setter Property="Foreground" Value="{DynamicResource BlackColorBrush}"/>
         <Setter Property="Background" Value="{DynamicResource BackgroundNormal}"/>
@@ -260,7 +260,7 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="Common.AccentButon" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Buton}">
+    <Style x:Key="Common.AccentButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
         <Setter Property="Foreground" Value="{DynamicResource WhiteColorBrush}"/>
         <Setter Property="Background" Value="{DynamicResource AccentColorBrush}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}"/>
@@ -282,7 +282,7 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="Common.DangerButon" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Buton}">
+    <Style x:Key="Common.DangerButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
         <Setter Property="Foreground" Value="{DynamicResource WhiteColorBrush}"/>
         <Setter Property="Background" Value="{DynamicResource ValidationSummaryColor1}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource ValidationSummaryColor1}"/>
@@ -321,19 +321,17 @@
         </Style.Resources>
     </Style>
 
-    <Style x:Key="Common.CircleToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource MahApps.Metro.Styles.MetroCircleToggleButtonStyle}">
+    <Style x:Key="Common.CircleAccentButton" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
         <Setter Property="Width" Value="40"/>
         <Setter Property="Height" Value="40"/>
-        <Setter Property="Foreground" Value="{DynamicResource GrayBrush3}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource AccentColorBrush}"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxPopupBorderBrush}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush3}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Foreground" Value="{DynamicResource SemiTransparentWhiteBrush}"/>
-            </Trigger>
-            <Trigger Property="IsChecked" Value="True">
-                <Setter Property="Foreground" Value="White"/>
             </Trigger>
         </Style.Triggers>
         <Style.Resources>
@@ -342,7 +340,26 @@
         </Style.Resources>
     </Style>
 
-    <Style x:Key="Default.ToggleButon" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource MetroFlatToggleButton}">
+    <Style x:Key="Common.CircleDangerButton" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
+        <Setter Property="Width" Value="40"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ValidationSummaryColor1}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ValidationSummaryColor1}"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="BorderBrush" Value="{DynamicResource ValidationSummaryColor3}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource SemiTransparentWhiteBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+        <Style.Resources>
+            <Style TargetType="{x:Type mi:PackIconModern}" BasedOn="{StaticResource Common.PackIconModernGrayMiddle}"/>
+            <Style TargetType="{x:Type mi:PackIconMaterial}" BasedOn="{StaticResource Common.PackIconMaterialGrayMiddle}"/>
+        </Style.Resources>
+    </Style>
+
+    <Style x:Key="Default.ToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource MetroFlatToggleButton}">
         <Setter Property="Foreground" Value="{DynamicResource BlackColorBrush}"/>
         <Setter Property="Background" Value="{DynamicResource BackgroundNormal}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
@@ -366,29 +383,25 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="Common.ToolButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Buton}">
-        <Setter Property="Background" Value="{x:Null}"/>
-        <Setter Property="BorderBrush" Value="{x:Null}"/>
-        <Setter Property="Width" Value="20"/>
-        <Setter Property="Height" Value="20"/>
-        <Setter Property="Padding" Value="2"/>
-    </Style>
-
-    <Style x:Key="Common.ToolToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Default.ToggleButon}">
-        <Setter Property="Background" Value="{x:Null}"/>
-        <Setter Property="BorderBrush" Value="{x:Null}"/>
-        <Setter Property="Width" Value="20"/>
-        <Setter Property="Height" Value="20"/>
-        <Setter Property="Padding" Value="2"/>
+    <Style x:Key="Common.CircleToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource MahApps.Metro.Styles.MetroCircleToggleButtonStyle}">
+        <Setter Property="Width" Value="40"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Foreground" Value="{DynamicResource GrayBrush3}"/>
         <Style.Triggers>
-            <MultiTrigger>
-                <MultiTrigger.Conditions>
-                    <Condition Property="IsChecked" Value="True"/>
-                    <Condition Property="IsPressed" Value="False"/>
-                </MultiTrigger.Conditions>
-                <Setter Property="Background" Value="{DynamicResource BackgroundSelected}"/>
-            </MultiTrigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxPopupBorderBrush}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource SemiTransparentWhiteBrush}"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Foreground" Value="White"/>
+            </Trigger>
         </Style.Triggers>
+        <Style.Resources>
+            <Style TargetType="{x:Type mi:PackIconModern}" BasedOn="{StaticResource Common.PackIconModernGrayMiddle}"/>
+            <Style TargetType="{x:Type mi:PackIconMaterial}" BasedOn="{StaticResource Common.PackIconMaterialGrayMiddle}"/>
+        </Style.Resources>
     </Style>
 
     <Style x:Key="Default.GroupBox" TargetType="{x:Type GroupBox}" BasedOn="{StaticResource MetroGroupBox}">
@@ -422,7 +435,7 @@
     <Style x:Key="Default.ScrollBar" TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource {x:Type ScrollBar}}">
         <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
     </Style>
-    
+
     <Style x:Key="Default.ScrollViewer" TargetType="{x:Type ScrollViewer}" BasedOn="{StaticResource {x:Type ScrollViewer}}">
         <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
@@ -487,7 +500,7 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="Common.StatusToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Default.ToggleButon}">
+    <Style x:Key="Common.StatusToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Default.ToggleButton}">
         <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StatusBar}}}"/>
         <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StatusBar}}}"/>
         <Setter Property="FontFamily" Value="{DynamicResource {x:Static SystemFonts.StatusFontFamilyKey}}"/>
@@ -560,7 +573,7 @@
 
     <Style x:Key="Default.BaseMetroDialog" TargetType="{x:Type md:BaseMetroDialog}" BasedOn="{StaticResource MahApps.Metro.Styles.MetroDialog}">
         <Style.Resources>
-            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Buton}"/>
+            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}"/>
         </Style.Resources>
         <Setter Property="Template">
             <Setter.Value>
@@ -660,7 +673,7 @@
         <Setter Property="ShowLastSeparator" Value="False"/>
         <Setter Property="Foreground" Value="{DynamicResource BlackBrush}"/>
         <Style.Resources>
-            <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Default.ToggleButon}">
+            <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Default.ToggleButton}">
                 <Setter Property="Background" Value="Transparent"/>
                 <Setter Property="Focusable" Value="False"/>
             </Style>
