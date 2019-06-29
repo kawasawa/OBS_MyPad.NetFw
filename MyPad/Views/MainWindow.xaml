@@ -298,7 +298,7 @@
                     <Separator/>
                     <MenuItem Command="{Binding MergeWindowsCommand, Source={x:Static viewModels:WorkspaceViewModel.Instance}, Mode=OneTime}" Header="{Binding Resources.Command_MergeWindows, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
                         <MenuItem.Icon>
-                            <mi:Material Kind="VectorCombine"/>
+                            <mi:Material Kind="ArrangeBringToFront"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem ItemsSource="{Binding Windows, Source={x:Static viewModels:WorkspaceViewModel.Instance}, Mode=OneWay}" Header="{Binding Resources.Command_WindowList, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
@@ -926,12 +926,10 @@
                 <i:Interaction.Behaviors>
                     <behaviors:FlyoutBehavior CloseByEsc="True"/>
                 </i:Interaction.Behaviors>
-                <Grid DataContext="{Binding ActiveEditor, Mode=OneWay}" ge:GridEx.ColumnDefinition="*, 5">
-                    <components:NumericUpDownEx x:Name="GoToLineInput"
-                        Background="Transparent" BorderThickness="0" FontSize="{StaticResource FlyoutHeaderFontSize}"
-                        Value="{qc:MultiBinding '$P0 ? $P1 : 1', P0={Binding IsOpen, ElementName=GoToLineFlyout, Mode=OneWay}, P1={Binding Line, Mode=OneWay}}"
-                        Minimum="1" Maximum="{Binding Document.LineCount, Mode=OneWay}" ReverseOnMouseWheel="True"/>
-                </Grid>
+                <components:NumericUpDownEx x:Name="GoToLineInput" Margin="0,0,5,0"
+                    Background="Transparent" BorderThickness="0" FontSize="{StaticResource FlyoutHeaderFontSize}"
+                    Value="{qc:MultiBinding '$P0 ? $P1 : 1', P0={Binding IsOpen, ElementName=GoToLineFlyout, Mode=OneWay}, P1={Binding ActiveEditor.Line, Mode=OneWay}}"
+                    Minimum="1" Maximum="{Binding ActiveEditor.Document.LineCount, Mode=OneWay}" ReverseOnMouseWheel="True"/>
             </m:Flyout>
 
             <!-- 印刷 -->
@@ -975,36 +973,36 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="{Binding ActualHeight, ElementName=StatusBar, Mode=OneWay}"/>
                     </Grid.RowDefinitions>
-                    <Grid.Resources>
-                        <Style TargetType="{x:Type Label}" BasedOn="{StaticResource Default.Label}">
-                            <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
-                        </Style>
-                        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
-                            <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
-                        </Style>
-                        <Style TargetType="{x:Type m:NumericUpDown}" BasedOn="{StaticResource Default.NumericUpDown}">
-                            <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
-                        </Style>
-                        <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource Default.ComboBox}">
-                            <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
-                        </Style>
-                        <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource Default.CheckBox}">
-                            <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
-                        </Style>
-                        <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource Default.RadioButton}">
-                            <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
-                        </Style>
-                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
-                            <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
-                        </Style>
-                        <Style TargetType="{x:Type GroupBox}" BasedOn="{StaticResource Default.GroupBox}">
-                            <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
-                        </Style>
-                        <Style TargetType="{x:Type Expander}" BasedOn="{StaticResource Default.Expander}">
-                            <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
-                        </Style>
-                    </Grid.Resources>
                     <TabControl>
+                        <TabControl.Resources>
+                            <Style TargetType="{x:Type Label}" BasedOn="{StaticResource Default.Label}">
+                                <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
+                            </Style>
+                            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
+                                <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
+                            </Style>
+                            <Style TargetType="{x:Type m:NumericUpDown}" BasedOn="{StaticResource Default.NumericUpDown}">
+                                <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
+                            </Style>
+                            <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource Default.ComboBox}">
+                                <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
+                            </Style>
+                            <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource Default.CheckBox}">
+                                <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
+                            </Style>
+                            <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource Default.RadioButton}">
+                                <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
+                            </Style>
+                            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
+                                <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
+                            </Style>
+                            <Style TargetType="{x:Type GroupBox}" BasedOn="{StaticResource Default.GroupBox}">
+                                <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
+                            </Style>
+                            <Style TargetType="{x:Type Expander}" BasedOn="{StaticResource Default.Expander}">
+                                <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
+                            </Style>
+                        </TabControl.Resources>
                         <TabItem DataContext="{Binding System, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}" Header="{Binding Resources.Label_System, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
                             <ScrollViewer>
                                 <StackPanel>
@@ -1243,16 +1241,14 @@
                         <RowDefinition Height="{Binding ActualHeight, ElementName=StatusBar, Mode=OneWay}"/>
                     </Grid.RowDefinitions>
                     <Grid ge:GridEx.RowDefinition="Auto, 15, Auto, 15, *" Margin="20,0">
-                        <StackPanel Grid.Row="0" Margin="20,0" Orientation="Horizontal">
-                            <TextBlock Text="{x:Static ml:ProductInfo.Product}" FontWeight="Bold" FontSize="32"/>
-                            <Border Width="20"/>
-                            <TextBlock>
+                        <Grid Grid.Row="0" Margin="20,0" ge:GridEx.ColumnDefinition="Auto, 20, Auto, 20, Auto">
+                            <TextBlock Grid.Column="0" Text="{x:Static ml:ProductInfo.Product}" FontWeight="Bold" FontSize="32"/>
+                            <TextBlock Grid.Column="2" TextWrapping="Wrap">
                                 <Run Text="{qc:MultiBinding '\'Version \' + $P0 + ($P1 ? \' - Debug Build\' : null)', P0={Binding Source={x:Static ml:ProductInfo.Version}, Mode=OneWay}, P1={Binding Source={x:Static ml:ProductInfo.IsDebugBuild}, Mode=OneWay}}"/>
                                 <LineBreak/>
                                 <Run Text="{x:Static ml:ProductInfo.Copyright}"/>
                             </TextBlock>
-                            <Border Width="20"/>
-                            <Button Style="{StaticResource Common.CircleButton}">
+                            <Button Grid.Column="4" Style="{StaticResource Common.CircleButton}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <mlwb:ProcessStartAction FileName="{x:Static root:AppConfig.ProjectSite}" ThrowException="False"/>
@@ -1260,7 +1256,7 @@
                                 </i:Interaction.Triggers>
                                 <mi:Material Kind="GithubCircle"/>
                             </Button>
-                        </StackPanel>
+                        </Grid>
                         <Border  Grid.Row="2" Height="1" Background="{DynamicResource GrayBrush5}"/>
                         <ListBox Grid.Row="4" Margin="20,0,10,0" ItemsSource="{qc:Binding '$P.OrderBy(((AssemblyName)x) => (string)($x.Name))', P={Binding Source={x:Static ml:ProductInfo.ReferencedAssemblies}, Mode=OneWay}}">
                             <ListBox.ItemTemplate>
