@@ -278,6 +278,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   Exit に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_ExitApplication {
+            get {
+                return ResourceManager.GetString("Command_ExitApplication", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   File に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_File {
@@ -1326,15 +1335,6 @@ namespace MyPad.Properties {
         public static string Message_ConfirmSaveChanges {
             get {
                 return ResourceManager.GetString("Message_ConfirmSaveChanges", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Some changes will be applied on restart. に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Message_NotifyAppliedOnRestart {
-            get {
-                return ResourceManager.GetString("Message_NotifyAppliedOnRestart", resourceCulture);
             }
         }
         

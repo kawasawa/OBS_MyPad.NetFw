@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Threading;
@@ -100,7 +101,7 @@ namespace MyPad.Views
             this.EncodingComboBox.SelectionChanged += this.StatusComboBox_SelectionChanged;
             this.LanguageComboBox.SelectionChanged += this.StatusComboBox_SelectionChanged;
             this.GoToLineInput.ValueChanged += this.GoToLineInput_ValueChanged;
-            this.Flyouts.Items.Cast<Flyout>().ForEach(item => item.IsOpenChanged += this.Flyout_IsOpenChanged);
+            this.Flyouts.Items.OfType<Flyout>().ForEach(item => item.IsOpenChanged += this.Flyout_IsOpenChanged);
         }
 
         private void Window_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -226,7 +227,7 @@ namespace MyPad.Views
             }
         }
 
-        private void ContentSplitter_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        private void ContentSplitter_DragCompleted(object sender, DragCompletedEventArgs e)
         {
             if (this.ToolContentRow.Height.Value == 0)
             {
@@ -244,7 +245,7 @@ namespace MyPad.Views
 
         private void TerminalTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // HACK: ComboBox.SelectionChanged が伝播してくるためイベントの発生源を確認
+            // ComboBox.SelectionChanged が伝播してくるためイベントの発生源を確認
             if (e.Source != e.OriginalSource)
                 return;
             this.Dispatcher.InvokeAsync(() => this.ActiveCommandBox?.Focus(), DispatcherPriority.Input);

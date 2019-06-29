@@ -573,9 +573,6 @@ Definitions is reflected on restart. Do you want to continue?</value>
   <data name="Label_Opacity" xml:space="preserve">
     <value>Opacity</value>
   </data>
-  <data name="Message_NotifyAppliedOnRestart" xml:space="preserve">
-    <value>Some changes will be applied on restart.</value>
-  </data>
   <data name="Text_AllowsTransparency" xml:space="preserve">
     <value>Allows transparency.</value>
   </data>
@@ -677,5 +674,8 @@ Definitions is reflected on restart. Do you want to continue?</value>
   </data>
   <data name="Command_NewTerminal" xml:space="preserve">
     <value>New terminal</value>
+  </data>
+  <data name="Command_ExitApplication" xml:space="preserve">
+    <value>Exit</value>
   </data>
 </root>

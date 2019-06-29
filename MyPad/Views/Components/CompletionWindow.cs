@@ -72,7 +72,7 @@ namespace MyPad.Views.Components
             // キーワードリストの設定
             completionData.ForEach(data => this.CompletionList.CompletionData.Add(data));
             this.CompletionList.SelectItem(start < end ? textAera.Document.GetText(start, end - start) : string.Empty);
-            if (this.CompletionList.ListBox.ItemsSource.Cast<ICompletionData>().Any() == false)
+            if (this.CompletionList.ListBox.ItemsSource.OfType<ICompletionData>().Any() == false)
                 this.CompletionList.SelectItem(string.Empty);
 
             // プロパティの設定

@@ -536,9 +536,6 @@
   <data name="Text_AllowsTransparency" xml:space="preserve">
     <value>背景を透過する。</value>
   </data>
-  <data name="Message_NotifyAppliedOnRestart" xml:space="preserve">
-    <value>一部の変更は次回起動時に適用されます。</value>
-  </data>
   <data name="Command_CloseAll" xml:space="preserve">
     <value>すべて閉じる</value>
   </data>
@@ -634,5 +631,8 @@
   </data>
   <data name="Command_NewTerminal" xml:space="preserve">
     <value>新規ターミナル</value>
+  </data>
+  <data name="Command_ExitApplication" xml:space="preserve">
+    <value>MyPad を終了する</value>
   </data>
 </root>

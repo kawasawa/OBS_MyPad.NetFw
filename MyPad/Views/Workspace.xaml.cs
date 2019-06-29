@@ -100,7 +100,7 @@ namespace MyPad.Views
         {
             var windows = Application.Current.Windows.OfType<MainWindow>();
             if (windows.Any())
-                windows.ForEach(window => window.SetForegroundWindow());
+                windows.ForEach(w => w.SetForegroundWindow());
             else
                 this.ViewModel.AddWindow();
         }

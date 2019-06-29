@@ -78,7 +78,7 @@ namespace MyPad.Models
             set => this.SetProperty(ref this._autoSaveInterval, value);
         }
 
-        private int _clipboardHistoryCount = 10;
+        private int _clipboardHistoryCount = 20;
         [Range(1, int.MaxValue)]
         public int ClipboardHistoryCount
         {

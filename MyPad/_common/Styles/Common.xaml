@@ -103,7 +103,7 @@
     <Style x:Key="Default.ResizeGrip" TargetType="{x:Type ResizeGrip}" BasedOn="{StaticResource {x:Type ResizeGrip}}">
         <Setter Property="Visibility" Value="Hidden"/>
         <Style.Triggers>
-            <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" Value="Maximized">
+            <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}" Value="Maximized">
                 <Setter Property="Visibility" Value="Collapsed"/>
             </DataTrigger>
         </Style.Triggers>
@@ -417,16 +417,6 @@
         <Setter Property="IsExpanded" Value="True"/>
     </Style>
 
-    <Style x:Key="Default.Border" TargetType="{x:Type Border}"/>
-
-    <Style x:Key="Default.Panel" TargetType="{x:Type Panel}"/>
-
-    <Style x:Key="Default.DockPanel" TargetType="{x:Type DockPanel}"/>
-
-    <Style x:Key="Default.StackPanel" TargetType="{x:Type StackPanel}"/>
-
-    <Style x:Key="Default.Grid" TargetType="{x:Type Grid}"/>
-
     <Style x:Key="Default.GridSplitter" TargetType="{x:Type GridSplitter}">
         <Setter Property="Background" Value="{DynamicResource LightBackground}"/>
         <Setter Property="Focusable" Value="False"/>
@@ -474,13 +464,13 @@
 
     <Style x:Key="Common.StatusTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StatusBar}}}"/>
+        <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type StatusBar}}, Mode=OneWay}"/>
         <Setter Property="Padding" Value="{StaticResource Const.Gap1W}"/>
     </Style>
 
     <Style x:Key="Common.StatusComboBox" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource Default.ComboBox}">
-        <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StatusBar}}}"/>
-        <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StatusBar}}}"/>
+        <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType={x:Type StatusBar}}, Mode=OneWay}"/>
+        <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type StatusBar}}, Mode=OneWay}"/>
         <Setter Property="m:TextBoxHelper.ButtonWidth" Value="0"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Padding" Value="{StaticResource Const.Gap1W}"/>
@@ -501,8 +491,8 @@
     </Style>
 
     <Style x:Key="Common.StatusToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Default.ToggleButton}">
-        <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StatusBar}}}"/>
-        <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StatusBar}}}"/>
+        <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType={x:Type StatusBar}}, Mode=OneWay}"/>
+        <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type StatusBar}}, Mode=OneWay}"/>
         <Setter Property="FontFamily" Value="{DynamicResource {x:Static SystemFonts.StatusFontFamilyKey}}"/>
         <Setter Property="FontStyle" Value="{DynamicResource {x:Static SystemFonts.StatusFontStyleKey}}"/>
         <Setter Property="FontWeight" Value="{DynamicResource {x:Static SystemFonts.StatusFontWeightKey}}"/>
@@ -512,7 +502,7 @@
         <Setter Property="Focusable" Value="False"/>
         <Style.Triggers>
             <Trigger Property="IsChecked" Value="True">
-                <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StatusBar}}}"/>
+                <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType={x:Type StatusBar}}, Mode=OneWay}"/>
             </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{DynamicResource AccentColorBrush2}"/>
@@ -521,7 +511,7 @@
     </Style>
 
     <Style x:Key="Default.StatusBarItem" TargetType="{x:Type StatusBarItem}">
-        <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StatusBar}}}"/>
+        <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type StatusBar}}, Mode=OneWay}"/>
         <Setter Property="Padding" Value="0"/>
         <Style.Resources>
             <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.StatusTextBlock}"/>
@@ -563,10 +553,10 @@
         </Setter>
         <Style.Resources>
             <Style TargetType="{x:Type mi:PackIconModern}" BasedOn="{StaticResource Common.PackIconModernGrayMiddle}">
-                <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type m:HamburgerMenu}}}"/>
+                <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type m:HamburgerMenu}}, Mode=OneWay}"/>
             </Style>
             <Style TargetType="{x:Type mi:PackIconMaterial}" BasedOn="{StaticResource Common.PackIconMaterialGrayMiddle}">
-                <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type m:HamburgerMenu}}}"/>
+                <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type m:HamburgerMenu}}, Mode=OneWay}"/>
             </Style>
         </Style.Resources>
     </Style>
@@ -639,8 +629,7 @@
 
     <Style x:Key="Default.Flyout" TargetType="{x:Type m:Flyout}" BasedOn="{StaticResource {x:Type m:Flyout}}">
         <Setter Property="Foreground" Value="White"/>
-        <Setter Property="Background" Value="{DynamicResource BlueColorBrush}"/>
-        <Setter Property="Opacity" Value="{StaticResource Const.Opacity1}"/>
+        <Setter Property="Background" Value="{DynamicResource AccentColorBrush}"/>
         <Setter Property="FontSize" Value="{StaticResource DialogMessageFontSize}"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="AnimateOpacity" Value="True"/>
@@ -651,15 +640,15 @@
             <SolidColorBrush x:Key="FlatButtonBackgroundBrush" Color="{DynamicResource WhiteColor}" o:Freeze="True"/>
 
             <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
-                <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type m:Flyout}}}"/>
+                <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type m:Flyout}}, Mode=OneWay}"/>
             </Style>
             <Style TargetType="{x:Type ListBox}" BasedOn="{StaticResource Default.ListBox}">
-                <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type m:Flyout}}}"/>
+                <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type m:Flyout}}, Mode=OneWay}"/>
                 <Setter Property="Background" Value="Transparent"/>
                 <Setter Property="ItemContainerStyle">
                     <Setter.Value>
                         <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource Default.ListBoxItem}">
-                            <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type m:Flyout}}}"/>
+                            <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type m:Flyout}}, Mode=OneWay}"/>
                             <Setter Property="Background" Value="Transparent"/>
                             <Setter Property="Focusable" Value="False"/>
                         </Style>
@@ -671,13 +660,6 @@
 
     <Style x:Key="Default.WindowCommands" TargetType="{x:Type m:WindowCommands}" BasedOn="{StaticResource {x:Type m:WindowCommands}}">
         <Setter Property="ShowLastSeparator" Value="False"/>
-        <Setter Property="Foreground" Value="{DynamicResource BlackBrush}"/>
-        <Style.Resources>
-            <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Default.ToggleButton}">
-                <Setter Property="Background" Value="Transparent"/>
-                <Setter Property="Focusable" Value="False"/>
-            </Style>
-        </Style.Resources>
     </Style>
 
     <Style x:Key="Default.MetroProgressBar" TargetType="{x:Type m:MetroProgressBar}" BasedOn="{StaticResource {x:Type m:MetroProgressBar}}">
@@ -688,7 +670,7 @@
         <Setter Property="Foreground" Value="{DynamicResource HighlightBrush}"/>
     </Style>
 
-    <Style x:Key="Common.Overlay" TargetType="{x:Type Border}" BasedOn="{StaticResource Default.Border}">
+    <Style x:Key="Common.Overlay" TargetType="{x:Type Border}">
         <Setter Property="Opacity" Value="{StaticResource Const.Opacity2}"/>
         <Setter Property="Background" Value="{DynamicResource GrayBrush8}"/>
         <Style.Resources>
@@ -718,12 +700,14 @@
     <Style x:Key="Common.Window" TargetType="{x:Type m:MetroWindow}" BasedOn="{StaticResource {x:Type m:MetroWindow}}">
         <Setter Property="MinHeight" Value="200"/>
         <Setter Property="MinWidth" Value="200"/>
-        <Setter Property="TitleCharacterCasing" Value="Normal"/>
-        <Setter Property="TitleForeground" Value="{DynamicResource LabelTextBrush}"/>
-        <Setter Property="WindowTitleBrush" Value="{x:Null}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource VSColorBrush}"/>
-        <Setter Property="NonActiveWindowTitleBrush" Value="{x:Null}"/>
         <Setter Property="NonActiveGlowBrush" Value="{DynamicResource DarkBlueColorBrush}"/>
+        <Setter Property="WindowTitleBrush" Value="{x:Null}"/>
+        <Setter Property="NonActiveWindowTitleBrush" Value="{x:Null}"/>
+        <Setter Property="TitleForeground" Value="{DynamicResource LabelTextBrush}"/>
+        <Setter Property="TitleCharacterCasing" Value="Normal"/>
+        <Setter Property="LeftWindowCommandsOverlayBehavior" Value="Never"/>
+        <Setter Property="RightWindowCommandsOverlayBehavior" Value="Never"/>
         <Style.Resources>
             <s:Double x:Key="WindowTitleFontSize">13</s:Double>
         </Style.Resources>

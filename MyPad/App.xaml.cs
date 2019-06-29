@@ -5,9 +5,11 @@ using QuickConverter;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using Vanara.PInvoke;
 
@@ -48,11 +50,23 @@ namespace MyPad
                 Logger.Write(LogLevel.Warn, "シンタックス定義ファイルの初期化に失敗しました。");
 
             this.InitializeQuickConverter();
+            this.CleanUpTemporary();
             this.MainWindow = new Workspace(e.Args);
             this.MainWindow.Closed += (_1, _2) =>
             {
+                // 設定ファイルを更新する
                 if (SettingsService.Instance.Save() == false)
                     Logger.Write(LogLevel.Warn, "設定ファイルの保存に失敗しました。");
+
+                // 一時フォルダを削除する
+                try
+                {
+                    if (Directory.Exists(Consts.CURRENT_TEMPORARY))
+                        Microsoft.VisualBasic.FileIO.FileSystem.DeleteDirectory(Consts.CURRENT_TEMPORARY, Microsoft.VisualBasic.FileIO.DeleteDirectoryOption.DeleteAllContents);
+                }
+                catch
+                {
+                }
             };
             this.MainWindow.Show();
 
@@ -128,6 +142,35 @@ namespace MyPad
 
             // Additional
             EquationTokenizer.AddNamespace(typeof(MyLib.Wpf.Interactions.InteractionNotification));
+        }
+
+        /// <summary>
+        /// 一時ファイルをクリーンアップします。
+        /// </summary>
+        private void CleanUpTemporary()
+        {
+            Task.Run(() =>
+            {
+                try
+                {
+                    var info = new DirectoryInfo(ProductInfo.Temporary);
+                    if (info.Exists == false)
+                        return;
+
+                    info.EnumerateFiles()
+                        .ForEach(i => Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(i.FullName));
+                    info.EnumerateDirectories()
+                        .ForEach(i => Microsoft.VisualBasic.FileIO.FileSystem.DeleteDirectory(i.FullName, Microsoft.VisualBasic.FileIO.DeleteDirectoryOption.DeleteAllContents));
+                }
+                catch
+                {
+                }
+                finally
+                {
+                    if (Directory.Exists(Consts.CURRENT_TEMPORARY) == false)
+                        Directory.CreateDirectory(Consts.CURRENT_TEMPORARY);
+                }
+            });
         }
     }
 }
