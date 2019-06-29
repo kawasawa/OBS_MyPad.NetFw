@@ -1,16 +1,12 @@
-﻿using MyLib;
-using MyLib.Wpf.Interactions;
+﻿using MyLib.Wpf.Interactions;
 using MyPad.Models;
 using Prism.Commands;
 using Prism.Interactivity.InteractionRequest;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -99,7 +95,7 @@ namespace MyPad.ViewModels
                     this.Dispose();
             });
 
-        public ICommand CloseAllWindowCommand
+        public ICommand ExitApplicationCommand
             => new DelegateCommand(async () =>
             {
                 if (this.Windows.Any())
@@ -134,46 +130,10 @@ namespace MyPad.ViewModels
 
             BindingOperations.EnableCollectionSynchronization(this.Windows, new object());
             BindingOperations.EnableCollectionSynchronization(this.ClipboardItems, new object());
-
-            // 一時フォルダのクリーンアップ
-            try
-            {
-                Task.Run(() =>
-                {
-                    var info = new DirectoryInfo(ProductInfo.Temporary);
-                    if (info.Exists == false)
-                        return;
-
-                    var now = DateTime.Now;
-                    info.EnumerateFiles()
-                        .ForEach(i => Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(i.FullName));
-                    info.EnumerateDirectories()
-                        .Where(i => DateTime.TryParseExact(Path.GetFileName(i.FullName), Consts.DATE_TIME_FORMAT, CultureInfo.CurrentCulture, DateTimeStyles.None, out var dateTime) &&
-                                    dateTime.AddDays(AppConfig.CacheLifetime) < now)
-                        .ForEach(i => Microsoft.VisualBasic.FileIO.FileSystem.DeleteDirectory(i.FullName, Microsoft.VisualBasic.FileIO.DeleteDirectoryOption.DeleteAllContents));
-                });
-
-                if (Directory.Exists(Consts.CURRENT_TEMPORARY) == false)
-                    Directory.CreateDirectory(Consts.CURRENT_TEMPORARY);
-            }
-            catch
-            {
-            }
         }
 
         protected override void Dispose(bool disposing)
         {
-            // 一時フォルダを削除
-            try
-            {
-                if (Directory.Exists(Consts.CURRENT_TEMPORARY))
-                    Microsoft.VisualBasic.FileIO.FileSystem.DeleteDirectory(Consts.CURRENT_TEMPORARY, Microsoft.VisualBasic.FileIO.DeleteDirectoryOption.DeleteAllContents);
-            }
-            catch
-            {
-            }
-
-            // コンテンツを削除
             for (var i = this.Windows.Count - 1; 0 <= i; i--)
                 this.RemoveWindow(this.Windows[i]);
 

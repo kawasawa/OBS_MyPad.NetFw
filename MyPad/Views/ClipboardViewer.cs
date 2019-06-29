@@ -23,6 +23,7 @@ namespace MyPad.Views
         public void Dispose()
         {
             User32.ChangeClipboardChain(this._handle, this._nextHandle);
+            this._handleSource.RemoveHook(this.WndProc);
             this._handleSource.Dispose();
         }
 

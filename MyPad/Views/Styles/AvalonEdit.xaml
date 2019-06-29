@@ -59,14 +59,14 @@
                         <Grid ge:GridEx.ColumnDefinition="Auto, 3, *, 3, Auto, Auto, 3, Auto, Auto, 3, Auto">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="{qc:Binding '$P ? double.NaN : 0', P={Binding (components:TextArea.SearchPanelExpand)}}"/>
-                                <RowDefinition Height="{qc:Binding '$P ? double.NaN : 0', P={Binding (components:TextArea.SearchPanelExpand)}}"/>
+                                <RowDefinition Height="{qc:Binding '$P ? double.NaN : 0', P={Binding (components:TextArea.SearchPanelExpand), Mode=OneWay}}"/>
+                                <RowDefinition Height="{qc:Binding '$P ? double.NaN : 0', P={Binding (components:TextArea.SearchPanelExpand), Mode=OneWay}}"/>
                             </Grid.RowDefinitions>
 
                             <Grid.Resources>
                                 <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
-                                    <Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"/>
-                                    <Setter Property="FontSize" Value="{Binding FontSize, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"/>
+                                    <Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
+                                    <Setter Property="FontSize" Value="{Binding FontSize, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
                                     <Setter Property="MinWidth" Value="150"/>
                                 </Style>
                                 <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
@@ -94,34 +94,34 @@
                                 </Style>
                             </Grid.Resources>
 
-                            <ToggleButton Grid.Row="0" Grid.Column="0" x:Name="ExpandButton" IsChecked="{Binding (components:TextArea.SearchPanelExpand)}" ToolTip="{qc:MultiBinding '$P0 ? $P1 : $P2', P0={Binding (components:TextArea.SearchPanelExpand)}, P1={Binding Resources.Command_SwitchToFindMode, Source={x:Static models:ResourceService.Instance}}, P2={Binding Resources.Command_SwitchToReplaceMode, Source={x:Static models:ResourceService.Instance}}}">
+                            <ToggleButton Grid.Row="0" Grid.Column="0" x:Name="ExpandButton" IsChecked="{Binding (components:TextArea.SearchPanelExpand), Mode=TwoWay}" ToolTip="{qc:MultiBinding '$P0 ? $P1 : $P2', P0={Binding (components:TextArea.SearchPanelExpand)}, P1={Binding Resources.Command_SwitchToFindMode, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}, P2={Binding Resources.Command_SwitchToReplaceMode, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}}">
                                 <mi:Material Kind="ChevronDown"/>
                             </ToggleButton>
                             
-                            <TextBox Grid.Row="0" Grid.Column="2" x:Name="PART_searchTextBox" Text="{Binding SearchPattern, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{Binding Resources.Command_Find, Source={x:Static models:ResourceService.Instance}}"/>
-                            <Button Grid.Row="0" Grid.Column="4" Command="a:SearchCommands.FindPrevious" ToolTip="{Binding Resources.Command_FindPrev, Source={x:Static models:ResourceService.Instance}}">
+                            <TextBox Grid.Row="0" Grid.Column="2" x:Name="PART_searchTextBox" Text="{Binding SearchPattern, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" m:TextBoxHelper.Watermark="{Binding Resources.Command_Find, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                            <Button Grid.Row="0" Grid.Column="4" Command="a:SearchCommands.FindPrevious" ToolTip="{Binding Resources.Command_FindPrev, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
                                 <mi:Modern Kind="MagnifyArrowUp"/>
                             </Button>
-                            <Button Grid.Row="0" Grid.Column="5" Command="a:SearchCommands.FindNext" ToolTip="{Binding Resources.Command_FindNext, Source={x:Static models:ResourceService.Instance}}">
+                            <Button Grid.Row="0" Grid.Column="5" Command="a:SearchCommands.FindNext" ToolTip="{Binding Resources.Command_FindNext, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
                                 <mi:Modern Kind="MagnifyArrowDown"/>
                             </Button>
-                            <ToggleButton Grid.Row="0" Grid.Column="7" IsChecked="{Binding MatchCase, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" ToolTip="{Binding Resources.Command_CaseSensitive, Source={x:Static models:ResourceService.Instance}}">
+                            <ToggleButton Grid.Row="0" Grid.Column="7" IsChecked="{Binding MatchCase, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" ToolTip="{Binding Resources.Command_CaseSensitive, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
                                 <mi:Material Kind="CaseSensitiveAlt"/>
                             </ToggleButton>
-                            <ToggleButton Grid.Row="0" Grid.Column="8" IsChecked="{Binding UseRegex, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" ToolTip="{Binding Resources.Command_UseRegex, Source={x:Static models:ResourceService.Instance}}">
+                            <ToggleButton Grid.Row="0" Grid.Column="8" IsChecked="{Binding UseRegex, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" ToolTip="{Binding Resources.Command_UseRegex, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
                                 <mi:Material Kind="Regex"/>
                             </ToggleButton>
-                            <Button Grid.Row="0" Grid.Column="10" Command="a:SearchCommands.CloseSearchPanel" ToolTip="{Binding Resources.Command_Close, Source={x:Static models:ResourceService.Instance}}" IsTabStop="False">
+                            <Button Grid.Row="0" Grid.Column="10" Command="a:SearchCommands.CloseSearchPanel" ToolTip="{Binding Resources.Command_Close, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" IsTabStop="False">
                                 <mi:Material Kind="Close"/>
                             </Button>
 
                             <Border Grid.Row="1" Grid.Column="0" Height="3"/>
 
-                            <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding (components:TextArea.ReplacePattern), UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{Binding Resources.Command_Replace, Source={x:Static models:ResourceService.Instance}}"/>
-                            <Button Grid.Row="2" Grid.Column="4" Command="components:TextEditorCommands.ReplaceNext" ToolTip="{Binding Resources.Command_ReplaceNext, Source={x:Static models:ResourceService.Instance}}">
+                            <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding (components:TextArea.ReplacePattern), UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" m:TextBoxHelper.Watermark="{Binding Resources.Command_Replace, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                            <Button Grid.Row="2" Grid.Column="4" Command="components:TextEditorCommands.ReplaceNext" ToolTip="{Binding Resources.Command_ReplaceNext, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
                                 <mi:Material Kind="FindReplace"/>
                             </Button>
-                            <Button Grid.Row="2" Grid.Column="5" Command="components:TextEditorCommands.ReplaceAll" ToolTip="{Binding Resources.Command_ReplaceAll, Source={x:Static models:ResourceService.Instance}}">
+                            <Button Grid.Row="2" Grid.Column="5" Command="components:TextEditorCommands.ReplaceAll" ToolTip="{Binding Resources.Command_ReplaceAll, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
                                 <mi:Modern Kind="Refresh"/>
                             </Button>
                         </Grid>
@@ -140,10 +140,10 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type components:TextView}" BasedOn="{StaticResource Default.TextView}"/>
-    <Style TargetType="{x:Type components:TextArea}" BasedOn="{StaticResource Default.TextArea}"/>
-    <Style TargetType="{x:Type components:TextEditor}" BasedOn="{StaticResource Default.TextEditor}"/>
+    <Style TargetType="{x:Type components:TextView}"         BasedOn="{StaticResource Default.TextView}"/>
+    <Style TargetType="{x:Type components:TextArea}"         BasedOn="{StaticResource Default.TextArea}"/>
+    <Style TargetType="{x:Type components:TextEditor}"       BasedOn="{StaticResource Default.TextEditor}"/>
     <Style TargetType="{x:Type components:CompletionWindow}" BasedOn="{StaticResource Default.CompletionWindow}"/>
-    <Style TargetType="{x:Type a:SearchPanel}" BasedOn="{StaticResource Default.SearchPanel}"/>
+    <Style TargetType="{x:Type a:SearchPanel}"               BasedOn="{StaticResource Default.SearchPanel}"/>
 
 </ResourceDictionary>
