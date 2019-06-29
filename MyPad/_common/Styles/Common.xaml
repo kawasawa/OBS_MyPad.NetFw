@@ -630,6 +630,7 @@
     <Style x:Key="Default.Flyout" TargetType="{x:Type m:Flyout}" BasedOn="{StaticResource {x:Type m:Flyout}}">
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="Background" Value="{DynamicResource AccentColorBrush}"/>
+        <Setter Property="Opacity" Value="{StaticResource Const.Opacity1}"/>
         <Setter Property="FontSize" Value="{StaticResource DialogMessageFontSize}"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="AnimateOpacity" Value="True"/>
