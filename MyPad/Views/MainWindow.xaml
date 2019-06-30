@@ -363,7 +363,7 @@
 
     <m:MetroWindow.RightWindowCommands>
         <m:WindowCommands>
-            <ToggleButton IsChecked="{Binding Topmost, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}" ToolTip="{Binding Resources.Command_Topmost, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
+            <ToggleButton IsChecked="{Binding Topmost, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}" ToolTip="{Binding Resources.Command_Topmost, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Focusable="False">
                 <mi:PackIconModern>
                     <mi:PackIconModern.Resources>
                         <Style TargetType="{x:Type mi:PackIconModern}">
