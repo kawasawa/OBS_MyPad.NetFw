@@ -296,6 +296,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   File explorer に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_FileExplorer {
+            get {
+                return ResourceManager.GetString("Command_FileExplorer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Find に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Find {
@@ -1062,6 +1071,15 @@ namespace MyPad.Properties {
         public static string Label_File {
             get {
                 return ResourceManager.GetString("Label_File", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   File explorer root に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_FileExplorerRoot {
+            get {
+                return ResourceManager.GetString("Label_FileExplorerRoot", resourceCulture);
             }
         }
         

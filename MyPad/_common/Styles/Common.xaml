@@ -219,6 +219,17 @@
         <Setter Property="BorderThickness" Value="0"/>
     </Style>
 
+    <Style x:Key="Default.TreeViewItem" TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource MetroTreeViewItem}">
+        <Setter Property="m:ItemHelper.SelectedForegroundBrush" Value="{DynamicResource TextBrush}"/>
+        <Setter Property="m:ItemHelper.ActiveSelectionForegroundBrush" Value="{DynamicResource TextBrush}"/>
+        <Setter Property="m:ItemHelper.ActiveSelectionBackgroundBrush" Value="{DynamicResource AccentColorBrush2}"/>
+        <Setter Property="m:ItemHelper.HoverSelectedBackgroundBrush" Value="{DynamicResource AccentColorBrush3}"/>
+    </Style>
+
+    <Style x:Key="Default.TreeView" TargetType="{x:Type TreeView}" BasedOn="{StaticResource MetroTreeView}">
+        <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+
     <Style x:Key="Default.GridViewColumnHeader" TargetType="{x:Type GridViewColumnHeader}" BasedOn="{StaticResource MetroGridViewColumnHeader}">
         <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
     </Style>

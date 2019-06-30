@@ -92,6 +92,13 @@ namespace MyPad.Models
             get => this._syntaxDefinitionName;
             set => this.SetProperty(ref this._syntaxDefinitionName, value);
         }
+
+        private string _fileExplorerRoot = string.Empty;
+        public string FileExplorerRoot
+        {
+            get => this._fileExplorerRoot;
+            set => this.SetProperty(ref this._fileExplorerRoot, value);
+        }
     }
 }
 

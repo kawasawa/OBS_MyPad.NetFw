@@ -31,6 +31,7 @@ namespace MyPad.ViewModels
         #region リクエスト
 
         public InteractionRequest<MessageNotification> MessageRequest { get; } = new InteractionRequest<MessageNotification>();
+        public InteractionRequest<OpenFileNotification> OpenDirectoryRequest { get; } = new InteractionRequest<OpenFileNotification>();
         public InteractionRequest<OpenFileNotificationEx> OpenFileRequest { get; } = new InteractionRequest<OpenFileNotificationEx>();
         public InteractionRequest<SaveFileNotificationEx> SaveFileRequest { get; } = new InteractionRequest<SaveFileNotificationEx>();
         public InteractionRequest<PrintDocumentNotification> PrintRequest { get; } = new InteractionRequest<PrintDocumentNotification>();
@@ -75,6 +76,8 @@ namespace MyPad.ViewModels
         public ObservableCollection<TextEditorViewModel> Editors { get; } = new ObservableCollection<TextEditorViewModel>();
 
         public ObservableCollection<TerminalViewModel> Terminals { get; } = new ObservableCollection<TerminalViewModel>();
+
+        public ObservableCollection<FileTreeNodeViewModel> FileTreeNodes { get; } = new ObservableCollection<FileTreeNodeViewModel>();
 
         public Func<TextEditorViewModel> EditorFactory =>
             () => new TextEditorViewModel();
@@ -131,6 +134,18 @@ namespace MyPad.ViewModels
                     {
                         if (n.Result == true && ResourceService.CleanUpXshd())
                             ResourceService.InitializeXshd(true);
+                    });
+            });
+
+        public ICommand InitializeFileExplorerRootCommand
+            => new DelegateCommand(() =>
+            {
+                this.OpenDirectoryRequest.Raise(
+                    new OpenFileNotification(),
+                    n =>
+                    {
+                        if (n.Result == true)
+                            SettingsService.Instance.System.FileExplorerRoot = n.FileName;
                     });
             });
 
@@ -270,6 +285,8 @@ namespace MyPad.ViewModels
         {
             BindingOperations.EnableCollectionSynchronization(this.Editors, new object());
             BindingOperations.EnableCollectionSynchronization(this.Terminals, new object());
+            BindingOperations.EnableCollectionSynchronization(this.FileTreeNodes, new object());
+            this.RefreshFileTreeNodes();
         }
 
         protected override void Dispose(bool disposing)
@@ -703,6 +720,16 @@ namespace MyPad.ViewModels
         private void Terminal_Disposed(object sender, EventArgs e)
         {
             this.RemoveTerminal((TerminalViewModel)sender);
+        }
+
+        private void RefreshFileTreeNodes()
+        {
+            var root = SettingsService.Instance.System.FileExplorerRoot;
+            if (string.IsNullOrEmpty(root) || Directory.Exists(root) == false)
+                root = Consts.DEFAULT_FILE_EXPLORER_ROOT;
+
+            this.FileTreeNodes.Clear();
+            this.FileTreeNodes.Add(new FileTreeNodeViewModel(root));
         }
 
         #endregion

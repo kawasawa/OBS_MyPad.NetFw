@@ -43,6 +43,12 @@
         <p:InteractionRequestTrigger SourceObject="{Binding MessageRequest, Mode=OneTime}">
             <behaviors:MessageActionEx UseOverlayMessage="{Binding Window.UseOverlayMessage, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}"/>
         </p:InteractionRequestTrigger>
+        <p:InteractionRequestTrigger SourceObject="{Binding OpenDirectoryRequest, Mode=OneTime}">
+            <mlwi:OpenFileAction IsFolderPicker="True"/>
+        </p:InteractionRequestTrigger>
+        <p:InteractionRequestTrigger SourceObject="{Binding OpenFileRequest, Mode=OneTime}">
+            <behaviors:OpenFileActionEx Filter="{x:Static root:Consts.FILE_FILTER}" DefaultExtension="{x:Static root:Consts.DEFAULT_EXTENSION}" Multiselect="True"/>
+        </p:InteractionRequestTrigger>
         <p:InteractionRequestTrigger SourceObject="{Binding OpenFileRequest, Mode=OneTime}">
             <behaviors:OpenFileActionEx Filter="{x:Static root:Consts.FILE_FILTER}" DefaultExtension="{x:Static root:Consts.DEFAULT_EXTENSION}" Multiselect="True"/>
         </p:InteractionRequestTrigger>
@@ -265,6 +271,11 @@
                     </MenuItem>
                 </MenuItem>
                 <MenuItem Header="{Binding Resources.Command_View, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
+                    <MenuItem Command="{x:Static views:MainWindow.ActivateFileExplorer}" Header="{Binding Resources.Command_FileExplorer, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
+                        <MenuItem.Icon>
+                            <mi:Material Kind="FileTree"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
                     <MenuItem Command="{x:Static views:MainWindow.ActivateProperty}" Header="{Binding Resources.Command_Property, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
                         <MenuItem.Icon>
                             <mi:Material Kind="File"/>
@@ -461,6 +472,7 @@
                         </ei:PropertyChangedTrigger>
                     </i:Interaction.Triggers>
                     <m:HamburgerMenu.Resources>
+                        <Style x:Key="__FileExplorerItem" TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource Default.TreeViewItem}"/>
                         <Style x:Key="__ClipboardItem" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource Default.ListBoxItem}">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                         </Style>
@@ -482,6 +494,22 @@
                     </m:HamburgerMenu.ContentTemplate>
                     <m:HamburgerMenu.ItemsSource>
                         <m:HamburgerMenuItemCollection>
+                            <m:HamburgerMenuIconItem x:Name="FileExplorerItem" Label="{Binding Resources.Command_FileExplorer, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
+                                <m:HamburgerMenuIconItem.Icon>
+                                    <mi:Material Kind="FileTree"/>
+                                </m:HamburgerMenuIconItem.Icon>
+                                <m:HamburgerMenuIconItem.Tag>
+                                    <Grid ge:GridEx.RowDefinition="Auto, 5, *">
+                                        <TreeView Grid.Row="2" ItemsSource="{Binding Data.FileTreeNodes, Source={StaticResource Proxy}, Mode=OneWay}" ItemContainerStyle="{StaticResource __FileExplorerItem}">
+                                            <TreeView.ItemTemplate>
+                                                <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="{x:Type viewModels:FileTreeNodeViewModel}">
+                                                    <TextBlock Text="{qc:Binding 'Path.GetFileName($P)', P={Binding FileName, Mode=OneWay}}" ToolTip="{Binding FileName, Mode=OneWay}"/>
+                                                </HierarchicalDataTemplate>
+                                            </TreeView.ItemTemplate>
+                                        </TreeView>
+                                    </Grid>
+                                </m:HamburgerMenuIconItem.Tag>
+                            </m:HamburgerMenuIconItem>
                             <m:HamburgerMenuIconItem x:Name="PropertyItem" Label="{Binding Resources.Command_Property, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
                                 <m:HamburgerMenuIconItem.Icon>
                                     <mi:Material Kind="File"/>
@@ -1163,7 +1191,7 @@
                                     </Expander>
 
                                     <Expander Header="{Binding Resources.Label_Directory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
-                                        <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto, 5, Auto" ge:GridEx.RowDefinition="Auto, Auto, Auto, Auto, Auto">
+                                        <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto, 5, Auto" ge:GridEx.RowDefinition="Auto, Auto, Auto, Auto, Auto, Auto">
                                             <Label   Grid.Row="0" Grid.Column="0" Content="{Binding Resources.Label_ExecutionDirectory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                                             <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Text="{x:Static ml:ProductInfo.Working}" IsReadOnly="True"/>
                                             <Button  Grid.Row="0" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
@@ -1219,6 +1247,12 @@
                                                         <mlwb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Temporary}" ThrowException="False"/>
                                                     </i:EventTrigger>
                                                 </i:Interaction.Triggers>
+                                                <mi:Modern Kind="FolderOpen"/>
+                                            </Button>
+                                            
+                                            <Label   Grid.Row="5" Grid.Column="0" Content="{Binding Resources.Label_FileExplorerRoot, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                            <TextBox Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding System.FileExplorerRoot, Source={x:Static models:SettingsService.Instance}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" m:TextBoxHelper.Watermark="{x:Static root:Consts.DEFAULT_FILE_EXPLORER_ROOT}"/>
+                                            <Button  Grid.Row="5" Grid.Column="5" Command="{Binding DataContext.InitializeFileExplorerRootCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneTime}" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
                                                 <mi:Modern Kind="FolderOpen"/>
                                             </Button>
                                         </Grid>

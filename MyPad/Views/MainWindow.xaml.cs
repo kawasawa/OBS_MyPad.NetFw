@@ -5,6 +5,7 @@ using MyPad.Models;
 using MyPad.ViewModels;
 using MyPad.Views.Components;
 using System;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -40,6 +41,8 @@ namespace MyPad.Views
             = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.F6, ModifierKeys.None, "F6") });
         public static readonly ICommand ActivateTerminal
             = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.OemTilde, ModifierKeys.Control, "Ctrl+@") });
+        public static readonly ICommand ActivateFileExplorer
+            = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.E, ModifierKeys.Control | ModifierKeys.Shift) });
         public static readonly ICommand ActivateProperty
             = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.P, ModifierKeys.Control | ModifierKeys.Shift) });
         public static readonly ICommand ActivateClipboardHistory
@@ -84,15 +87,19 @@ namespace MyPad.Views
 
             this.CommandBindings.Add(new CommandBinding(SwitchFocus, (sender, e) => this.SwitchActiveContent()));
             this.CommandBindings.Add(new CommandBinding(ActivateTerminal, (sender, e) => this.SwitchTerminalVisibility()));
+            this.CommandBindings.Add(new CommandBinding(ActivateFileExplorer, (sender, e) => this.ActivateHamburgerMenuItem(this.FileExplorerItem)));
             this.CommandBindings.Add(new CommandBinding(ActivateProperty, (sender, e) => this.ActivateHamburgerMenuItem(this.PropertyItem)));
             this.CommandBindings.Add(new CommandBinding(ActivateClipboardHistory, (sender, e) => this.ActivateHamburgerMenuItem(this.ClipboardItem)));
 
             this.DataContextChanged += this.Window_DataContextChanged;
             this.Loaded += this.Window_Loaded;
             this.Closed += this.Window_Closed;
-            ((Style)this.HamburgerMenu.Resources["__ClipboardItem"]).Setters.Add(new EventSetter() { Event = PreviewMouseDoubleClickEvent, Handler = new MouseButtonEventHandler(this.ClipboardItem_PreviewMouseDoubleClick) });
-            ((Style)this.TerminalTabControl.Resources["__TerminalTabItem"]).Setters.Add(new EventSetter() { Event = PreviewMouseRightButtonDownEvent, Handler = new MouseButtonEventHandler(this.TabItem_PreviewMouseRightButtonDown) });
-            ((Style)this.TextEditorTabControl.Resources["__TextEditorTabItem"]).Setters.Add(new EventSetter() { Event = PreviewMouseRightButtonDownEvent, Handler = new MouseButtonEventHandler(this.TabItem_PreviewMouseRightButtonDown) });
+            ((Style)this.HamburgerMenu.Resources["__FileExplorerItem"]).Setters.Add(new EventSetter() { Event = TreeViewItem.ExpandedEvent, Handler = new RoutedEventHandler(this.FileExplorerItem_Expanded) });
+            ((Style)this.HamburgerMenu.Resources["__FileExplorerItem"]).Setters.Add(new EventSetter() { Event = MouseDoubleClickEvent, Handler = new MouseButtonEventHandler(this.FileExplorerItem_MouseDoubleClick) });
+            ((Style)this.HamburgerMenu.Resources["__FileExplorerItem"]).Setters.Add(new EventSetter() { Event = KeyDownEvent, Handler = new KeyEventHandler(this.FileExplorerItem_KeyDown) });
+            ((Style)this.HamburgerMenu.Resources["__ClipboardItem"]).Setters.Add(new EventSetter() { Event = MouseDoubleClickEvent, Handler = new MouseButtonEventHandler(this.ClipboardItem_MouseDoubleClick) });
+            ((Style)this.TerminalTabControl.Resources["__TerminalTabItem"]).Setters.Add(new EventSetter() { Event = MouseRightButtonDownEvent, Handler = new MouseButtonEventHandler(this.TabItem_MouseRightButtonDown) });
+            ((Style)this.TextEditorTabControl.Resources["__TextEditorTabItem"]).Setters.Add(new EventSetter() { Event = MouseRightButtonDownEvent, Handler = new MouseButtonEventHandler(this.TabItem_MouseRightButtonDown) });
             ((Style)this.TextEditorTabControl.Resources["__TextEditor"]).Setters.Add(new EventSetter() { Event = PreviewKeyDownEvent, Handler = new KeyEventHandler(this.TextEditor_PreviewKeyDown) });
             this.HamburgerMenu.ItemClick += this.HamburgerMenu_ItemClick;
             this.ContentSplitter.DragCompleted += this.ContentSplitter_DragCompleted;
@@ -186,22 +193,72 @@ namespace MyPad.Views
             }
         }
 
-        private void ClipboardItem_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void FileExplorerItem_Expanded(object sender, RoutedEventArgs e)
         {
+            if (e.Handled)
+                return;
+
+            var node = (FileTreeNodeViewModel)((TreeViewItem)sender).DataContext;
+            node.ExploreChildren();
+            e.Handled = true;
+        }
+
+        private void FileExplorerItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (e.Handled)
+                return;
+
+            var node = (FileTreeNodeViewModel)((TreeViewItem)sender).DataContext;
+            if (File.Exists(node.FileName) == false)
+                return;
+            this.ViewModel.LoadEditor(new[] { node.FileName });
+            e.Handled = true;
+        }
+
+        private void FileExplorerItem_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Handled)
+                return;
+
+            switch (e.Key)
+            {
+                case Key.Enter:
+                    var node = (FileTreeNodeViewModel)((TreeViewItem)sender).DataContext;
+                    if (File.Exists(node.FileName) == false)
+                        return;
+                    this.ViewModel.LoadEditor(new[] { node.FileName });
+                    e.Handled = true;
+                    return;
+            }
+        }
+
+        private void ClipboardItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (e.Handled)
+                return;
+
             var text = ((ListBoxItem)sender).Content.ToString();
             if (string.IsNullOrEmpty(text) == false)
                 this.ActiveTextEditor?.TextArea.Selection.ReplaceSelectionWithText(text);
             this.ActiveTextEditor?.ScrollToCaret();
             this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus(), DispatcherPriority.Input);
+            e.Handled = true;
         }
 
-        private void TabItem_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        private void TabItem_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            ((DragablzItem)sender).GetParent<DraggableTabControl>().SelectedItem = ((DragablzItem)sender).Content;
-        }
+            if (e.Handled)
+                return;
 
+            ((DragablzItem)sender).GetParent<DraggableTabControl>().SelectedItem = ((DragablzItem)sender).Content;
+            e.Handled = true;
+        }
+            
         private void TextEditor_PreviewKeyDown(object sender, KeyEventArgs e)
         {
+            if (e.Handled)
+                return;
+
             switch (e.Key)
             {
                 case Key.Escape:
@@ -209,9 +266,8 @@ namespace MyPad.Views
                     {
                         this.ActiveStatusComboBox.IsDropDownOpen = false;
                         e.Handled = true;
-                        return;
                     }
-                    break;
+                    return;
             }
         }
 
@@ -238,17 +294,19 @@ namespace MyPad.Views
 
         private void TextEditorTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.Source != e.OriginalSource)
+            if (e.Handled || e.Source != e.OriginalSource)
                 return;
             this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus(), DispatcherPriority.Input);
+            e.Handled = true;
         }
 
         private void TerminalTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // ComboBox.SelectionChanged が伝播してくるためイベントの発生源を確認
-            if (e.Source != e.OriginalSource)
+            if (e.Handled || e.Source != e.OriginalSource)
                 return;
             this.Dispatcher.InvokeAsync(() => this.ActiveCommandBox?.Focus(), DispatcherPriority.Input);
+            e.Handled = true;
         }
 
         private void StatusComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
