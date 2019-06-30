@@ -678,4 +678,10 @@ Definitions is reflected on restart. Do you want to continue?</value>
   <data name="Command_ExitApplication" xml:space="preserve">
     <value>Exit</value>
   </data>
+  <data name="Command_FileExplorer" xml:space="preserve">
+    <value>File explorer</value>
+  </data>
+  <data name="Label_FileExplorerRoot" xml:space="preserve">
+    <value>File explorer root</value>
+  </data>
 </root>

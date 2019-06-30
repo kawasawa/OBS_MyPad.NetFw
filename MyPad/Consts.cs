@@ -2,6 +2,7 @@
 using MyLib;
 using MyPad.Models;
 using MyPad.Properties;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -28,6 +29,8 @@ namespace MyPad
         public static readonly IEnumerable FONT_SIZES = new[] {
             6, 7, 8, 9, 10, 10.5, 11, 12, 13, 14, 15, 16, 18, 20, 22, 24, 26, 28, 32, 36, 42, 48, 60, 72, 96,
         };
+
+        public static readonly string DEFAULT_FILE_EXPLORER_ROOT = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
         public const string DEFAULT_EXTENSION = "txt";
 

@@ -635,4 +635,10 @@
   <data name="Command_ExitApplication" xml:space="preserve">
     <value>MyPad を終了する</value>
   </data>
+  <data name="Command_FileExplorer" xml:space="preserve">
+    <value>エクスプローラー</value>
+  </data>
+  <data name="Label_FileExplorerRoot" xml:space="preserve">
+    <value>エクスプローラーの起点</value>
+  </data>
 </root>
