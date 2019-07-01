@@ -956,7 +956,7 @@
                 </i:Interaction.Behaviors>
                 <components:NumericUpDownEx x:Name="GoToLineInput" Margin="0,0,5,0"
                     Background="Transparent" BorderThickness="0" FontSize="{StaticResource FlyoutHeaderFontSize}"
-                    Value="{qc:MultiBinding '$P0 ? $P1 : 1', P0={Binding IsOpen, ElementName=GoToLineFlyout, Mode=OneWay}, P1={Binding ActiveEditor.Line, Mode=OneWay}}"
+                    Value="{qc:MultiBinding '$P0 ? $P1 : 1', P0={Binding IsOpen, ElementName=GoToLineFlyout, Mode=OneWay}, P1={Binding ActiveEditor.Line, Mode=TwoWay}}"
                     Minimum="1" Maximum="{Binding ActiveEditor.Document.LineCount, Mode=OneWay}" ReverseOnMouseWheel="True"/>
             </m:Flyout>
 
