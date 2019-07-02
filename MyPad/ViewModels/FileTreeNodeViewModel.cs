@@ -14,6 +14,17 @@ namespace MyPad.ViewModels
         public FileTreeNodeViewModel Parent { get; }
         public ObservableCollection<FileTreeNodeViewModel> Children { get; } = new ObservableCollection<FileTreeNodeViewModel>();
 
+        private bool _isExpanded;
+        public bool IsExpanded
+        {
+            get => this._isExpanded;
+            set
+            {
+                if (this.SetProperty(ref this._isExpanded, value) && value)
+                    this.ExploreChildren();
+            }
+        }
+
         private FileTreeNodeViewModel()
         {
         }

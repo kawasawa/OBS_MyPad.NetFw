@@ -94,7 +94,6 @@ namespace MyPad.Views
             this.DataContextChanged += this.Window_DataContextChanged;
             this.Loaded += this.Window_Loaded;
             this.Closed += this.Window_Closed;
-            ((Style)this.HamburgerMenu.Resources["__FileExplorerItem"]).Setters.Add(new EventSetter() { Event = TreeViewItem.ExpandedEvent, Handler = new RoutedEventHandler(this.FileExplorerItem_Expanded) });
             ((Style)this.HamburgerMenu.Resources["__FileExplorerItem"]).Setters.Add(new EventSetter() { Event = MouseDoubleClickEvent, Handler = new MouseButtonEventHandler(this.FileExplorerItem_MouseDoubleClick) });
             ((Style)this.HamburgerMenu.Resources["__FileExplorerItem"]).Setters.Add(new EventSetter() { Event = KeyDownEvent, Handler = new KeyEventHandler(this.FileExplorerItem_KeyDown) });
             ((Style)this.HamburgerMenu.Resources["__ClipboardItem"]).Setters.Add(new EventSetter() { Event = MouseDoubleClickEvent, Handler = new MouseButtonEventHandler(this.ClipboardItem_MouseDoubleClick) });
@@ -193,16 +192,6 @@ namespace MyPad.Views
             }
         }
 
-        private void FileExplorerItem_Expanded(object sender, RoutedEventArgs e)
-        {
-            if (e.Handled)
-                return;
-
-            var node = (FileTreeNodeViewModel)((TreeViewItem)sender).DataContext;
-            node.ExploreChildren();
-            e.Handled = true;
-        }
-
         private void FileExplorerItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (e.Handled)
@@ -224,9 +213,10 @@ namespace MyPad.Views
             {
                 case Key.Enter:
                     var node = (FileTreeNodeViewModel)((TreeViewItem)sender).DataContext;
-                    if (File.Exists(node.FileName) == false)
-                        return;
-                    this.ViewModel.LoadEditor(new[] { node.FileName });
+                    if (Directory.Exists(node.FileName))
+                        node.IsExpanded = !node.IsExpanded;
+                    else if (File.Exists(node.FileName))
+                        this.ViewModel.LoadEditor(new[] { node.FileName });
                     e.Handled = true;
                     return;
             }
