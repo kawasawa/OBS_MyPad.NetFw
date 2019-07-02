@@ -251,7 +251,7 @@
     <Style x:Key="Default.Button" TargetType="{x:Type Button}" BasedOn="{StaticResource MetroFlatButton}">
         <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
         <Setter Property="Foreground" Value="{DynamicResource BlackColorBrush}"/>
-        <Setter Property="Background" Value="{DynamicResource BackgroundNormal}"/>
+        <Setter Property="Background" Value="{DynamicResource GrayBrush8}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
         <Style.Triggers>
             <Trigger Property="IsFocused" Value="True">
@@ -272,7 +272,7 @@
     </Style>
 
     <Style x:Key="Common.AccentButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
-        <Setter Property="Foreground" Value="{DynamicResource WhiteColorBrush}"/>
+        <Setter Property="Foreground" Value="White"/>
         <Setter Property="Background" Value="{DynamicResource AccentColorBrush}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}"/>
         <Style.Triggers>
@@ -294,7 +294,7 @@
     </Style>
 
     <Style x:Key="Common.DangerButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
-        <Setter Property="Foreground" Value="{DynamicResource WhiteColorBrush}"/>
+        <Setter Property="Foreground" Value="White"/>
         <Setter Property="Background" Value="{DynamicResource ValidationSummaryColor1}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource ValidationSummaryColor1}"/>
         <Style.Triggers>
@@ -335,8 +335,8 @@
     <Style x:Key="Common.CircleAccentButton" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
         <Setter Property="Width" Value="40"/>
         <Setter Property="Height" Value="40"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}"/>
         <Setter Property="Foreground" Value="{DynamicResource AccentColorBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush3}"/>
@@ -354,8 +354,8 @@
     <Style x:Key="Common.CircleDangerButton" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
         <Setter Property="Width" Value="40"/>
         <Setter Property="Height" Value="40"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource ValidationSummaryColor1}"/>
         <Setter Property="Foreground" Value="{DynamicResource ValidationSummaryColor1}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ValidationSummaryColor1}"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="BorderBrush" Value="{DynamicResource ValidationSummaryColor3}"/>
@@ -372,7 +372,7 @@
 
     <Style x:Key="Default.ToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource MetroFlatToggleButton}">
         <Setter Property="Foreground" Value="{DynamicResource BlackColorBrush}"/>
-        <Setter Property="Background" Value="{DynamicResource BackgroundNormal}"/>
+        <Setter Property="Background" Value="{DynamicResource GrayBrush8}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
         <Style.Triggers>
             <Trigger Property="IsChecked" Value="True">
@@ -446,6 +446,16 @@
     <Style x:Key="Default.TabItem" TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
         <Setter Property="m:TabControlHelper.CloseButtonEnabled" Value="False"/>
         <Setter Property="m:ControlsHelper.HeaderFontSize" Value="{DynamicResource DialogMessageFontSize}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Style.Resources>
+            <SolidColorBrush x:Key="GrayNormalBrush" Color="{DynamicResource Gray2}" o:Freeze="True"/>
+            <SolidColorBrush x:Key="GrayHoverBrush" Color="{DynamicResource BlackColor}" o:Freeze="True"/>
+        </Style.Resources>
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+        <Setter Property="m:ControlsHelper.HeaderFontWeight" Value="Bold"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <Style x:Key="Default.TabControl" TargetType="{x:Type TabControl}" BasedOn="{StaticResource {x:Type TabControl}}">
@@ -639,8 +649,8 @@
     </Style>
 
     <Style x:Key="Default.Flyout" TargetType="{x:Type m:Flyout}" BasedOn="{StaticResource {x:Type m:Flyout}}">
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="Background" Value="{DynamicResource AccentColorBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource Foreground}"/>
+        <Setter Property="Background" Value="{DynamicResource GrayBrush10}"/>
         <Setter Property="Opacity" Value="{StaticResource Const.Opacity1}"/>
         <Setter Property="FontSize" Value="{StaticResource DialogMessageFontSize}"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -648,19 +658,25 @@
         <Setter Property="IsPinned" Value="False"/>
         <Style.Resources>
             <!-- 既定のリソースを打ち消す -->
-            <SolidColorBrush x:Key="LabelTextBrush" Color="White" o:Freeze="True"/>
-            <SolidColorBrush x:Key="FlatButtonBackgroundBrush" Color="{DynamicResource WhiteColor}" o:Freeze="True"/>
+            <SolidColorBrush x:Key="LabelTextBrush" Color="{DynamicResource BlackColor}" o:Freeze="True"/>
+            <SolidColorBrush x:Key="FlatButtonBackgroundBrush" Color="{DynamicResource BlackColor}" o:Freeze="True"/>
 
-            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
-                <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type m:Flyout}}, Mode=OneWay}"/>
-            </Style>
             <Style TargetType="{x:Type ListBox}" BasedOn="{StaticResource Default.ListBox}">
-                <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type m:Flyout}}, Mode=OneWay}"/>
                 <Setter Property="Background" Value="Transparent"/>
                 <Setter Property="ItemContainerStyle">
                     <Setter.Value>
                         <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource Default.ListBoxItem}">
-                            <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type m:Flyout}}, Mode=OneWay}"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Focusable" Value="False"/>
+                        </Style>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style TargetType="{x:Type ListView}" BasedOn="{StaticResource Default.ListView}">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="ItemContainerStyle">
+                    <Setter.Value>
+                        <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource Default.ListViewItem}">
                             <Setter Property="Background" Value="Transparent"/>
                             <Setter Property="Focusable" Value="False"/>
                         </Style>
