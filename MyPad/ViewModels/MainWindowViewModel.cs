@@ -728,8 +728,10 @@ namespace MyPad.ViewModels
             if (string.IsNullOrEmpty(root) || Directory.Exists(root) == false)
                 root = Consts.DEFAULT_FILE_EXPLORER_ROOT;
 
+            var node = new FileTreeNodeViewModel(root);
+            node.IsExpanded = true;
             this.FileTreeNodes.Clear();
-            this.FileTreeNodes.Add(new FileTreeNodeViewModel(root));
+            this.FileTreeNodes.Add(node);
         }
 
         #endregion

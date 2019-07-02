@@ -472,7 +472,9 @@
                         </ei:PropertyChangedTrigger>
                     </i:Interaction.Triggers>
                     <m:HamburgerMenu.Resources>
-                        <Style x:Key="__FileExplorerItem" TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource Default.TreeViewItem}"/>
+                        <Style x:Key="__FileExplorerItem" TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource Default.TreeViewItem}">
+                            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                        </Style>
                         <Style x:Key="__ClipboardItem" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource Default.ListBoxItem}">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                         </Style>
