@@ -474,6 +474,11 @@
                     <m:HamburgerMenu.Resources>
                         <Style x:Key="__FileExplorerItem" TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource Default.TreeViewItem}">
                             <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsEmpty, Mode=OneWay}" Value="True">
+                                    <Setter Property="Foreground" Value="{DynamicResource GrayBrush5}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
                         </Style>
                         <Style x:Key="__ClipboardItem" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource Default.ListBoxItem}">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -505,7 +510,7 @@
                                         <TreeView Grid.Row="2" ItemsSource="{Binding Data.FileTreeNodes, Source={StaticResource Proxy}, Mode=OneWay}" ItemContainerStyle="{StaticResource __FileExplorerItem}">
                                             <TreeView.ItemTemplate>
                                                 <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="{x:Type viewModels:FileTreeNodeViewModel}">
-                                                    <TextBlock Text="{qc:Binding 'Path.GetFileName($P)', P={Binding FileName, Mode=OneWay}}" ToolTip="{Binding FileName, Mode=OneWay}"/>
+                                                    <TextBlock Text="{qc:MultiBinding '$P0 ? \'empty\' : Path.GetFileName($P1)', P0={Binding IsEmpty, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}" ToolTip="{Binding FileName, Mode=OneWay}"/>
                                                 </HierarchicalDataTemplate>
                                             </TreeView.ItemTemplate>
                                         </TreeView>
@@ -812,13 +817,13 @@
                                         <MultiDataTrigger.Conditions>
                                             <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}, Mode=OneWay}" Value="True"/>
                                         </MultiDataTrigger.Conditions>
-                                        <Setter Property="Background" Value="{DynamicResource GrayBrush8}"/>
+                                        <Setter Property="Background" Value="{DynamicResource GrayBrush5}"/>
                                     </MultiDataTrigger>
                                     <MultiDataTrigger>
                                         <MultiDataTrigger.Conditions>
                                             <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}, Mode=OneWay}" Value="True"/>
                                         </MultiDataTrigger.Conditions>
-                                        <Setter Property="Background" Value="{DynamicResource GrayBrush8}"/>
+                                        <Setter Property="Background" Value="{DynamicResource GrayBrush3}"/>
                                     </MultiDataTrigger>
                                 </Style.Triggers>
                             </Style>

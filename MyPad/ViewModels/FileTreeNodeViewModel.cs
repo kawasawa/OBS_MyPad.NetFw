@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyLib;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -8,8 +9,9 @@ namespace MyPad.ViewModels
 {
     public class FileTreeNodeViewModel : ViewModelBase
     {
-        public static FileTreeNodeViewModel Empty { get; } = new FileTreeNodeViewModel();
+        public static FileTreeNodeViewModel Empty { get; } = new FileTreeNodeViewModel(string.Empty) { IsEmpty = true };
 
+        public bool IsEmpty { get; private set; }
         public string FileName { get; }
         public FileTreeNodeViewModel Parent { get; }
         public ObservableCollection<FileTreeNodeViewModel> Children { get; } = new ObservableCollection<FileTreeNodeViewModel>();
@@ -32,13 +34,14 @@ namespace MyPad.ViewModels
         public FileTreeNodeViewModel(string fileName)
             : this(fileName, null)
         {
-            this.Children.Add(Empty);
         }
 
         public FileTreeNodeViewModel(string fileName, FileTreeNodeViewModel parent)
         {
             this.FileName = fileName;
             this.Parent = parent;
+            if (Directory.Exists(fileName))
+                this.Children.Add(Empty);
         }
 
         public void ExploreChildren()
@@ -54,7 +57,8 @@ namespace MyPad.ViewModels
             {
                 if (Directory.Exists(parent.FileName))
                     return Directory.EnumerateFileSystemEntries(parent.FileName, "*", SearchOption.TopDirectoryOnly)
-                        .Where(nodeFilter).Any();
+                        .Where(nodeFilter)
+                        .Any();
                 else
                     return false;
             }
@@ -62,10 +66,18 @@ namespace MyPad.ViewModels
             IEnumerable<FileTreeNodeViewModel> getChildren(FileTreeNodeViewModel parent)
             {
                 if (Directory.Exists(parent.FileName))
-                    return Directory.EnumerateFileSystemEntries(parent.FileName, "*", SearchOption.TopDirectoryOnly)
-                        .Where(nodeFilter).Select(p => new FileTreeNodeViewModel(p, parent));
+                {
+                    var temp = Directory.EnumerateFileSystemEntries(parent.FileName, "*", SearchOption.TopDirectoryOnly)
+                        .Where(nodeFilter);
+                    var children = temp.Where(path => File.GetAttributes(path).HasFlag(FileAttributes.Directory))
+                        .Union(temp.Where(path => File.GetAttributes(path).HasFlag(FileAttributes.Directory) == false))
+                        .Select(p => new FileTreeNodeViewModel(p, parent));
+                    return children.Any() ? children : new[] { Empty };
+                }
                 else
+                {
                     return Enumerable.Empty<FileTreeNodeViewModel>();
+                }
             }
 
             try
@@ -74,8 +86,9 @@ namespace MyPad.ViewModels
                 this.Children.AddRange(getChildren(this));
                 this.Children.Where(c => existChild(c)).ForEach(c => c.Children.Add(Empty));
             }
-            catch (UnauthorizedAccessException)
+            catch (UnauthorizedAccessException e)
             {
+                Logger.Write(LogLevel.Warn, "ファイルの探索時にエラーが発生しました。", e);
             }
         }
     }
