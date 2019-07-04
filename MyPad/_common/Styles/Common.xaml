@@ -453,7 +453,7 @@
         </Style.Resources>
         <Style.Triggers>
             <Trigger Property="IsSelected" Value="True">
-        <Setter Property="m:ControlsHelper.HeaderFontWeight" Value="Bold"/>
+                <Setter Property="m:ControlsHelper.HeaderFontWeight" Value="Bold"/>
             </Trigger>
         </Style.Triggers>
     </Style>
