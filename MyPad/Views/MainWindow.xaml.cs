@@ -198,10 +198,14 @@ namespace MyPad.Views
                 return;
 
             var node = (FileTreeNodeViewModel)((TreeViewItem)sender).DataContext;
-            if (File.Exists(node.FileName) == false)
+            if (node.IsEmpty)
                 return;
-            this.ViewModel.LoadEditor(new[] { node.FileName });
-            e.Handled = true;
+
+            if (File.Exists(node.FileName))
+            {
+                this.ViewModel.LoadEditor(new[] { node.FileName });
+                e.Handled = true;
+            }
         }
 
         private void FileExplorerItem_KeyDown(object sender, KeyEventArgs e)
@@ -213,12 +217,22 @@ namespace MyPad.Views
             {
                 case Key.Enter:
                     var node = (FileTreeNodeViewModel)((TreeViewItem)sender).DataContext;
+                    if (node.IsEmpty)
+                        return;
+
                     if (Directory.Exists(node.FileName))
+                    {
                         node.IsExpanded = !node.IsExpanded;
-                    else if (File.Exists(node.FileName))
+                        e.Handled = true;
+                        return;
+                    }
+                    if (File.Exists(node.FileName))
+                    {
                         this.ViewModel.LoadEditor(new[] { node.FileName });
-                    e.Handled = true;
-                    return;
+                        e.Handled = true;
+                        return;
+                    }
+                    break;
             }
         }
 
