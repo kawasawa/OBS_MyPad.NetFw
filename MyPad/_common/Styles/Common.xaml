@@ -100,6 +100,10 @@
     ************************************************************
     -->
 
+    <Style x:Key="Default.Badged" TargetType="{x:Type m:Badged}" BasedOn="{StaticResource {x:Type m:Badged}}">
+        <Setter Property="BadgeForeground" Value="White"/>
+    </Style>
+
     <Style x:Key="Default.ResizeGrip" TargetType="{x:Type ResizeGrip}" BasedOn="{StaticResource {x:Type ResizeGrip}}">
         <Setter Property="Visibility" Value="Hidden"/>
         <Style.Triggers>
@@ -107,22 +111,6 @@
                 <Setter Property="Visibility" Value="Collapsed"/>
             </DataTrigger>
         </Style.Triggers>
-    </Style>
-
-    <Style x:Key="Default.PackIconModern" TargetType="{x:Type mi:PackIconModern}" BasedOn="{StaticResource {x:Type mi:PackIconModern}}">
-    </Style>
-
-    <Style x:Key="Default.PackIconMaterial" TargetType="{x:Type mi:PackIconMaterial}" BasedOn="{StaticResource {x:Type mi:PackIconMaterial}}">
-    </Style>
-
-    <Style x:Key="Common.PackIconModernGrayMiddle" TargetType="{x:Type mi:PackIconModern}" BasedOn="{StaticResource Default.PackIconModern}">
-        <Setter Property="Width" Value="20"/>
-        <Setter Property="Height" Value="20"/>
-    </Style>
-
-    <Style x:Key="Common.PackIconMaterialGrayMiddle" TargetType="{x:Type mi:PackIconMaterial}" BasedOn="{StaticResource Default.PackIconMaterial}">
-        <Setter Property="Width" Value="20"/>
-        <Setter Property="Height" Value="20"/>
     </Style>
 
     <Style x:Key="Default.Label" TargetType="{x:Type Label}" BasedOn="{StaticResource MetroLabel}"/>
@@ -145,6 +133,22 @@
         <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{DynamicResource AccentColorBrush2}"/>
     </Style>
 
+    <Style x:Key="Default.NumericUpDown" TargetType="{x:Type m:NumericUpDown}" BasedOn="{StaticResource {x:Type m:NumericUpDown}}">
+        <Setter Property="m:TextBoxHelper.SelectAllOnFocus" Value="True"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
+        <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{DynamicResource AccentColorBrush2}"/>
+        <Setter Property="Speedup" Value="False"/>
+        <Style.Resources>
+            <!-- 既定のリソースを打ち消す -->
+            <SolidColorBrush x:Key="GrayBrush1" Color="{DynamicResource AccentColor2}" o:Freeze="True"/>
+        </Style.Resources>
+        <Style.Triggers>
+            <Trigger Property="IsReadOnly" Value="True">
+                <Setter Property="HideUpDownButtons" Value="True"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <Style x:Key="Default.DatePicker" TargetType="{x:Type DatePicker}" BasedOn="{StaticResource MetroDatePicker}">
         <Setter Property="KeyboardNavigation.TabNavigation" Value="Local"/>
         <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
@@ -156,25 +160,6 @@
                 </Style>
             </Setter.Value>
         </Setter>
-    </Style>
-
-    <Style x:Key="Default.Badged" TargetType="{x:Type m:Badged}" BasedOn="{StaticResource {x:Type m:Badged}}">
-        <Setter Property="BadgeForeground" Value="White"/>
-    </Style>
-
-    <Style x:Key="Default.NumericUpDown" TargetType="{x:Type m:NumericUpDown}" BasedOn="{StaticResource {x:Type m:NumericUpDown}}">
-        <Style.Resources>
-            <!-- 既定のリソースを打ち消す -->
-            <SolidColorBrush x:Key="GrayBrush1" Color="{DynamicResource AccentColor2}" o:Freeze="True"/>
-        </Style.Resources>
-        <Setter Property="Speedup" Value="False"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
-        <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{DynamicResource AccentColorBrush2}"/>
-        <Style.Triggers>
-            <Trigger Property="IsReadOnly" Value="True">
-                <Setter Property="HideUpDownButtons" Value="True"/>
-            </Trigger>
-        </Style.Triggers>
     </Style>
 
     <Style x:Key="Default.ComboBoxItem" TargetType="{x:Type ComboBoxItem}" BasedOn="{StaticResource MetroComboBoxItem}">
@@ -248,6 +233,30 @@
         <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{DynamicResource AccentColorBrush2}"/>
     </Style>
 
+    <Style x:Key="Default.ToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource MetroFlatToggleButton}">
+        <Setter Property="Foreground" Value="{DynamicResource BlackColorBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource GrayBrush8}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
+        <Style.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Background" Value="{DynamicResource AccentColorBrush2}"/>
+            </Trigger>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="Background" Value="{DynamicResource AccentColorBrush3}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{DynamicResource Foreground}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource FlatButtonPressedBackgroundBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource FlatButtonPressedForegroundBrush}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource GrayBrush2}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <Style x:Key="Default.Button" TargetType="{x:Type Button}" BasedOn="{StaticResource MetroFlatButton}">
         <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
         <Setter Property="Foreground" Value="{DynamicResource BlackColorBrush}"/>
@@ -315,6 +324,33 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="Common.CircleToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource MahApps.Metro.Styles.MetroCircleToggleButtonStyle}">
+        <Setter Property="Width" Value="40"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Foreground" Value="{DynamicResource GrayBrush3}"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxPopupBorderBrush}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource SemiTransparentWhiteBrush}"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Foreground" Value="White"/>
+            </Trigger>
+        </Style.Triggers>
+        <Style.Resources>
+            <Style TargetType="{x:Type mi:PackIconModern}">
+                <Setter Property="Width" Value="20"/>
+                <Setter Property="Height" Value="20"/>
+            </Style>
+            <Style TargetType="{x:Type mi:PackIconMaterial}">
+                <Setter Property="Width" Value="20"/>
+                <Setter Property="Height" Value="20"/>
+            </Style>
+        </Style.Resources>
+    </Style>
+
     <Style x:Key="Common.CircleButton" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
         <Setter Property="Width" Value="40"/>
         <Setter Property="Height" Value="40"/>
@@ -327,8 +363,14 @@
             </Trigger>
         </Style.Triggers>
         <Style.Resources>
-            <Style TargetType="{x:Type mi:PackIconModern}" BasedOn="{StaticResource Common.PackIconModernGrayMiddle}"/>
-            <Style TargetType="{x:Type mi:PackIconMaterial}" BasedOn="{StaticResource Common.PackIconMaterialGrayMiddle}"/>
+            <Style TargetType="{x:Type mi:PackIconModern}">
+                <Setter Property="Width" Value="20"/>
+                <Setter Property="Height" Value="20"/>
+            </Style>
+            <Style TargetType="{x:Type mi:PackIconMaterial}">
+                <Setter Property="Width" Value="20"/>
+                <Setter Property="Height" Value="20"/>
+            </Style>
         </Style.Resources>
     </Style>
 
@@ -346,8 +388,14 @@
             </Trigger>
         </Style.Triggers>
         <Style.Resources>
-            <Style TargetType="{x:Type mi:PackIconModern}" BasedOn="{StaticResource Common.PackIconModernGrayMiddle}"/>
-            <Style TargetType="{x:Type mi:PackIconMaterial}" BasedOn="{StaticResource Common.PackIconMaterialGrayMiddle}"/>
+            <Style TargetType="{x:Type mi:PackIconModern}">
+                <Setter Property="Width" Value="20"/>
+                <Setter Property="Height" Value="20"/>
+            </Style>
+            <Style TargetType="{x:Type mi:PackIconMaterial}">
+                <Setter Property="Width" Value="20"/>
+                <Setter Property="Height" Value="20"/>
+            </Style>
         </Style.Resources>
     </Style>
 
@@ -365,53 +413,14 @@
             </Trigger>
         </Style.Triggers>
         <Style.Resources>
-            <Style TargetType="{x:Type mi:PackIconModern}" BasedOn="{StaticResource Common.PackIconModernGrayMiddle}"/>
-            <Style TargetType="{x:Type mi:PackIconMaterial}" BasedOn="{StaticResource Common.PackIconMaterialGrayMiddle}"/>
-        </Style.Resources>
-    </Style>
-
-    <Style x:Key="Default.ToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource MetroFlatToggleButton}">
-        <Setter Property="Foreground" Value="{DynamicResource BlackColorBrush}"/>
-        <Setter Property="Background" Value="{DynamicResource GrayBrush8}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
-        <Style.Triggers>
-            <Trigger Property="IsChecked" Value="True">
-                <Setter Property="Background" Value="{DynamicResource AccentColorBrush2}"/>
-            </Trigger>
-            <Trigger Property="IsFocused" Value="True">
-                <Setter Property="Background" Value="{DynamicResource AccentColorBrush3}"/>
-            </Trigger>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Foreground" Value="{DynamicResource Foreground}"/>
-            </Trigger>
-            <Trigger Property="IsPressed" Value="True">
-                <Setter Property="Background" Value="{DynamicResource FlatButtonPressedBackgroundBrush}"/>
-                <Setter Property="Foreground" Value="{DynamicResource FlatButtonPressedForegroundBrush}"/>
-            </Trigger>
-            <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="{DynamicResource GrayBrush2}"/>
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-
-    <Style x:Key="Common.CircleToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource MahApps.Metro.Styles.MetroCircleToggleButtonStyle}">
-        <Setter Property="Width" Value="40"/>
-        <Setter Property="Height" Value="40"/>
-        <Setter Property="Foreground" Value="{DynamicResource GrayBrush3}"/>
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxPopupBorderBrush}"/>
-            </Trigger>
-            <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="{DynamicResource SemiTransparentWhiteBrush}"/>
-            </Trigger>
-            <Trigger Property="IsChecked" Value="True">
-                <Setter Property="Foreground" Value="White"/>
-            </Trigger>
-        </Style.Triggers>
-        <Style.Resources>
-            <Style TargetType="{x:Type mi:PackIconModern}" BasedOn="{StaticResource Common.PackIconModernGrayMiddle}"/>
-            <Style TargetType="{x:Type mi:PackIconMaterial}" BasedOn="{StaticResource Common.PackIconMaterialGrayMiddle}"/>
+            <Style TargetType="{x:Type mi:PackIconModern}">
+                <Setter Property="Width" Value="20"/>
+                <Setter Property="Height" Value="20"/>
+            </Style>
+            <Style TargetType="{x:Type mi:PackIconMaterial}">
+                <Setter Property="Width" Value="20"/>
+                <Setter Property="Height" Value="20"/>
+            </Style>
         </Style.Resources>
     </Style>
 
@@ -448,6 +457,7 @@
         <Setter Property="m:ControlsHelper.HeaderFontSize" Value="{DynamicResource DialogMessageFontSize}"/>
         <Setter Property="Background" Value="Transparent"/>
         <Style.Resources>
+            <!-- 既定のリソースを打ち消す -->
             <SolidColorBrush x:Key="GrayNormalBrush" Color="{DynamicResource Gray2}" o:Freeze="True"/>
             <SolidColorBrush x:Key="GrayHoverBrush" Color="{DynamicResource BlackColor}" o:Freeze="True"/>
         </Style.Resources>
@@ -573,10 +583,14 @@
             </Setter.Value>
         </Setter>
         <Style.Resources>
-            <Style TargetType="{x:Type mi:PackIconModern}" BasedOn="{StaticResource Common.PackIconModernGrayMiddle}">
+            <Style TargetType="{x:Type mi:PackIconModern}">
+                <Setter Property="Width" Value="20"/>
+                <Setter Property="Height" Value="20"/>
                 <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type m:HamburgerMenu}}, Mode=OneWay}"/>
             </Style>
-            <Style TargetType="{x:Type mi:PackIconMaterial}" BasedOn="{StaticResource Common.PackIconMaterialGrayMiddle}">
+            <Style TargetType="{x:Type mi:PackIconMaterial}">
+                <Setter Property="Width" Value="20"/>
+                <Setter Property="Height" Value="20"/>
                 <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type m:HamburgerMenu}}, Mode=OneWay}"/>
             </Style>
         </Style.Resources>
@@ -715,8 +729,9 @@
         <Setter Property="Opacity" Value="{StaticResource Const.Opacity1}"/>
         <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
         <Style.Resources>
-            <SolidColorBrush x:Key="MenuBorderBrush" Color="{DynamicResource Gray2}"/>
-            <SolidColorBrush x:Key="SubMenuBorderBrush" Color="{DynamicResource Gray2}"/>
+            <!-- 既定のリソースを打ち消す -->
+            <SolidColorBrush x:Key="MenuBorderBrush" Color="{DynamicResource Gray2}" o:Freeze="True"/>
+            <SolidColorBrush x:Key="SubMenuBorderBrush" Color="{DynamicResource Gray2}" o:Freeze="True"/>
         </Style.Resources>
     </Style>
 
