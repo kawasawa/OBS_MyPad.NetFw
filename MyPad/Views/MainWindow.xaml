@@ -49,9 +49,6 @@
         <p:InteractionRequestTrigger SourceObject="{Binding OpenFileRequest, Mode=OneTime}">
             <behaviors:OpenFileActionEx Filter="{x:Static root:Consts.FILE_FILTER}" DefaultExtension="{x:Static root:Consts.DEFAULT_EXTENSION}" Multiselect="True"/>
         </p:InteractionRequestTrigger>
-        <p:InteractionRequestTrigger SourceObject="{Binding OpenFileRequest, Mode=OneTime}">
-            <behaviors:OpenFileActionEx Filter="{x:Static root:Consts.FILE_FILTER}" DefaultExtension="{x:Static root:Consts.DEFAULT_EXTENSION}" Multiselect="True"/>
-        </p:InteractionRequestTrigger>
         <p:InteractionRequestTrigger SourceObject="{Binding SaveFileRequest, Mode=OneTime}">
             <behaviors:SaveFileActionEx Filter="{x:Static root:Consts.FILE_FILTER}" DefaultExtension="{x:Static root:Consts.DEFAULT_EXTENSION}"/>
         </p:InteractionRequestTrigger>
