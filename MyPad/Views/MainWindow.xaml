@@ -98,11 +98,6 @@
         <Style TargetType="{x:Type StatusBar}" BasedOn="{StaticResource Default.StatusBar}">
             <Setter Property="Visibility" Value="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding Window.ShowStatusBar, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}}"/>
         </Style>
-        <Style x:Key="IconButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
-            <Setter Property="Width" Value="30"/>
-            <Setter Property="Height" Value="30"/>
-            <Setter Property="Padding" Value="2"/>
-        </Style>
         <Style x:Key="ReadOnlyTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
             <Setter Property="IsReadOnly" Value="True"/>
             <Setter Property="IsTabStop" Value="False"/>
@@ -110,17 +105,17 @@
             <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
             <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
         </Style>
-        <Style x:Key="AddItemButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
+        <Style x:Key="ToolButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Padding" Value="2"/>
+        </Style>
+        <Style x:Key="TabItemButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
             <Setter Property="Background" Value="{x:Null}"/>
             <Setter Property="BorderBrush" Value="{x:Null}"/>
             <Setter Property="Width" Value="20"/>
             <Setter Property="Height" Value="20"/>
             <Setter Property="Padding" Value="2"/>
-            <Setter Property="Content">
-                <Setter.Value>
-                    <mi:Material Kind="Plus" Height="12" Width="12"/>
-                </Setter.Value>
-            </Setter>
         </Style>
         <ContextMenu x:Key="ContextMenu">
             <MenuItem IsCheckable="True" IsChecked="{Binding Window.ShowMenuBar,   Source={x:Static models:SettingsService.Instance}, Mode=TwoWay}" Header="{Binding Resources.Command_ShowMenuBar,   Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
@@ -556,10 +551,10 @@
                                 <m:HamburgerMenuIconItem.Tag>
                                     <Grid ge:GridEx.RowDefinition="Auto, 5, 3*(50-), Auto, *(50-)">
                                         <Grid Grid.Row="0" ge:GridEx.ColumnDefinition="Auto, 5, Auto">
-                                            <Button Grid.Column="0" Command="{Binding ClearClipboardItemCommand, Source={x:Static viewModels:WorkspaceViewModel.Instance}, Mode=OneTime}" ToolTip="{Binding Resources.Command_Delete, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
+                                            <Button Grid.Column="0" Command="{Binding ClearClipboardItemCommand, Source={x:Static viewModels:WorkspaceViewModel.Instance}, Mode=OneTime}" ToolTip="{Binding Resources.Command_Delete, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource ToolButton}">
                                                 <mi:Modern Kind="Clean"/>
                                             </Button>
-                                            <Button Grid.Column="2" Command="{Binding ClearAllClipboardItemsCommand, Source={x:Static viewModels:WorkspaceViewModel.Instance}, Mode=OneTime}" ToolTip="{Binding Resources.Command_DeleteAll, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
+                                            <Button Grid.Column="2" Command="{Binding ClearAllClipboardItemsCommand, Source={x:Static viewModels:WorkspaceViewModel.Instance}, Mode=OneTime}" ToolTip="{Binding Resources.Command_DeleteAll, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource ToolButton}">
                                                 <mi:Material Kind="Broom"/>
                                             </Button>
                                         </Grid>
@@ -673,7 +668,9 @@
                         </dr:TabablzControl.HeaderItemTemplate>
                         <dr:TabablzControl.HeaderSuffixContent>
                             <Grid ge:GridEx.ColumnDefinition="Auto, *" Margin="5,0,0,0">
-                                <Button Grid.Column="0" Command="{x:Static dr:TabablzControl.AddItemCommand}" Style="{StaticResource AddItemButton}" Focusable="False"/>
+                                <Button Grid.Column="0" Command="{x:Static dr:TabablzControl.AddItemCommand}" Style="{StaticResource TabItemButton}" Focusable="False">
+                                    <mi:Material Kind="Plus" Height="12" Width="12"/>
+                                </Button>
                                 <Border Grid.Column="1" ContextMenu="{StaticResource ContextMenu}">
                                     <TextBlock VerticalAlignment="Stretch"/>
                                 </Border>
@@ -843,7 +840,9 @@
                         </dr:TabablzControl.HeaderPrefixContent>
                         <dr:TabablzControl.HeaderSuffixContent>
                             <Grid ge:GridEx.ColumnDefinition="Auto, *" Margin="5,0,0,0">
-                                <Button Grid.Column="0" Command="{x:Static dr:TabablzControl.AddItemCommand}" Style="{StaticResource AddItemButton}" Focusable="False"/>
+                                <Button Grid.Column="0" Command="{x:Static dr:TabablzControl.AddItemCommand}" Style="{StaticResource TabItemButton}" Focusable="False">
+                                    <mi:Material Kind="Plus" Height="12" Width="12"/>
+                                </Button>
                                 <Border Grid.Column="1" ContextMenu="{StaticResource ContextMenu}">
                                     <TextBlock VerticalAlignment="Stretch"/>
                                 </Border>
@@ -1176,7 +1175,7 @@
                                         <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto" ge:GridEx.RowDefinition="Auto, Auto">
                                             <Label   Grid.Row="0" Grid.Column="0" Content="{Binding Resources.Label_ExecutionFile, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                                             <TextBox Grid.Row="0" Grid.Column="1" Text="{x:Static ml:ProductInfo.Location}" IsReadOnly="True"/>
-                                            <Button  Grid.Row="0" Grid.Column="3" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
+                                            <Button  Grid.Row="0" Grid.Column="3" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource ToolButton}">
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName="Click">
                                                         <mlwb:ProcessStartAction FileName="explorer.exe" Argument="{qc:Binding '\'/select, \' + $P', P={Binding Source={x:Static ml:ProductInfo.Location}, Mode=OneWay}}" ThrowException="False"/>
@@ -1186,7 +1185,7 @@
                                             </Button>
                                             <Label   Grid.Row="1" Grid.Column="0" Content="{Binding Resources.Label_SettingFile, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                                             <TextBox Grid.Row="1" Grid.Column="1" Text="{x:Static models:SettingsService.SettingsFilePath}" IsReadOnly="True"/>
-                                            <Button  Grid.Row="1" Grid.Column="3" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
+                                            <Button  Grid.Row="1" Grid.Column="3" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource ToolButton}">
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName="Click">
                                                         <mlwb:ProcessStartAction FileName="explorer.exe" Argument="{qc:Binding '\'/select, \' + $P', P={Binding Source={x:Static models:SettingsService.SettingsFilePath}, Mode=OneWay}}" ThrowException="False"/>
@@ -1201,7 +1200,7 @@
                                         <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto, 5, Auto" ge:GridEx.RowDefinition="Auto, Auto, Auto, Auto, Auto, Auto">
                                             <Label   Grid.Row="0" Grid.Column="0" Content="{Binding Resources.Label_ExecutionDirectory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                                             <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Text="{x:Static ml:ProductInfo.Working}" IsReadOnly="True"/>
-                                            <Button  Grid.Row="0" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
+                                            <Button  Grid.Row="0" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource ToolButton}">
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName="Click">
                                                         <mlwb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Working}" ThrowException="False"/>
@@ -1212,7 +1211,7 @@
 
                                             <Label   Grid.Row="1" Grid.Column="0" Content="{Binding Resources.Label_RoamingDirectory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                                             <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Text="{x:Static ml:ProductInfo.Roaming}" IsReadOnly="True"/>
-                                            <Button  Grid.Row="1" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
+                                            <Button  Grid.Row="1" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource ToolButton}">
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName="Click">
                                                         <mlwb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Roaming}" ThrowException="False"/>
@@ -1223,10 +1222,10 @@
 
                                             <Label   Grid.Row="2" Grid.Column="0" Content="{Binding Resources.Label_XshdDirectory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                                             <TextBox Grid.Row="2" Grid.Column="1" Text="{x:Static models:ResourceService.XshdDirectoryPath}" IsReadOnly="True"/>
-                                            <Button  Grid.Row="2" Grid.Column="3" Command="{Binding DataContext.InitializeXshdCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneTime}" ToolTip="{Binding Resources.Command_Initialize, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
+                                            <Button  Grid.Row="2" Grid.Column="3" Command="{Binding DataContext.InitializeXshdCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneTime}" ToolTip="{Binding Resources.Command_Initialize, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource ToolButton}">
                                                 <mi:Modern Kind="New"/>
                                             </Button>
-                                            <Button  Grid.Row="2" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
+                                            <Button  Grid.Row="2" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource ToolButton}">
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName="Click">
                                                         <mlwb:ProcessStartAction FileName="{x:Static models:ResourceService.XshdDirectoryPath}" ThrowException="False"/>
@@ -1237,7 +1236,7 @@
 
                                             <Label   Grid.Row="3" Grid.Column="0" Content="{Binding Resources.Label_LogDirectory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                                             <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Text="{x:Static ml:Logger.LogDirectoryPath}" IsReadOnly="True"/>
-                                            <Button  Grid.Row="3" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
+                                            <Button  Grid.Row="3" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource ToolButton}">
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName="Click">
                                                         <mlwb:ProcessStartAction FileName="{x:Static ml:Logger.LogDirectoryPath}" ThrowException="False"/>
@@ -1248,7 +1247,7 @@
 
                                             <Label   Grid.Row="4" Grid.Column="0" Content="{Binding Resources.Label_TempDirectory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                                             <TextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Text="{x:Static ml:ProductInfo.Temporary}" IsReadOnly="True"/>
-                                            <Button  Grid.Row="4" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
+                                            <Button  Grid.Row="4" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource ToolButton}">
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName="Click">
                                                         <mlwb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Temporary}" ThrowException="False"/>
@@ -1259,7 +1258,7 @@
                                             
                                             <Label   Grid.Row="5" Grid.Column="0" Content="{Binding Resources.Label_FileExplorerRoot, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                                             <TextBox Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding System.FileExplorerRoot, Source={x:Static models:SettingsService.Instance}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" m:TextBoxHelper.Watermark="{x:Static root:Consts.DEFAULT_FILE_EXPLORER_ROOT}"/>
-                                            <Button  Grid.Row="5" Grid.Column="5" Command="{Binding DataContext.InitializeFileExplorerRootCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneTime}" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
+                                            <Button  Grid.Row="5" Grid.Column="5" Command="{Binding DataContext.InitializeFileExplorerRootCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneTime}" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource ToolButton}">
                                                 <mi:Modern Kind="FolderOpen"/>
                                             </Button>
                                         </Grid>
