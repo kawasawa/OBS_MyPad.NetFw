@@ -44,7 +44,7 @@
             <behaviors:MessageActionEx UseOverlayMessage="{Binding Window.UseOverlayMessage, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}"/>
         </p:InteractionRequestTrigger>
         <p:InteractionRequestTrigger SourceObject="{Binding OpenDirectoryRequest, Mode=OneTime}">
-            <mlwi:OpenFileAction IsFolderPicker="True"/>
+            <mlwi:OpenFileAction IsFolderPicker="True" UseFolderBrowserDialog="True"/>
         </p:InteractionRequestTrigger>
         <p:InteractionRequestTrigger SourceObject="{Binding OpenFileRequest, Mode=OneTime}">
             <behaviors:OpenFileActionEx Filter="{x:Static root:Consts.FILE_FILTER}" DefaultExtension="{x:Static root:Consts.DEFAULT_EXTENSION}" Multiselect="True"/>
@@ -1266,7 +1266,7 @@
                                             <Label   Grid.Row="0" Grid.Column="0" Content="{Binding Resources.Label_FileExplorerRoot, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                                             <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding System.FileExplorerRoot, Source={x:Static models:SettingsService.Instance}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" m:TextBoxHelper.Watermark="{x:Static root:Consts.DEFAULT_FILE_EXPLORER_ROOT}"/>
                                             <Button  Grid.Row="0" Grid.Column="5" Command="{Binding DataContext.InitializeFileExplorerRootCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneTime}" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource ToolButton}">
-                                                <mi:Modern Kind="FolderOpen"/>
+                                                <mi:Modern Kind="FolderStar"/>
                                             </Button>
                                         </Grid>
                                     </Expander>
