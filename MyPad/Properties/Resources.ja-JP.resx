@@ -491,11 +491,11 @@
   <data name="Command_Print" xml:space="preserve">
     <value>印刷</value>
   </data>
-  <data name="Label_Directory" xml:space="preserve">
-    <value>フォルダ</value>
+  <data name="Label_SystemDirectory" xml:space="preserve">
+    <value>システムフォルダ</value>
   </data>
-  <data name="Label_File" xml:space="preserve">
-    <value>ファイル</value>
+  <data name="Label_SystemFile" xml:space="preserve">
+    <value>システムファイル</value>
   </data>
   <data name="Label_SyntaxDefinition" xml:space="preserve">
     <value>シンタックス定義</value>

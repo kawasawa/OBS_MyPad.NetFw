@@ -502,7 +502,7 @@
                                         <TreeView Grid.Row="2" ItemsSource="{Binding Data.FileTreeNodes, Source={StaticResource Proxy}, Mode=OneWay}" ItemContainerStyle="{StaticResource __FileExplorerItem}">
                                             <TreeView.ItemTemplate>
                                                 <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="{x:Type viewModels:FileTreeNodeViewModel}">
-                                                    <TextBlock Text="{qc:MultiBinding '$P0 ? \'empty\' : Path.GetFileName($P1)', P0={Binding IsEmpty, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}" ToolTip="{Binding FileName, Mode=OneWay}"/>
+                                                    <TextBlock Text="{qc:MultiBinding '$P0 ? \'empty\' : Path.GetFileName($P1)', P0={Binding IsEmpty, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}" ToolTip="{Binding FileName, Mode=OneWay}" ToolTipService.IsEnabled="{qc:Binding '!$P', P={Binding IsEmpty, Mode=OneWay}}"/>
                                                 </HierarchicalDataTemplate>
                                             </TreeView.ItemTemplate>
                                         </TreeView>
@@ -1011,6 +1011,11 @@
                             </Style>
                             <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
                                 <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsReadOnly" Value="True">
+                                        <Setter Property="Foreground" Value="{DynamicResource GrayBrush5}"/>
+                                    </Trigger>
+                                </Style.Triggers>
                             </Style>
                             <Style TargetType="{x:Type m:NumericUpDown}" BasedOn="{StaticResource Default.NumericUpDown}">
                                 <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
@@ -1034,6 +1039,7 @@
                                 <Setter Property="Margin" Value="{StaticResource Const.Gap1W1H}"/>
                             </Style>
                         </TabControl.Resources>
+
                         <TabItem DataContext="{Binding System, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}" Header="{Binding Resources.Label_System, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
                             <ScrollViewer>
                                 <StackPanel>
@@ -1168,7 +1174,7 @@
                         <TabItem Header="{Binding Resources.Label_Other, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
                             <ScrollViewer HorizontalScrollBarVisibility="Disabled">
                                 <StackPanel>
-                                    <Expander Header="{Binding Resources.Label_File, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
+                                    <Expander Header="{Binding Resources.Label_SystemFile, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
                                         <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto" ge:GridEx.RowDefinition="Auto, Auto">
                                             <Label   Grid.Row="0" Grid.Column="0" Content="{Binding Resources.Label_ExecutionFile, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                                             <TextBox Grid.Row="0" Grid.Column="1" Text="{x:Static ml:ProductInfo.Location}" IsReadOnly="True"/>
@@ -1193,8 +1199,8 @@
                                         </Grid>
                                     </Expander>
 
-                                    <Expander Header="{Binding Resources.Label_Directory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
-                                        <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto, 5, Auto" ge:GridEx.RowDefinition="Auto, Auto, Auto, Auto, Auto, Auto">
+                                    <Expander Header="{Binding Resources.Label_SystemDirectory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
+                                        <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto, 5, Auto" ge:GridEx.RowDefinition="Auto, Auto, Auto, Auto, Auto">
                                             <Label   Grid.Row="0" Grid.Column="0" Content="{Binding Resources.Label_ExecutionDirectory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                                             <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Text="{x:Static ml:ProductInfo.Working}" IsReadOnly="True"/>
                                             <Button  Grid.Row="0" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource ToolButton}">
@@ -1252,10 +1258,14 @@
                                                 </i:Interaction.Triggers>
                                                 <mi:Modern Kind="FolderOpen"/>
                                             </Button>
-                                            
-                                            <Label   Grid.Row="5" Grid.Column="0" Content="{Binding Resources.Label_FileExplorerRoot, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                                            <TextBox Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding System.FileExplorerRoot, Source={x:Static models:SettingsService.Instance}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" m:TextBoxHelper.Watermark="{x:Static root:Consts.DEFAULT_FILE_EXPLORER_ROOT}"/>
-                                            <Button  Grid.Row="5" Grid.Column="5" Command="{Binding DataContext.InitializeFileExplorerRootCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneTime}" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource ToolButton}">
+                                        </Grid>
+                                    </Expander>
+
+                                    <Expander Header="{Binding Resources.Label_Advanced, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
+                                        <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto, 5, Auto" ge:GridEx.RowDefinition="Auto">
+                                            <Label   Grid.Row="0" Grid.Column="0" Content="{Binding Resources.Label_FileExplorerRoot, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                            <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding System.FileExplorerRoot, Source={x:Static models:SettingsService.Instance}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" m:TextBoxHelper.Watermark="{x:Static root:Consts.DEFAULT_FILE_EXPLORER_ROOT}"/>
+                                            <Button  Grid.Row="0" Grid.Column="5" Command="{Binding DataContext.InitializeFileExplorerRootCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneTime}" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource ToolButton}">
                                                 <mi:Modern Kind="FolderOpen"/>
                                             </Button>
                                         </Grid>

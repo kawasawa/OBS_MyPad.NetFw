@@ -528,11 +528,11 @@ Definitions is reflected on restart. Do you want to continue?</value>
   <data name="Command_Print" xml:space="preserve">
     <value>Print</value>
   </data>
-  <data name="Label_Directory" xml:space="preserve">
-    <value>Directory</value>
+  <data name="Label_SystemDirectory" xml:space="preserve">
+    <value>System directory</value>
   </data>
-  <data name="Label_File" xml:space="preserve">
-    <value>File</value>
+  <data name="Label_SystemFile" xml:space="preserve">
+    <value>System file</value>
   </data>
   <data name="Label_SyntaxDefinition" xml:space="preserve">
     <value>Syntax definition</value>

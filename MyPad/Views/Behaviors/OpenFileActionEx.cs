@@ -9,7 +9,7 @@ namespace MyPad.Views.Behaviors
 {
     public class OpenFileActionEx : OpenFileAction
     {
-        protected override void OnPreviewShowDialog(OpenFileNotification context, CommonOpenFileDialog dialog)
+        protected override void OnPreviewShowDialog(FileNotificationBase context, CommonFileDialog dialog)
         {
             if (!(context is OpenFileNotificationEx contextEx))
                 return;
@@ -21,7 +21,7 @@ namespace MyPad.Views.Behaviors
             base.OnPreviewShowDialog(context, dialog);
         }
 
-        protected override void OnDialogClosed(OpenFileNotification context, CommonOpenFileDialog dialog, CommonFileDialogResult dialogResult)
+        protected override void OnDialogClosed(FileNotificationBase context, CommonFileDialog dialog, CommonFileDialogResult dialogResult)
         {
             if (!(context is OpenFileNotificationEx contextEx))
                 return;

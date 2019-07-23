@@ -218,8 +218,10 @@ namespace MyPad.Views
                 case Key.Enter:
                     var node = (FileTreeNodeViewModel)((TreeViewItem)sender).DataContext;
                     if (node.IsEmpty)
+                    {
+                        e.Handled = true;
                         return;
-
+                    }
                     if (Directory.Exists(node.FileName))
                     {
                         node.IsExpanded = !node.IsExpanded;

@@ -8,7 +8,7 @@ namespace MyPad.Views.Behaviors
 {
     public class SaveFileActionEx : SaveFileAction
     {
-        protected override void OnPreviewShowDialog(SaveFileNotification context, CommonSaveFileDialog dialog)
+        protected override void OnPreviewShowDialog(FileNotificationBase context, CommonFileDialog dialog)
         {
             if (!(context is SaveFileNotificationEx contextEx))
                 return;
@@ -18,7 +18,7 @@ namespace MyPad.Views.Behaviors
             base.OnPreviewShowDialog(context, dialog);
         }
 
-        protected override void OnDialogClosed(SaveFileNotification context, CommonSaveFileDialog dialog, CommonFileDialogResult dialogResult)
+        protected override void OnDialogClosed(FileNotificationBase context, CommonFileDialog dialog, CommonFileDialogResult dialogResult)
         {
             if (!(context is SaveFileNotificationEx contextEx))
                 return;
