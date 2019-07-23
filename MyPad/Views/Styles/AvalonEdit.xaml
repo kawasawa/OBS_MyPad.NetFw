@@ -10,6 +10,7 @@
                     xmlns:components="clr-namespace:MyPad.Views.Components">
 
     <Style x:Key="Default.TextView" TargetType="{x:Type a:TextView}">
+        <Setter Property="NonPrintableCharacterBrush" Value="{DynamicResource GrayBrush2}"/>
         <Setter Property="LinkTextForegroundBrush" Value="{DynamicResource AccentBaseColorBrush}"/>
         <Setter Property="CurrentLineBackground" Value="{DynamicResource AccentColorBrush4}"/>
         <Setter Property="CurrentLineBorder">
@@ -31,6 +32,7 @@
         <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
         <Setter Property="Background" Value="{DynamicResource LightBackground}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource LightBackground}"/>
+        <Setter Property="LineNumbersForeground" Value="{DynamicResource GrayBrush2}"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>
         <Setter Property="HorizontalScrollBarVisibility" Value="Visible"/>
     </Style>
