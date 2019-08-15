@@ -498,15 +498,13 @@
                                     <mi:Material Kind="FileTree"/>
                                 </m:HamburgerMenuIconItem.Icon>
                                 <m:HamburgerMenuIconItem.Tag>
-                                    <Grid ge:GridEx.RowDefinition="Auto, 5, *">
-                                        <TreeView Grid.Row="2" ItemsSource="{Binding Data.FileTreeNodes, Source={StaticResource Proxy}, Mode=OneWay}" ItemContainerStyle="{StaticResource __FileExplorerItem}">
-                                            <TreeView.ItemTemplate>
-                                                <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="{x:Type viewModels:FileTreeNodeViewModel}">
-                                                    <TextBlock Text="{qc:MultiBinding '$P0 ? \'empty\' : Path.GetFileName($P1)', P0={Binding IsEmpty, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}" ToolTip="{Binding FileName, Mode=OneWay}" ToolTipService.IsEnabled="{qc:Binding '!$P', P={Binding IsEmpty, Mode=OneWay}}"/>
-                                                </HierarchicalDataTemplate>
-                                            </TreeView.ItemTemplate>
-                                        </TreeView>
-                                    </Grid>
+                                    <TreeView ItemsSource="{Binding Data.FileTreeNodes, Source={StaticResource Proxy}, Mode=OneWay}" ItemContainerStyle="{StaticResource __FileExplorerItem}">
+                                        <TreeView.ItemTemplate>
+                                            <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="{x:Type viewModels:FileTreeNodeViewModel}">
+                                                <TextBlock Text="{qc:MultiBinding '$P0 ? \'empty\' : Path.GetFileName($P1)', P0={Binding IsEmpty, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}" ToolTip="{Binding FileName, Mode=OneWay}" ToolTipService.IsEnabled="{qc:Binding '!$P', P={Binding IsEmpty, Mode=OneWay}}"/>
+                                            </HierarchicalDataTemplate>
+                                        </TreeView.ItemTemplate>
+                                    </TreeView>
                                 </m:HamburgerMenuIconItem.Tag>
                             </m:HamburgerMenuIconItem>
                             <m:HamburgerMenuIconItem x:Name="PropertyItem" Label="{Binding Resources.Command_Property, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
@@ -910,12 +908,16 @@
                     <TextBlock Text="{qc:MultiBinding '$P0 + \' chars (\' + $P1 + \' lines) selected\'', P0={Binding SelectionLength, Mode=OneWay}, P1={Binding SelectionLineCount, Mode=OneWay}}" Visibility="{qc:Binding '$P == 0 ? Visibility.Collapsed : Visibility.Visible', P={Binding SelectionLength, Mode=OneWay}}"/>
                 </StatusBarItem>
                 <StatusBarItem Grid.Column="1" DataContext="{Binding ActiveEditor, Mode=OneWay}">
-                    <TextBlock Text="{qc:MultiBinding '\'Len \' + $P0 + \' (View \' + $P1 + \')\'', P0={Binding TextLength, Mode=OneWay}, P1={Binding VisualLength, Mode=OneWay}}"/>
+                    <ToggleButton Command="{x:Static views:MainWindow.ActivateProperty}">
+                        <ToggleButton.Content>
+                            <TextBlock Text="{qc:MultiBinding '\'Lines \' + $P0 + \' - Length \' + $P1 + \' ( \' + $P2 + \' )\'', P0={Binding Document.LineCount, Mode=OneWay}, P1={Binding TextLength, Mode=OneWay}, P2={Binding VisualLength, Mode=OneWay}}"/>
+                        </ToggleButton.Content>
+                    </ToggleButton>
                 </StatusBarItem>
                 <StatusBarItem Grid.Column="2" DataContext="{Binding ActiveEditor, Mode=OneWay}">
                     <ToggleButton Click="{qc:QuickEvent '$GoToLineFlyout.IsOpen = true'}">
                         <ToggleButton.Content>
-                            <TextBlock Text="{qc:MultiBinding '\'Ln \' + $P0 + \' - Col \' + $P1', P0={Binding Line, Mode=OneWay}, P1={Binding Column, Mode=OneWay}}"/>
+                            <TextBlock Text="{qc:MultiBinding '\'Ln \' + $P0 + \' - Col \' + $P1 + \' ( \' + $P2 + \' )\'', P0={Binding Line, Mode=OneWay}, P1={Binding Column, Mode=OneWay}, P2={Binding CharName, Mode=OneWay}}"/>
                         </ToggleButton.Content>
                     </ToggleButton>
                 </StatusBarItem>
