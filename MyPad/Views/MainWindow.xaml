@@ -560,7 +560,7 @@
                                                 </DataTemplate>
                                             </ListBox.ItemTemplate>
                                         </ListBox>
-                                        <GridSplitter Grid.Row="3" HorizontalAlignment="Stretch" Height="5"/>
+                                        <GridSplitter Grid.Row="3" HorizontalAlignment="Stretch" Height="{StaticResource Const.Gap1}"/>
                                         <TextBox Grid.Row="4" Text="{Binding Children[1].(ListBox.SelectedItem), RelativeSource={RelativeSource AncestorType={x:Type Grid}}, Mode=OneWay}" Style="{StaticResource ReadOnlyTextBox}"/>
                                     </Grid>
                                 </m:HamburgerMenuIconItem.Tag>
@@ -569,7 +569,7 @@
                     </m:HamburgerMenu.ItemsSource>
                 </m:HamburgerMenu>
 
-                <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Width="{qc:MultiBinding '$P0 ## double.IsNaN($P1) ? 10 : 0', P0={Binding Window.ShowSideBar, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}, P1={Binding Width, ElementName=HamburgerMenu, Mode=OneWay}}"/>
+                <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Width="{qc:MultiBinding '$P0 ## double.IsNaN($P1) ? 5 : 0', P0={Binding Window.ShowSideBar, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}, P1={Binding Width, ElementName=HamburgerMenu, Mode=OneWay}}"/>
 
                 <!-- メインコンテンツ -->
                 <Grid Grid.Column="2">
@@ -910,14 +910,14 @@
                 <StatusBarItem Grid.Column="1" DataContext="{Binding ActiveEditor, Mode=OneWay}">
                     <ToggleButton Command="{x:Static views:MainWindow.ActivateProperty}">
                         <ToggleButton.Content>
-                            <TextBlock Text="{qc:MultiBinding '\'Lines \' + $P0 + \' - Length \' + $P1 + \' ( \' + $P2 + \' )\'', P0={Binding Document.LineCount, Mode=OneWay}, P1={Binding TextLength, Mode=OneWay}, P2={Binding VisualLength, Mode=OneWay}}"/>
+                            <TextBlock Text="{qc:MultiBinding '\'Lines \' + $P0 + \' - Length \' + $P1 + \' (\' + $P2 + \')\'', P0={Binding Document.LineCount, Mode=OneWay}, P1={Binding TextLength, Mode=OneWay}, P2={Binding VisualLength, Mode=OneWay}}"/>
                         </ToggleButton.Content>
                     </ToggleButton>
                 </StatusBarItem>
                 <StatusBarItem Grid.Column="2" DataContext="{Binding ActiveEditor, Mode=OneWay}">
                     <ToggleButton Click="{qc:QuickEvent '$GoToLineFlyout.IsOpen = true'}">
                         <ToggleButton.Content>
-                            <TextBlock Text="{qc:MultiBinding '\'Ln \' + $P0 + \' - Col \' + $P1 + \' ( \' + $P2 + \' )\'', P0={Binding Line, Mode=OneWay}, P1={Binding Column, Mode=OneWay}, P2={Binding CharName, Mode=OneWay}}"/>
+                            <TextBlock Text="{qc:MultiBinding '\'Ln \' + $P0 + \' - Col \' + $P1 + \' (\' + $P2 + \')\'', P0={Binding Line, Mode=OneWay}, P1={Binding Column, Mode=OneWay}, P2={Binding CharName, Mode=OneWay}}"/>
                         </ToggleButton.Content>
                     </ToggleButton>
                 </StatusBarItem>
