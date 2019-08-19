@@ -51,29 +51,29 @@ namespace MyPad.Views
             switch ((User32_Gdi.WindowMessage)msg)
             {
                 case User32_Gdi.WindowMessage.WM_COPYDATA:
+                {
+                    MainWindowViewModel window = null;
+                    var structure = Marshal.PtrToStructure<COPYDATASTRUCT>(lParam);
+                    if (string.IsNullOrEmpty(structure.lpData) == false)
                     {
-                        MainWindowViewModel window = null;
-                        var structure = Marshal.PtrToStructure<COPYDATASTRUCT>(lParam);
-                        if (string.IsNullOrEmpty(structure.lpData) == false)
+                        var paths = structure.lpData.Split('|');
+                        if (this.ViewModel.Windows.Any())
                         {
-                            var paths = structure.lpData.Split('|');
-                            if (this.ViewModel.Windows.Any())
-                            {
-                                window = this.ViewModel.ActiveWindow;
-                                window.LoadEditor(paths);
-                            }
-                            else
-                            {
-                                window = this.ViewModel.AddWindow(paths);
-                            }
+                            window = this.ViewModel.ActiveWindow;
+                            window.LoadEditor(paths);
                         }
                         else
                         {
-                            window = this.ViewModel.Windows.Any() ? this.ViewModel.ActiveWindow : this.ViewModel.AddWindow();
+                            window = this.ViewModel.AddWindow(paths);
                         }
-                        window.TransitionRequest.Raise(new TransitionNotification(TransitionKind.Activate));
-                        break;
                     }
+                    else
+                    {
+                        window = this.ViewModel.Windows.Any() ? this.ViewModel.ActiveWindow : this.ViewModel.AddWindow();
+                    }
+                    window.TransitionRequest.Raise(new TransitionNotification(TransitionKind.Activate));
+                    break;
+                }
             }
             return IntPtr.Zero;
         }

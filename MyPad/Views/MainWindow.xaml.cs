@@ -498,7 +498,6 @@ namespace MyPad.Views
                 return new NewTabHost<Window>(view, view.TextEditorTabControl);
             }
 
-
             TabEmptiedResponse IInterTabClient.TabEmptiedHandler(TabablzControl tabControl, Window window)
                 => TabEmptiedResponse.CloseWindowOrLayoutBranch;
         }
