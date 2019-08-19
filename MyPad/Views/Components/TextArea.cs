@@ -18,13 +18,13 @@ namespace MyPad.Views.Components
     {
         #region プロパティ
 
-        public static readonly DependencyProperty SearchPanelExpandProperty = Interactor.RegisterAttachedDependencyProperty();
+        public static readonly DependencyProperty ReplaceAreaExpandedProperty = Interactor.RegisterAttachedDependencyProperty();
         public static readonly DependencyProperty ReplacePatternProperty = Interactor.RegisterAttachedDependencyProperty();
 
         [AttachedPropertyBrowsableForType(typeof(SearchPanel))]
-        public static bool GetSearchPanelExpand(DependencyObject obj) => (bool)obj.GetValue(SearchPanelExpandProperty);
+        public static bool GetReplaceAreaExpanded(DependencyObject obj) => (bool)obj.GetValue(ReplaceAreaExpandedProperty);
         [AttachedPropertyBrowsableForType(typeof(SearchPanel))]
-        public static void SetSearchPanelExpand(DependencyObject obj, bool value) => obj.SetValue(SearchPanelExpandProperty, value);
+        public static void SetReplaceAreaExpanded(DependencyObject obj, bool value) => obj.SetValue(ReplaceAreaExpandedProperty, value);
 
         [AttachedPropertyBrowsableForType(typeof(SearchPanel))]
         public static string GetReplacePattern(DependencyObject obj) => (string)obj.GetValue(ReplacePatternProperty);
@@ -108,6 +108,8 @@ namespace MyPad.Views.Components
             var bindings = this.DefaultInputHandler.Editing.CommandBindings;
             bindings.Add(new CommandBinding(ApplicationCommands.Find, (sender, e) => this.OpenSearchPanel()));
             bindings.Add(new CommandBinding(ApplicationCommands.Replace, (sender, e) => this.OpenSearchPanel(true)));
+            bindings.Add(new CommandBinding(SearchCommands.FindNext, (sender, e) => this.FindNext()));
+            bindings.Add(new CommandBinding(SearchCommands.FindPrevious, (sender, e) => this.FindPrevious()));
             bindings.Add(new CommandBinding(TextEditorCommands.ZoomIn, (sender, e) => this.ZoomIn()));
             bindings.Add(new CommandBinding(TextEditorCommands.ZoomOut, (sender, e) => this.ZoomOut()));
             bindings.Add(new CommandBinding(TextEditorCommands.ZoomReset, (sender, e) => this.ZoomReset()));
@@ -169,13 +171,28 @@ namespace MyPad.Views.Components
         public void ZoomReset()
             => this.FontSize = this.ActualFontSize;
 
-        public void OpenSearchPanel(bool expandReplaceArea = false)
+        public void OpenSearchPanel()
+            => this.OpenSearchPanel(false);
+
+        public void OpenSearchPanel(bool replaceAreaExpanded)
         {
-            SetSearchPanelExpand(this.SearchPanel, expandReplaceArea);
+            SetReplaceAreaExpanded(this.SearchPanel, replaceAreaExpanded);
             this.SearchPanel.Open();
             if (this.Selection.IsEmpty == false && this.Selection.IsMultiline == false)
                 this.SearchPanel.SearchPattern = this.Selection.GetText();
             this.Dispatcher.InvokeAsync(() => this.SearchPanel.Reactivate(), DispatcherPriority.Input);
+        }
+
+        public void FindNext()
+        {
+            this.SearchPanel.Open();
+            this.SearchPanel.FindNext();
+        }
+
+        public void FindPrevious()
+        {
+            this.SearchPanel.Open();
+            this.SearchPanel.FindPrevious();
         }
 
         public void ReplaceNext()

@@ -99,8 +99,13 @@
             <Setter Property="IsReadOnly" Value="True"/>
             <Setter Property="IsTabStop" Value="False"/>
             <Setter Property="VerticalContentAlignment" Value="Top"/>
-            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Hidden"/>
+            <Setter Property="HorizontalScrollBarVisibility" Value="Hidden"/>
+            <Setter Property="ContextMenu">
+                <Setter.Value>
+                    <ContextMenu Visibility="Collapsed"/>
+                </Setter.Value>
+            </Setter>
         </Style>
         <Style x:Key="ToolButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
             <Setter Property="Width" Value="30"/>
@@ -216,6 +221,16 @@
                     <MenuItem Command="Find" Header="{Binding Resources.Command_Find, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
                         <MenuItem.Icon>
                             <mi:Material Kind="Magnify"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Command="a:SearchCommands.FindNext" Header="{Binding Resources.Command_FindNext, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
+                        <MenuItem.Icon>
+                            <mi:Modern Kind="MagnifyArrowDown"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Command="a:SearchCommands.FindPrevious" Header="{Binding Resources.Command_FindPrev, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
+                        <MenuItem.Icon>
+                            <mi:Modern Kind="MagnifyArrowUp"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Command="Replace" Header="{Binding Resources.Command_Replace, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
@@ -560,7 +575,7 @@
                                                 </DataTemplate>
                                             </ListBox.ItemTemplate>
                                         </ListBox>
-                                        <GridSplitter Grid.Row="3" HorizontalAlignment="Stretch" Height="{StaticResource Const.Gap1}"/>
+                                        <GridSplitter Grid.Row="3" Height="{StaticResource Const.Gap1}"/>
                                         <TextBox Grid.Row="4" Text="{Binding Children[1].(ListBox.SelectedItem), RelativeSource={RelativeSource AncestorType={x:Type Grid}}, Mode=OneWay}" Style="{StaticResource ReadOnlyTextBox}"/>
                                     </Grid>
                                 </m:HamburgerMenuIconItem.Tag>
@@ -569,7 +584,7 @@
                     </m:HamburgerMenu.ItemsSource>
                 </m:HamburgerMenu>
 
-                <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Width="{qc:MultiBinding '$P0 ## double.IsNaN($P1) ? 5 : 0', P0={Binding Window.ShowSideBar, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}, P1={Binding Width, ElementName=HamburgerMenu, Mode=OneWay}}"/>
+                <GridSplitter Grid.Column="1" Width="{qc:MultiBinding '$P0 ## double.IsNaN($P1) ? 5 : 0', P0={Binding Window.ShowSideBar, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}, P1={Binding Width, ElementName=HamburgerMenu, Mode=OneWay}}"/>
 
                 <!-- メインコンテンツ -->
                 <Grid Grid.Column="2">
@@ -791,7 +806,7 @@
                         </dr:TabablzControl.ContentTemplate>
                     </components:DraggableTabControl>
 
-                    <GridSplitter x:Name="ContentSplitter" Grid.Row="1" HorizontalAlignment="Stretch" Height="{StaticResource Const.Gap1}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsVisibleTerminalContent, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}}"/>
+                    <GridSplitter x:Name="ContentSplitter" Grid.Row="1" Height="{StaticResource Const.Gap1}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsVisibleTerminalContent, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}}"/>
 
                     <!-- ターミナル -->
                     <components:DraggableTabControl x:Name="TerminalTabControl" Grid.Row="2" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsVisibleTerminalContent, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}}"
@@ -809,13 +824,13 @@
                                         <MultiDataTrigger.Conditions>
                                             <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}, Mode=OneWay}" Value="True"/>
                                         </MultiDataTrigger.Conditions>
-                                        <Setter Property="Background" Value="{DynamicResource GrayBrush5}"/>
+                                        <Setter Property="Background" Value="{DynamicResource AccentColorBrush4}"/>
                                     </MultiDataTrigger>
                                     <MultiDataTrigger>
                                         <MultiDataTrigger.Conditions>
                                             <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}, Mode=OneWay}" Value="True"/>
                                         </MultiDataTrigger.Conditions>
-                                        <Setter Property="Background" Value="{DynamicResource GrayBrush3}"/>
+                                        <Setter Property="Background" Value="{DynamicResource AccentColorBrush3}"/>
                                     </MultiDataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -828,11 +843,6 @@
                                 <TextBlock DataContext="{Binding Mode=OneWay}" Text="{Binding TerminalName, Mode=OneWay}"/>
                             </DataTemplate>
                         </dr:TabablzControl.HeaderItemTemplate>
-                        <dr:TabablzControl.HeaderPrefixContent>
-                            <Border Margin="0,0,10,0" Background="{DynamicResource AccentColorBrush2}">
-                                <TextBlock Text="{Binding Resources.Command_Terminal, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" FontWeight="Bold" Margin="{StaticResource Const.Gap2W}"/>
-                            </Border>
-                        </dr:TabablzControl.HeaderPrefixContent>
                         <dr:TabablzControl.HeaderSuffixContent>
                             <Grid ge:GridEx.ColumnDefinition="Auto, *" Margin="5,0,0,0">
                                 <Button Grid.Column="0" Command="{x:Static dr:TabablzControl.AddItemCommand}" Style="{StaticResource TabItemButton}" Focusable="False">
