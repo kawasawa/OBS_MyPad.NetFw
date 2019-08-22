@@ -911,7 +911,7 @@
             <StatusBar x:Name="StatusBar" Grid.Row="2">
                 <StatusBar.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <Grid ge:GridEx.ColumnDefinition="*, Auto(50-), Auto(50-), Auto(50-), Auto(50-), Auto(50-), 5"/>
+                        <Grid ge:GridEx.ColumnDefinition="*, Auto, Auto, Auto, Auto, Auto, 5"/>
                     </ItemsPanelTemplate>
                 </StatusBar.ItemsPanel>
                 <StatusBarItem Grid.Column="0" DataContext="{Binding ActiveEditor, Mode=OneWay}">
@@ -1307,7 +1307,7 @@
                                 <LineBreak/>
                                 <Run Text="{x:Static ml:ProductInfo.Copyright}"/>
                             </TextBlock>
-                            <Button Grid.Column="4" Style="{StaticResource Common.CircleButton}">
+                            <Button Grid.Column="4" Style="{StaticResource Common.CircleButton}" ToolTip="GitHub">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <mlwb:ProcessStartAction FileName="{x:Static root:AppConfig.ProjectSite}" ThrowException="False"/>
