@@ -18,6 +18,9 @@ namespace MyPad.Views.Components
     {
         #region プロパティ
 
+        private const double MIN_FONT_SIZE = 2;
+        private const double MAX_FONT_SIZE = 99;
+
         public static readonly DependencyProperty ReplaceAreaExpandedProperty = Interactor.RegisterAttachedDependencyProperty();
         public static readonly DependencyProperty ReplacePatternProperty = Interactor.RegisterAttachedDependencyProperty();
 
@@ -34,7 +37,7 @@ namespace MyPad.Views.Components
         public new static readonly DependencyProperty FontSizeProperty
             = Interactor.RegisterDependencyProperty(
                 new PropertyMetadata(13D),
-                value => double.TryParse(value.ToString(), out var i) ? 2D <= i && i <= 99D : false);
+                value => double.TryParse(value.ToString(), out var i) ? MIN_FONT_SIZE <= i && i <= MAX_FONT_SIZE : false);
         public static readonly DependencyProperty ActualFontSizeProperty
             = Interactor.RegisterDependencyProperty(
                 new PropertyMetadata(FontSizeProperty.DefaultMetadata.DefaultValue),
@@ -106,15 +109,36 @@ namespace MyPad.Views.Components
             : base(new TextView())
         {
             var bindings = this.DefaultInputHandler.Editing.CommandBindings;
-            bindings.Add(new CommandBinding(ApplicationCommands.Find, (sender, e) => this.OpenSearchPanel()));
-            bindings.Add(new CommandBinding(ApplicationCommands.Replace, (sender, e) => this.OpenSearchPanel(true)));
-            bindings.Add(new CommandBinding(SearchCommands.FindNext, (sender, e) => this.FindNext()));
-            bindings.Add(new CommandBinding(SearchCommands.FindPrevious, (sender, e) => this.FindPrevious()));
-            bindings.Add(new CommandBinding(TextEditorCommands.ZoomIn, (sender, e) => this.ZoomIn()));
-            bindings.Add(new CommandBinding(TextEditorCommands.ZoomOut, (sender, e) => this.ZoomOut()));
-            bindings.Add(new CommandBinding(TextEditorCommands.ZoomReset, (sender, e) => this.ZoomReset()));
-            bindings.Add(new CommandBinding(TextEditorCommands.Completion, (sender, e) => this.ExpandCompletionList()));
-            bindings.Add(new CommandBinding(TextEditorCommands.ConvertToNarrow,
+            bindings.Add(new CommandBinding(
+                ApplicationCommands.Find, 
+                (sender, e) => this.OpenSearchPanel()));
+            bindings.Add(new CommandBinding(
+                ApplicationCommands.Replace, 
+                (sender, e) => this.OpenSearchPanel(true)));
+            bindings.Add(new CommandBinding(
+                SearchCommands.FindNext,
+                (sender, e) => this.FindNext()));
+            bindings.Add(new CommandBinding(
+                SearchCommands.FindPrevious,
+                (sender, e) => this.FindPrevious()));
+            bindings.Add(new CommandBinding(
+                TextEditorCommands.ZoomIn,
+                (sender, e) => this.ZoomIn(),
+                (sender, e) => e.CanExecute = this.CanZoomIn()));
+            bindings.Add(new CommandBinding(
+                TextEditorCommands.ZoomOut,
+                (sender, e) => this.ZoomOut(),
+                (sender, e) => e.CanExecute = this.CanZoomOut()));
+            bindings.Add(new CommandBinding(
+                TextEditorCommands.ZoomReset,
+                (sender, e) => this.ZoomReset(),
+                (sender, e) => e.CanExecute = this.CanZoomReset()));
+            bindings.Add(new CommandBinding(
+                TextEditorCommands.Completion,
+                (sender, e) => this.ShowCompletionList(),
+                (sender, e) => e.CanExecute = this.CanShowCompletionList()));
+            bindings.Add(new CommandBinding(
+                TextEditorCommands.ConvertToNarrow,
                 (sender, e) => this.InvokeTransformSelectedSegments(
                     new[] {
                         (Action<ICSharpCode.AvalonEdit.Editing.TextArea, ISegment>)(
@@ -129,8 +153,9 @@ namespace MyPad.Views.Components
                     }
                 )
             ));
-            bindings.Add(new CommandBinding(TextEditorCommands.ConvertToWide,
-               (sender, e) => this.InvokeTransformSelectedSegments(
+            bindings.Add(new CommandBinding(
+                TextEditorCommands.ConvertToWide,
+                (sender, e) => this.InvokeTransformSelectedSegments(
                     new[] {
                         (Action<ICSharpCode.AvalonEdit.Editing.TextArea, ISegment>)(
                             (textArea, segment) =>
@@ -151,10 +176,20 @@ namespace MyPad.Views.Components
             // MarkerBrush の実体は上記レンダラであり、スタイルで上書きすると例外になる。
             this.SearchPanel = SearchPanel.Install(this);
             this.SearchPanel.MarkerBrush = new SolidColorBrush(Color.FromArgb(255, 98, 57, 22));
-            this.SearchPanel.CommandBindings.Add(new CommandBinding(ApplicationCommands.Find, (sender, e) => this.OpenSearchPanel()));
-            this.SearchPanel.CommandBindings.Add(new CommandBinding(ApplicationCommands.Replace, (sender, e) => this.OpenSearchPanel(true)));
-            this.SearchPanel.CommandBindings.Add(new CommandBinding(TextEditorCommands.ReplaceNext, (sender, e) => this.ReplaceNext()));
-            this.SearchPanel.CommandBindings.Add(new CommandBinding(TextEditorCommands.ReplaceAll, (sender, e) => this.ReplaceAll()));
+            this.SearchPanel.CommandBindings.Add(new CommandBinding(
+                ApplicationCommands.Find,
+                (sender, e) => this.OpenSearchPanel()));
+            this.SearchPanel.CommandBindings.Add(new CommandBinding(
+                ApplicationCommands.Replace,
+                (sender, e) => this.OpenSearchPanel(true)));
+            this.SearchPanel.CommandBindings.Add(new CommandBinding(
+                TextEditorCommands.ReplaceNext, 
+                (sender, e) => this.ReplaceNext(),
+                (sender, e) => e.CanExecute = this.CanReplaceNext()));
+            this.SearchPanel.CommandBindings.Add(new CommandBinding(
+                TextEditorCommands.ReplaceAll,
+                (sender, e) => this.ReplaceAll(),
+                (sender, e) => e.CanExecute = this.CanReplaceAll()));
 
             this.Unloaded += this.TextArea_Unloaded;
         }
@@ -162,14 +197,46 @@ namespace MyPad.Views.Components
         public void Redraw()
             => this.TextView.Redraw();
 
+        public bool CanZoomIn()
+        {
+            return this.FontSize < MAX_FONT_SIZE;
+        }
+
         public void ZoomIn()
-            => this.FontSize += this.ZoomIncrement;
+        {
+            if (this.CanZoomIn() == false)
+                return;
+
+            var newSize = this.FontSize + this.ZoomIncrement;
+            this.FontSize = Math.Min(newSize, MIN_FONT_SIZE);
+        }
+
+        public bool CanZoomOut()
+        {
+            return MIN_FONT_SIZE < this.FontSize;
+        }
 
         public void ZoomOut()
-            => this.FontSize -= this.ZoomIncrement;
+        {
+            if (this.CanZoomOut() == false)
+                return;
+
+            var newSize = this.FontSize - this.ZoomIncrement;
+            this.FontSize = Math.Max(newSize, MIN_FONT_SIZE);
+        }
+
+        public bool CanZoomReset()
+        {
+            return this.FontSize != this.ActualFontSize;
+        }
 
         public void ZoomReset()
-            => this.FontSize = this.ActualFontSize;
+        {
+            if (this.CanZoomReset() == false)
+                return;
+
+            this.FontSize = this.ActualFontSize;
+        }
 
         public void OpenSearchPanel()
             => this.OpenSearchPanel(false);
@@ -195,9 +262,16 @@ namespace MyPad.Views.Components
             this.SearchPanel.FindPrevious();
         }
 
-        public void ReplaceNext()
+        public bool CanReplaceNext()
         {
             if (this.IsReadOnly)
+                return false;
+            return true;
+        }
+
+        public void ReplaceNext()
+        {
+            if (this.CanReplaceNext() == false)
                 return;
 
             var text = GetReplacePattern(this.SearchPanel) ?? string.Empty;
@@ -208,9 +282,16 @@ namespace MyPad.Views.Components
             this.Selection.ReplaceSelectionWithText(text);
         }
 
-        public void ReplaceAll()
+        public bool CanReplaceAll()
         {
             if (this.IsReadOnly)
+                return false;
+            return true;
+        }
+
+        public void ReplaceAll()
+        {
+            if (this.CanReplaceAll() == false)
                 return;
 
             var text = GetReplacePattern(this.SearchPanel) ?? string.Empty;
@@ -223,11 +304,18 @@ namespace MyPad.Views.Components
             }
         }
 
-        public void ExpandCompletionList()
+        public bool CanShowCompletionList()
         {
             if (this.IsReadOnly)
-                return;
+                return false;
             if (this._completionWindow != null || this._completionData.Any() == false)
+                return false;
+            return true;
+        }
+
+        public void ShowCompletionList()
+        {
+            if (this.CanShowCompletionList() == false)
                 return;
 
             this._completionWindow = new CompletionWindow(this, this._completionData);
@@ -248,9 +336,7 @@ namespace MyPad.Views.Components
         private IEnumerable<string> GetWords(IEnumerable<XshdElement> elements)
         {
             if (elements == null)
-            {
                 return Enumerable.Empty<string>();
-            }
 
             var list = new List<string>();
             foreach (var element in elements)
@@ -321,25 +407,22 @@ namespace MyPad.Views.Components
                 e.Text.Length == 1 && 
                 TextUtilities.GetCharacterClass(e.Text.First()) == CharacterClass.IdentifierPart)
             {
-                this.ExpandCompletionList();
+                this.ShowCompletionList();
             }
             base.OnTextEntered(e);
         }
 
         protected override void OnPreviewMouseWheel(MouseWheelEventArgs e)
         {
-            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control) && e.Delta != 0 && this._completionWindow == null)
+            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control) &&
+                this._completionWindow == null &&
+                e.Delta != 0)
             {
                 if (0 < e.Delta)
-                {
                     this.ZoomIn();
-                    e.Handled = true;
-                }
-                else if (e.Delta < 0)
-                {
+                else
                     this.ZoomOut();
-                    e.Handled = true;
-                }
+                e.Handled = true;
             }
             base.OnPreviewMouseWheel(e);
         }
