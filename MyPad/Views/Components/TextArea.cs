@@ -208,7 +208,7 @@ namespace MyPad.Views.Components
                 return;
 
             var newSize = this.FontSize + this.ZoomIncrement;
-            this.FontSize = Math.Min(newSize, MIN_FONT_SIZE);
+            this.FontSize = Math.Min(newSize, MAX_FONT_SIZE);
         }
 
         public bool CanZoomOut()
