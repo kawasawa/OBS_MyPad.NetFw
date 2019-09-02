@@ -132,13 +132,15 @@ namespace MyPad
         private void InitializeQuickConverter()
         {
             // System
-            EquationTokenizer.AddNamespace(typeof(System.Object));                 // mscorlib              : System
-            EquationTokenizer.AddNamespace(typeof(System.IO.Path));                // mscorlib              : System.IO
-            EquationTokenizer.AddNamespace(typeof(System.Reflection.Assembly));    // mscorlib              : System.Reflection
-            EquationTokenizer.AddNamespace(typeof(System.Windows.Point));          // WindowsBase           : System.Windows
-            EquationTokenizer.AddNamespace(typeof(System.Windows.UIElement));      // PresentationCore      : System.Windows
-            EquationTokenizer.AddNamespace(typeof(Microsoft.VisualBasic.Globals)); // Microsoft.VisualBasic : Microsoft.VisualBasic
-            EquationTokenizer.AddExtensionMethods(typeof(System.Linq.Enumerable)); // System.Core           : System.Linq
+            EquationTokenizer.AddNamespace(typeof(System.Object));                   // mscorlib              : System
+            EquationTokenizer.AddNamespace(typeof(System.IO.Path));                  // mscorlib              : System.IO
+            EquationTokenizer.AddNamespace(typeof(System.Reflection.Assembly));      // mscorlib              : System.Reflection
+            EquationTokenizer.AddNamespace(typeof(System.Windows.Point));            // WindowsBase           : System.Windows
+            EquationTokenizer.AddNamespace(typeof(System.Windows.UIElement));        // PresentationCore      : System.Windows
+            EquationTokenizer.AddNamespace(typeof(System.Windows.Controls.Control)); // PresentationFramework : System.Windows.Controls
+            EquationTokenizer.AddNamespace(typeof(Microsoft.VisualBasic.Globals));   // Microsoft.VisualBasic : Microsoft.VisualBasic
+            EquationTokenizer.AddExtensionMethods(typeof(System.Linq.Enumerable));   // System.Core           : System.Linq
+
 
             // Additional
             EquationTokenizer.AddNamespace(typeof(MyLib.Wpf.Interactions.InteractionNotification));

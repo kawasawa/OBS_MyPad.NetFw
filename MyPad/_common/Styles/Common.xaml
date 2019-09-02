@@ -104,15 +104,6 @@
         <Setter Property="BadgeForeground" Value="White"/>
     </Style>
 
-    <Style x:Key="Default.ResizeGrip" TargetType="{x:Type ResizeGrip}" BasedOn="{StaticResource {x:Type ResizeGrip}}">
-        <Setter Property="Visibility" Value="Hidden"/>
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}" Value="Maximized">
-                <Setter Property="Visibility" Value="Collapsed"/>
-            </DataTrigger>
-        </Style.Triggers>
-    </Style>
-
     <Style x:Key="Default.Label" TargetType="{x:Type Label}" BasedOn="{StaticResource MetroLabel}"/>
 
     <Style x:Key="Default.TextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MetroTextBlock}">
@@ -744,7 +735,10 @@
     <Style x:Key="Common.Window" TargetType="{x:Type m:MetroWindow}" BasedOn="{StaticResource {x:Type m:MetroWindow}}">
         <Setter Property="MinHeight" Value="200"/>
         <Setter Property="MinWidth" Value="200"/>
+        <Setter Property="ResizeBorderThickness" Value="7"/>
         <Setter Property="BorderBrush" Value="{DynamicResource VSColorBrush}"/>
+        <Setter Property="NonActiveBorderBrush" Value="{DynamicResource DarkBlueColorBrush}"/>
+        <Setter Property="GlowBrush" Value="{DynamicResource VSColorBrush}"/>
         <Setter Property="NonActiveGlowBrush" Value="{DynamicResource DarkBlueColorBrush}"/>
         <Setter Property="WindowTitleBrush" Value="{x:Null}"/>
         <Setter Property="NonActiveWindowTitleBrush" Value="{x:Null}"/>

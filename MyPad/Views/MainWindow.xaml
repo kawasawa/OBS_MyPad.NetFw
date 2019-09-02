@@ -501,6 +501,9 @@
                     <m:HamburgerMenu.ContentTemplate>
                         <DataTemplate DataType="{x:Type m:HamburgerMenuIconItem}">
                             <Grid Width="{qc:Binding '$P - 48', P={Binding ActualWidth, ElementName=HamburgerMenu, Mode=OneWay}}" ge:GridEx.RowDefinition="Auto, *">
+                                <Grid.ContextMenu>
+                                    <ContextMenu/>
+                                </Grid.ContextMenu>
                                 <TextBlock      Grid.Row="0" Margin="{StaticResource Const.Gap2H}" Text="{Binding Label, Mode=OneWay}" FontSize="{DynamicResource NormalFontSize}"/>
                                 <ContentControl Grid.Row="1" Margin="{StaticResource Const.Gap1W1H}" Content="{Binding Tag, Mode=OneWay}" IsTabStop="False" Focusable="False"/>
                             </Grid>

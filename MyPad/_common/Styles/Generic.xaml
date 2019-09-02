@@ -7,8 +7,6 @@
         <ResourceDictionary Source="./Common.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-    <Style TargetType="{x:Type ResizeGrip}" BasedOn="{StaticResource Default.ResizeGrip}"/>
-    <Style TargetType="{x:Type ContextMenu}" BasedOn="{StaticResource Default.ContextMenu}"/>
     <Style TargetType="{x:Type Label}" BasedOn="{StaticResource Default.Label}"/>
     <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}"/>
     <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}"/>
@@ -35,6 +33,7 @@
     <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource Default.TabItem}"/>
     <Style TargetType="{x:Type TabControl}" BasedOn="{StaticResource Default.TabControl}"/>
     <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource Default.MenuItem}"/>
+    <Style TargetType="{x:Type ContextMenu}" BasedOn="{StaticResource Default.ContextMenu}"/>
     <Style TargetType="{x:Type StatusBarItem}" BasedOn="{StaticResource Default.StatusBarItem}"/>
     <Style TargetType="{x:Type StatusBar}" BasedOn="{StaticResource Default.StatusBar}"/>
     <Style TargetType="{x:Type Menu}" BasedOn="{StaticResource Default.Menu}"/>
