@@ -132,7 +132,7 @@ namespace MyPad.ViewModels
                     new MessageNotification(Resources.Message_ConfirmInitializeXshd, MessageKind.CancelableWarning),
                     n =>
                     {
-                        if (n.Result == true && ResourceService.CleanUpXshd())
+                        if (n.Result == true)
                             ResourceService.InitializeXshd(true);
                     });
             });

@@ -290,7 +290,7 @@ namespace MyPad.ViewModels
             try
             {
                 if (File.Exists(this._temporary?.Item1))
-                    Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(this._temporary.Item1);
+                    File.Delete(this._temporary.Item1);
             }
             catch
             {

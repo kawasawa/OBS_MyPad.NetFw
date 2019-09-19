@@ -30,10 +30,13 @@ namespace MyPad
         }
 
         public static long LargeFileSize
-            => long.TryParse(ConfigurationManager.AppSettings[nameof(LargeFileSize)], out var value) && 0 < value ? value : 100L * 1024 * 1024;
+            => long.TryParse(ConfigurationManager.AppSettings[nameof(LargeFileSize)], out var value) && 1 <= value ? value : 100L * 1024 * 1024;
 
         public static int TerminalLineSize
             => int.TryParse(ConfigurationManager.AppSettings[nameof(TerminalLineSize)], out var value) && 1 <= value ? value : 10000;
+
+        public static int LifetimeOfTempsLeftBehind
+            => int.TryParse(ConfigurationManager.AppSettings[nameof(LifetimeOfTempsLeftBehind)], out var value) && 0 <= value ? value : 7;
 
         public static string ProjectSite
             => ConfigurationManager.AppSettings[nameof(ProjectSite)];
