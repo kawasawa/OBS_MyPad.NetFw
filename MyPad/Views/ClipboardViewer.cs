@@ -32,21 +32,18 @@ namespace MyPad.Views
             switch ((User32_Gdi.WindowMessage)msg)
             {
                 case User32_Gdi.WindowMessage.WM_DRAWCLIPBOARD:
-                {
                     User32_Gdi.SendMessage(this._nextHandle, (uint)msg, wParam, lParam);
                     this.OnDrawClipboard();
                     handled = true;
                     break;
-                }
+
                 case User32_Gdi.WindowMessage.WM_CHANGECBCHAIN:
-                {
                     if (wParam == this._nextHandle)
                         this._nextHandle = lParam;
                     else
                         User32_Gdi.SendMessage(this._nextHandle, (uint)msg, wParam, lParam);
                     handled = true;
                     break;
-                }
             }
             return IntPtr.Zero;
         }

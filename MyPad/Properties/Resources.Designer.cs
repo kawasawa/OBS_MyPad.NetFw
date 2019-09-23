@@ -80,6 +80,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   Search sub-directories に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_AllDirectories {
+            get {
+                return ResourceManager.GetString("Command_AllDirectories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Case sensitive に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_CaseSensitive {
@@ -233,15 +242,6 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Delete all に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Command_DeleteAll {
-            get {
-                return ResourceManager.GetString("Command_DeleteAll", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Edit に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Edit {
@@ -346,6 +346,15 @@ namespace MyPad.Properties {
         public static string Command_GoToLine {
             get {
                 return ResourceManager.GetString("Command_GoToLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Grep に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Grep {
+            get {
+                return ResourceManager.GetString("Command_Grep", resourceCulture);
             }
         }
         
@@ -1197,6 +1206,33 @@ namespace MyPad.Properties {
         public static string Label_RoamingDirectory {
             get {
                 return ResourceManager.GetString("Label_RoamingDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Directory に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_RootPath {
+            get {
+                return ResourceManager.GetString("Label_RootPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   File masks に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_SearchPattern {
+            get {
+                return ResourceManager.GetString("Label_SearchPattern", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Text to find に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_SearchText {
+            get {
+                return ResourceManager.GetString("Label_SearchText", resourceCulture);
             }
         }
         

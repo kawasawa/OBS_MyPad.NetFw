@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -25,6 +26,13 @@ namespace MyPad.ViewModels
         public ObservableCollection<string> DataLines { get; } = new ObservableCollection<string>();
         public string DataLinesText => string.Join(Environment.NewLine, this.DataLines);
 
+        private bool _isWorking;
+        public bool IsWorking
+        {
+            get => this._isWorking;
+            set => this.SetProperty(ref this._isWorking, value);
+        }
+
         private string _lastLine;
         public string LastLine
         {
@@ -42,28 +50,28 @@ namespace MyPad.ViewModels
         public ICommand SendValueCommand
             => new DelegateCommand(() =>
             {
-                if (this._writer.BaseStream.CanWrite)
+                if (this._writer.BaseStream.CanWrite == false)
+                    return;
+
+                var value = this.Value?.Trim() ?? string.Empty;
+
+                // 前コマンドの最終行 (カレントディレクトリ表示) が重複するため削除する
+                if (this.DataLines.Any())
+                    this.DataLines.RemoveAt(this.DataLines.Count - 1);
+
+                // HACK: OutputDataReceived で最終行を取得するにはコマンドの末尾に改行コードを付ける必要がある様子
+                this._writer.WriteLine(value + Environment.NewLine);
+
+                if (string.IsNullOrEmpty(value) == false)
                 {
-                    var value = this.Value?.Trim() ?? string.Empty;
-
-                    // 前コマンドの最終行 (カレントディレクトリ表示) が重複するため削除する
-                    if (this.DataLines.Any())
-                        this.DataLines.RemoveAt(this.DataLines.Count - 1);
-
-                    // HACK: OutputDataReceived で最終行を取得するにはコマンドの末尾に改行コードを付ける必要がある様子
-                    this._writer.WriteLine(value + Environment.NewLine);
-
-                    if (string.IsNullOrEmpty(value) == false)
-                    {
-                        var i = this.Histories.IndexOf(value);
-                        if (0 <= i)
-                            this.Histories.Move(i, 0);
-                        else
-                            this.Histories.Insert(0, value);
-                    }
-
-                    this.Value = string.Empty;
+                    var i = this.Histories.IndexOf(value);
+                    if (0 <= i)
+                        this.Histories.Move(i, 0);
+                    else
+                        this.Histories.Insert(0, value);
                 }
+
+                this.Value = string.Empty;
             });
 
         public TerminalViewModel()
@@ -114,28 +122,44 @@ namespace MyPad.ViewModels
             base.Dispose(disposing);
         }
 
-        public void Start()
+        public async void Start()
         {
-            this._terminal.Start();
-            this._terminal.BeginOutputReadLine();
-            this._terminal.BeginErrorReadLine();
-            this._writer = this._terminal.StandardInput;
+            try
+            {
+                this.IsWorking = true;
+                await Task.WhenAll(
+                    Task.Delay(2000), // 少し間を持たせる
+                    Task.Run(() =>
+                    {
+                        this._terminal.Start();
+                        this._terminal.BeginOutputReadLine();
+                        this._terminal.BeginErrorReadLine();
+                        this._writer = this._terminal.StandardInput;
+                    })
+                );
+            }
+            finally
+            {
+                this.IsWorking = false;
+            }
         }
 
         private void Terminal_DataReceived(object sender, DataReceivedEventArgs e)
         {
+            const int INITIAL_LINES_COUNT = 2;
+
             if (this.LastLine != null)
                 this.DataLines.Add(this.LastLine);
             this.LastLine = e.Data;
-            // HACK: 初回表示でカレントディレクトリを表示
+            // HACK: 初期表示でカレントディレクトリを表示
             // マジックナンバーなのでほかに良い方法があれば直したい
-            if (this._opening && this.DataLines.Count == 2)
+            if (this._opening && this.DataLines.Count == INITIAL_LINES_COUNT)
             {
                 this.DataLines.Add(this.LastLine);
                 this.LastLine = $"{this._terminal.StartInfo.WorkingDirectory}>";
                 this._opening = false;
             }
-            if (AppConfig.TerminalLineSize < this.DataLines.Count)
+            if (AppConfig.TerminalBufferSize < this.DataLines.Count)
                 this.DataLines.RemoveAt(0);
             this.RaisePropertyChanged(nameof(this.DataLinesText));
         }

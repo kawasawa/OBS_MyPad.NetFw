@@ -1,7 +1,6 @@
 ﻿using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Search;
-using Microsoft.VisualBasic;
 using MyLib.Wpf;
 using System;
 using System.Collections.Generic;
@@ -146,7 +145,10 @@ namespace MyPad.Views.Components
                                 textArea.Document.Replace(
                                     segment.Offset,
                                     segment.Length,
-                                    Strings.StrConv(textArea.Document.GetText(segment), VbStrConv.Narrow),
+                                    Microsoft.VisualBasic.Strings.StrConv(
+                                        textArea.Document.GetText(segment),
+                                        Microsoft.VisualBasic.VbStrConv.Narrow
+                                    ),
                                     OffsetChangeMappingType.CharacterReplace)
                         ),
                         sender, e, 1,
@@ -162,7 +164,10 @@ namespace MyPad.Views.Components
                                 textArea.Document.Replace(
                                     segment.Offset,
                                     segment.Length,
-                                    Strings.StrConv(textArea.Document.GetText(segment), VbStrConv.Wide),
+                                    Microsoft.VisualBasic.Strings.StrConv(
+                                        textArea.Document.GetText(segment),
+                                        Microsoft.VisualBasic.VbStrConv.Wide
+                                    ),
                                     OffsetChangeMappingType.CharacterReplace)
                         ),
                         sender, e, 1,

@@ -154,7 +154,7 @@ namespace MyPad.ViewModels
                 await this.FileStream.ReadAsync(bytes, 0, bytes.Length);
 
                 if (encoding == null)
-                    encoding = await Task.Run(() => (SettingsService.Instance.System.EmphasisOnQuality ? EncodingDetector.Detect(bytes, 0) : EncodingDetector.Detect(bytes, 10 * 1024)) ?? SettingsService.Instance.System.Encoding);
+                    encoding = await Task.Run(() => (SettingsService.Instance.System.EmphasisOnQuality ? TextFileHelper.DetectEncoding(bytes) : TextFileHelper.DetectEncodingFast(bytes)) ?? SettingsService.Instance.System.Encoding);
 
                 // HACK: UndoStack のリセット
                 // TextDocument.Text へ代入後に ClearAll() を実行したところ IsModified の変更が通知されなくなった。
@@ -290,7 +290,7 @@ namespace MyPad.ViewModels
             try
             {
                 if (File.Exists(this._temporary?.Item1))
-                    Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(this._temporary.Item1);
+                    File.Delete(this._temporary.Item1);
             }
             catch
             {

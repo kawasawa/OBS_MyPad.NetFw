@@ -5,6 +5,7 @@ using QuickConverter;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -62,7 +63,7 @@ namespace MyPad
                 try
                 {
                     if (Directory.Exists(Consts.CURRENT_TEMPORARY))
-                        Microsoft.VisualBasic.FileIO.FileSystem.DeleteDirectory(Consts.CURRENT_TEMPORARY, Microsoft.VisualBasic.FileIO.DeleteDirectoryOption.DeleteAllContents);
+                        Directory.Delete(Consts.CURRENT_TEMPORARY, true);
                 }
                 catch
                 {
@@ -134,15 +135,15 @@ namespace MyPad
             // System
             EquationTokenizer.AddNamespace(typeof(System.Object));                   // mscorlib              : System
             EquationTokenizer.AddNamespace(typeof(System.IO.Path));                  // mscorlib              : System.IO
+            EquationTokenizer.AddNamespace(typeof(System.Text.Encoding));            // mscorlib              : System.Text
             EquationTokenizer.AddNamespace(typeof(System.Reflection.Assembly));      // mscorlib              : System.Reflection
             EquationTokenizer.AddNamespace(typeof(System.Windows.Point));            // WindowsBase           : System.Windows
             EquationTokenizer.AddNamespace(typeof(System.Windows.UIElement));        // PresentationCore      : System.Windows
             EquationTokenizer.AddNamespace(typeof(System.Windows.Controls.Control)); // PresentationFramework : System.Windows.Controls
-            EquationTokenizer.AddNamespace(typeof(Microsoft.VisualBasic.Globals));   // Microsoft.VisualBasic : Microsoft.VisualBasic
             EquationTokenizer.AddExtensionMethods(typeof(System.Linq.Enumerable));   // System.Core           : System.Linq
 
-
             // Additional
+            EquationTokenizer.AddNamespace(typeof(Microsoft.VisualBasic.Globals));   // Microsoft.VisualBasic : Microsoft.VisualBasic
             EquationTokenizer.AddNamespace(typeof(MyLib.Wpf.Interactions.InteractionNotification));
         }
 
@@ -159,10 +160,15 @@ namespace MyPad
                     if (info.Exists == false)
                         return;
 
+                    // 残存する一時ファイルのうち指定の日数を超えたものを削除する
+                    // ファイルの場合は更新日時を、ディレクトリの場合はテンポラリの命名規則に従い日付に変換し判定を行う
+                    var basis = DateTime.Now.AddDays(-1 * AppConfig.LifetimeOfTempsLeftBehind);
                     info.EnumerateFiles()
-                        .ForEach(i => Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(i.FullName));
+                        .Where(i => i.LastWriteTime < basis)
+                        .ForEach(i => File.Delete(i.FullName));
                     info.EnumerateDirectories()
-                        .ForEach(i => Microsoft.VisualBasic.FileIO.FileSystem.DeleteDirectory(i.FullName, Microsoft.VisualBasic.FileIO.DeleteDirectoryOption.DeleteAllContents));
+                        .Where(i => DateTime.TryParseExact(Path.GetFileName(i.FullName), Consts.TEMPORARY_NAME_FORMAT, CultureInfo.CurrentCulture, DateTimeStyles.None, out var value) == false || value < basis)
+                        .ForEach(i => Directory.Delete(i.FullName, true));
                 }
                 catch
                 {

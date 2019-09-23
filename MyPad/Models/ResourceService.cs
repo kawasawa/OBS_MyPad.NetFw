@@ -37,36 +37,20 @@ namespace MyPad.Models
                 if (forceInitilize == false && Directory.Exists(XshdDirectoryPath))
                     return true;
 
+                if (Directory.Exists(XshdDirectoryPath))
+                    Directory.Delete(XshdDirectoryPath, true);
                 Directory.CreateDirectory(XshdDirectoryPath);
-                if (Directory.Exists(XshdDirectoryPath) == false)
-                    return false;
 
-                typeof(Resources).GetProperties().Where(p => p.PropertyType == typeof(byte[])).ForEach(p =>
-                {
-                    using (var stream = new FileStream(Path.Combine(XshdDirectoryPath, $"{p.Name}.xshd"), FileMode.Create, FileAccess.Write))
-                    using (var writer = new BinaryWriter(stream, FileEncoding))
+                typeof(Resources).GetProperties()
+                    .Where(p => p.PropertyType == typeof(byte[]))
+                    .ForEach(p =>
                     {
-                        writer.Write((byte[])p.GetValue(null));
-                    }
-                });
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        public static bool CleanUpXshd()
-        {
-            try
-            {
-                if (Directory.Exists(XshdDirectoryPath) == false)
-                    return true;
-
-                var info = new DirectoryInfo(XshdDirectoryPath);
-                info.EnumerateFiles().ForEach(i => Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(i.FullName));
-                info.EnumerateDirectories().ForEach(i => Microsoft.VisualBasic.FileIO.FileSystem.DeleteDirectory(i.FullName, Microsoft.VisualBasic.FileIO.DeleteDirectoryOption.DeleteAllContents));
+                        using (var stream = new FileStream(Path.Combine(XshdDirectoryPath, $"{p.Name}.xshd"), FileMode.Create, FileAccess.Write))
+                        using (var writer = new BinaryWriter(stream, FileEncoding))
+                        {
+                            writer.Write((byte[])p.GetValue(null));
+                        }
+                    });
                 return true;
             }
             catch

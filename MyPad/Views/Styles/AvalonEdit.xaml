@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                     xmlns:qc="http://QuickConverter.CodePlex.com/"
                     xmlns:m="http://metro.mahapps.com/winfx/xaml/controls"
                     xmlns:mi="http://metro.mahapps.com/winfx/xaml/iconpacks"
@@ -56,7 +57,7 @@
         <!-- ここで MarkerBrush は定義できない -->
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type a:SearchPanel}">
+                <ControlTemplate>
                     <Border Background="{DynamicResource BackgroundNormal}" BorderBrush="{DynamicResource AccentBaseColorBrush}" Opacity="{StaticResource Const.Opacity1}" VerticalAlignment="Top" HorizontalAlignment="Right" BorderThickness="0,0,0,2" Padding="3">
                         <Grid ge:GridEx.ColumnDefinition="Auto, 3, *, 3, Auto, Auto, 3, Auto, Auto, 3, Auto">
                             <Grid.RowDefinitions>

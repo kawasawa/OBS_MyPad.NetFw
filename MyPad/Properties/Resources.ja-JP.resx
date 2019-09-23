@@ -608,9 +608,6 @@
   <data name="Label_ClipboardHistoryCount" xml:space="preserve">
     <value>クリップボードの履歴数</value>
   </data>
-  <data name="Command_DeleteAll" xml:space="preserve">
-    <value>すべて削除</value>
-  </data>
   <data name="Command_OpenParentDirectory" xml:space="preserve">
     <value>親フォルダを開く</value>
   </data>
@@ -640,5 +637,20 @@
   </data>
   <data name="Label_FileExplorerRoot" xml:space="preserve">
     <value>エクスプローラーの起点</value>
+  </data>
+  <data name="Command_Grep" xml:space="preserve">
+    <value>Grep</value>
+  </data>
+  <data name="Command_AllDirectories" xml:space="preserve">
+    <value>サブフォルダー含める</value>
+  </data>
+  <data name="Label_RootPath" xml:space="preserve">
+    <value>検索対象</value>
+  </data>
+  <data name="Label_SearchPattern" xml:space="preserve">
+    <value>ファイル種別</value>
+  </data>
+  <data name="Label_SearchText" xml:space="preserve">
+    <value>検索文字列</value>
   </data>
 </root>

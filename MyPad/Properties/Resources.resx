@@ -648,9 +648,6 @@ Definitions is reflected on restart. Do you want to continue?</value>
   <data name="Label_ClipboardHistoryCount" xml:space="preserve">
     <value>Clipboard history count</value>
   </data>
-  <data name="Command_DeleteAll" xml:space="preserve">
-    <value>Delete all</value>
-  </data>
   <data name="Command_OpenParentDirectory" xml:space="preserve">
     <value>Open parent directory</value>
   </data>
@@ -683,5 +680,20 @@ Definitions is reflected on restart. Do you want to continue?</value>
   </data>
   <data name="Label_FileExplorerRoot" xml:space="preserve">
     <value>File explorer root</value>
+  </data>
+  <data name="Command_Grep" xml:space="preserve">
+    <value>Grep</value>
+  </data>
+  <data name="Command_AllDirectories" xml:space="preserve">
+    <value>Search sub-directories</value>
+  </data>
+  <data name="Label_RootPath" xml:space="preserve">
+    <value>Directory</value>
+  </data>
+  <data name="Label_SearchPattern" xml:space="preserve">
+    <value>File masks</value>
+  </data>
+  <data name="Label_SearchText" xml:space="preserve">
+    <value>Text to find</value>
   </data>
 </root>
