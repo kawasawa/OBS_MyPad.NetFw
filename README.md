@@ -3,4 +3,4 @@ WPFで作ったメモ帳アプリです。AvalonEditをベースに使ってま�
 
 執筆中。。。
 
-![MainWindow](https://user-images.githubusercontent.com/16559662/55159703-03fee180-51a5-11e9-92b0-68d5c10e096f.png)
+![mypad](https://user-images.githubusercontent.com/16559662/65251701-c3b86480-db32-11e9-8656-5cb93a444afc.png)
