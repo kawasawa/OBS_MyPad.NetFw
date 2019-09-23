@@ -41,6 +41,12 @@ namespace MyPad.ViewModels
 
         #region プロパティ
 
+        public ObservableCollection<TextEditorViewModel> Editors { get; } = new ObservableCollection<TextEditorViewModel>();
+        public ObservableCollection<TerminalViewModel> Terminals { get; } = new ObservableCollection<TerminalViewModel>();
+        public ObservableCollection<FileTreeNodeViewModel> FileTreeNodes { get; } = new ObservableCollection<FileTreeNodeViewModel>();
+
+        public GrepViewModel Grep { get; } = new GrepViewModel();
+
         public int Sequense { get; } = ++_SEQUENCE;
 
         public bool IsModified => this.Editors.Any(c => c.IsModified);
@@ -72,12 +78,6 @@ namespace MyPad.ViewModels
             get => this._activeTerminal;
             set => this.SetProperty(ref this._activeTerminal, value);
         }
-
-        public ObservableCollection<TextEditorViewModel> Editors { get; } = new ObservableCollection<TextEditorViewModel>();
-
-        public ObservableCollection<TerminalViewModel> Terminals { get; } = new ObservableCollection<TerminalViewModel>();
-
-        public ObservableCollection<FileTreeNodeViewModel> FileTreeNodes { get; } = new ObservableCollection<FileTreeNodeViewModel>();
 
         public Func<TextEditorViewModel> EditorFactory =>
             () => new TextEditorViewModel();
@@ -215,9 +215,8 @@ namespace MyPad.ViewModels
                 var currentTerminal = this.ActiveTerminal;
                 for (var i = this.Terminals.Count - 1; 0 <= i; i--)
                 {
-                    if (this.Terminals[i].Equals(currentTerminal))
-                        continue;
-                    this.RemoveTerminal(this.Terminals[i]);
+                    if (this.Terminals[i].Equals(currentTerminal) == false)
+                        this.RemoveTerminal(this.Terminals[i]);
                 }
             });
 
@@ -263,6 +262,7 @@ namespace MyPad.ViewModels
             {
                 if (e.IsCancelled || !(e.DragablzItem?.DataContext is TextEditorViewModel editor))
                     return;
+
                 if (await this.SaveChangesIfAndRemove(editor) == false)
                     e.Cancel();
                 if (this.Editors.Any() == false)
@@ -274,6 +274,7 @@ namespace MyPad.ViewModels
             {
                 if (e.IsCancelled || !(e.DragablzItem?.DataContext is TerminalViewModel terminal))
                     return;
+
                 this.RemoveTerminal(terminal);
             });
 
@@ -487,8 +488,9 @@ namespace MyPad.ViewModels
                     return null;
 
                 // ファイルサイズを確認する
+                const long LARGE_FILE_SIZE = 100L * 1024 * 1024;
                 var info = new FileInfo(path);
-                if (AppConfig.LargeFileSize <= info.Length)
+                if (LARGE_FILE_SIZE <= info.Length)
                 {
                     var ready = false;
                     this.MessageRequest.Raise(

@@ -114,24 +114,35 @@ namespace MyPad.Views.Components
 
         private void TextArea_TextEntered(object sender, TextCompositionEventArgs e)
         {
-            if (this.CompletionList.ListBox.Items.Count == 0 || this.IsCompletionDecided)
-            {
-                if (this.IsVisible)
-                    this.Hide();
-            }
+            // 現状の補完候補を確認する
+            if (this.IsCompletionDecided == false && 0 < this.CompletionList.ListBox.Items.Count)
+                return;
+
+            // 表示状態を確認する
+            if (this.IsVisible == false)
+                return;
+
+            // 補完ウィンドウを隠す
+            this.Hide();
         }
 
         private void Caret_PositionChanged(object sender, EventArgs e)
         {
+            // キャレットの位置を確認する
             var caret = (Caret)sender;
-            if (this.StartOffset < caret.Offset && caret.Offset <= this.EndOffset)
-            {
-                if (0 < this.CompletionList.ListBox.Items.Count && this.IsCompletionDecided == false)
-                {
-                    if (this.IsVisible == false)
-                        this.Show();
-                }
-            }
+            if (caret.Offset <= this.StartOffset || this.EndOffset < caret.Offset)
+                return;
+
+            // 現状の補完候補を確認する
+            if (this.IsCompletionDecided || this.CompletionList.ListBox.Items.Count == 0)
+                return;
+
+            // 表示状態を確認する
+            if (this.IsVisible)
+                return;
+
+            // 補完ウィンドウを表示する
+            this.Show();
         }
 
         protected override void ActivateParentWindow()

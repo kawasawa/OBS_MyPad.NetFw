@@ -55,29 +55,25 @@ namespace MyPad.ViewModels
 
             bool existChild(FileTreeNodeViewModel parent)
             {
-                if (Directory.Exists(parent.FileName))
-                    return Directory.EnumerateFileSystemEntries(parent.FileName, "*", SearchOption.TopDirectoryOnly)
-                        .Where(nodeFilter)
-                        .Any();
-                else
+                if (Directory.Exists(parent.FileName) == false)
                     return false;
+
+                return Directory.EnumerateFileSystemEntries(parent.FileName, "*", SearchOption.TopDirectoryOnly)
+                    .Where(nodeFilter)
+                    .Any();
             }
 
             IEnumerable<FileTreeNodeViewModel> getChildren(FileTreeNodeViewModel parent)
             {
-                if (Directory.Exists(parent.FileName))
-                {
-                    var temp = Directory.EnumerateFileSystemEntries(parent.FileName, "*", SearchOption.TopDirectoryOnly)
-                        .Where(nodeFilter);
-                    var children = temp.Where(path => File.GetAttributes(path).HasFlag(FileAttributes.Directory))
-                        .Union(temp.Where(path => File.GetAttributes(path).HasFlag(FileAttributes.Directory) == false))
-                        .Select(p => new FileTreeNodeViewModel(p, parent));
-                    return children.Any() ? children : new[] { Empty };
-                }
-                else
-                {
+                if (Directory.Exists(parent.FileName) == false)
                     return Enumerable.Empty<FileTreeNodeViewModel>();
-                }
+
+                var temp = Directory.EnumerateFileSystemEntries(parent.FileName, "*", SearchOption.TopDirectoryOnly)
+                    .Where(nodeFilter);
+                var children = temp.Where(path => File.GetAttributes(path).HasFlag(FileAttributes.Directory))
+                    .Union(temp.Where(path => File.GetAttributes(path).HasFlag(FileAttributes.Directory) == false))
+                    .Select(p => new FileTreeNodeViewModel(p, parent));
+                return children.Any() ? children : new[] { Empty };
             }
 
             try

@@ -51,8 +51,8 @@ namespace MyPad
                 {
                     _SYNTAX_DEFINITIONS = new Dictionary<string, XshdSyntaxDefinition>();
                     ResourceService.Instance.EnumerateSyntaxDefinitions()
-                        .Where(x => _SYNTAX_DEFINITIONS.ContainsKey(x.Name) == false)
-                        .ForEach(definition => _SYNTAX_DEFINITIONS.Add(definition.Name, definition));
+                        .Where(d => _SYNTAX_DEFINITIONS.ContainsKey(d.Name) == false)
+                        .ForEach(d => _SYNTAX_DEFINITIONS.Add(d.Name, d));
                 }
                 return _SYNTAX_DEFINITIONS;
             }

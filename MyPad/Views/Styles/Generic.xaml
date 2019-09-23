@@ -4,6 +4,7 @@
                     xmlns:components="clr-namespace:MyPad.Views.Components">
     
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="./App.xaml"/>
         <ResourceDictionary Source="./Dragablz.xaml"/>
         <ResourceDictionary Source="./AvalonEdit.xaml"/>
     </ResourceDictionary.MergedDictionaries>

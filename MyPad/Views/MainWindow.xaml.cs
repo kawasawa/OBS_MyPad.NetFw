@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -47,6 +48,8 @@ namespace MyPad.Views
             = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.P, ModifierKeys.Control | ModifierKeys.Shift) });
         public static readonly ICommand ActivateClipboardHistory
             = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.C, ModifierKeys.Control | ModifierKeys.Shift) });
+        public static readonly ICommand ActivateGrep
+            = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.F, ModifierKeys.Control | ModifierKeys.Shift) });
 
         private static readonly DependencyProperty IsVisibleTerminalContentProperty
             = Interactor.RegisterDependencyProperty();
@@ -89,17 +92,20 @@ namespace MyPad.Views
             this.CommandBindings.Add(new CommandBinding(ActivateTerminal, (sender, e) => this.SwitchTerminalVisibility()));
             this.CommandBindings.Add(new CommandBinding(ActivateFileExplorer, (sender, e) => this.ActivateHamburgerMenuItem(this.FileExplorerItem)));
             this.CommandBindings.Add(new CommandBinding(ActivateProperty, (sender, e) => this.ActivateHamburgerMenuItem(this.PropertyItem)));
-            this.CommandBindings.Add(new CommandBinding(ActivateClipboardHistory, (sender, e) => this.ActivateHamburgerMenuItem(this.ClipboardItem)));
+            this.CommandBindings.Add(new CommandBinding(ActivateClipboardHistory, (sender, e) => this.ActivateHamburgerMenuItem(this.ClipboardHistoryItem)));
+            this.CommandBindings.Add(new CommandBinding(ActivateGrep, (sender, e) => this.ActivateHamburgerMenuItem(this.GrepItem)));
 
             this.DataContextChanged += this.Window_DataContextChanged;
             this.Loaded += this.Window_Loaded;
             this.Closed += this.Window_Closed;
             ((Style)this.HamburgerMenu.Resources["__FileExplorerItem"]).Setters.Add(new EventSetter() { Event = MouseDoubleClickEvent, Handler = new MouseButtonEventHandler(this.FileExplorerItem_MouseDoubleClick) });
             ((Style)this.HamburgerMenu.Resources["__FileExplorerItem"]).Setters.Add(new EventSetter() { Event = KeyDownEvent, Handler = new KeyEventHandler(this.FileExplorerItem_KeyDown) });
-            ((Style)this.HamburgerMenu.Resources["__ClipboardItem"]).Setters.Add(new EventSetter() { Event = MouseDoubleClickEvent, Handler = new MouseButtonEventHandler(this.ClipboardItem_MouseDoubleClick) });
+            ((Style)this.HamburgerMenu.Resources["__ClipboardHistoryItem"]).Setters.Add(new EventSetter() { Event = MouseDoubleClickEvent, Handler = new MouseButtonEventHandler(this.ClipboardHistoryItem_MouseDoubleClick) });
+            ((Style)this.HamburgerMenu.Resources["__GrepItem"]).Setters.Add(new EventSetter() { Event = MouseDoubleClickEvent, Handler = new MouseButtonEventHandler(this.GrepItem_MouseDoubleClick) });
             ((Style)this.TerminalTabControl.Resources["__TerminalTabItem"]).Setters.Add(new EventSetter() { Event = MouseRightButtonDownEvent, Handler = new MouseButtonEventHandler(this.TabItem_MouseRightButtonDown) });
             ((Style)this.TextEditorTabControl.Resources["__TextEditorTabItem"]).Setters.Add(new EventSetter() { Event = MouseRightButtonDownEvent, Handler = new MouseButtonEventHandler(this.TabItem_MouseRightButtonDown) });
             ((Style)this.TextEditorTabControl.Resources["__TextEditor"]).Setters.Add(new EventSetter() { Event = PreviewKeyDownEvent, Handler = new KeyEventHandler(this.TextEditor_PreviewKeyDown) });
+            this.Flyouts.Items.OfType<Flyout>().ForEach(item => item.IsOpenChanged += this.Flyout_IsOpenChanged);
             this.HamburgerMenu.ItemClick += this.HamburgerMenu_ItemClick;
             this.ContentSplitter.DragCompleted += this.ContentSplitter_DragCompleted;
             this.TextEditorTabControl.SelectionChanged += this.TextEditorTabControl_SelectionChanged;
@@ -107,7 +113,6 @@ namespace MyPad.Views
             this.EncodingComboBox.SelectionChanged += this.StatusComboBox_SelectionChanged;
             this.LanguageComboBox.SelectionChanged += this.StatusComboBox_SelectionChanged;
             this.GoToLineInput.ValueChanged += this.GoToLineInput_ValueChanged;
-            this.Flyouts.Items.OfType<Flyout>().ForEach(item => item.IsOpenChanged += this.Flyout_IsOpenChanged);
         }
 
         private void Window_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -192,7 +197,7 @@ namespace MyPad.Views
             }
         }
 
-        private void FileExplorerItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private async void FileExplorerItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (e.Handled)
                 return;
@@ -203,12 +208,12 @@ namespace MyPad.Views
 
             if (File.Exists(node.FileName))
             {
-                this.ViewModel.LoadEditor(new[] { node.FileName });
+                await this.ViewModel.LoadEditor(new[] { node.FileName });
                 e.Handled = true;
             }
         }
 
-        private void FileExplorerItem_KeyDown(object sender, KeyEventArgs e)
+        private async void FileExplorerItem_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Handled)
                 return;
@@ -230,7 +235,7 @@ namespace MyPad.Views
                     }
                     if (File.Exists(node.FileName))
                     {
-                        this.ViewModel.LoadEditor(new[] { node.FileName });
+                        await this.ViewModel.LoadEditor(new[] { node.FileName });
                         e.Handled = true;
                         return;
                     }
@@ -238,16 +243,34 @@ namespace MyPad.Views
             }
         }
 
-        private void ClipboardItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private async void ClipboardHistoryItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (e.Handled)
                 return;
 
             var text = ((ListBoxItem)sender).Content.ToString();
+            while (this.ActiveTextEditor == null)
+                await Task.Delay(100);
             if (string.IsNullOrEmpty(text) == false)
-                this.ActiveTextEditor?.TextArea.Selection.ReplaceSelectionWithText(text);
-            this.ActiveTextEditor?.ScrollToCaret();
-            this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus(), DispatcherPriority.Input);
+                this.ActiveTextEditor.TextArea.Selection.ReplaceSelectionWithText(text);
+            await this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor.Focus(), DispatcherPriority.Input);
+            this.ActiveTextEditor.ScrollToCaret();
+            e.Handled = true;
+        }
+
+        private async void GrepItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (e.Handled)
+                return;
+
+            dynamic content = ((ListBoxItem)sender).Content;
+            var path = (string)content.Path;
+            var line = (int)content.Line;
+            await this.ViewModel.LoadEditor(new[] { path });
+            this.ViewModel.ActiveEditor.Line = line;
+            while (this.ActiveTextEditor == null)
+                await Task.Delay(100);
+            this.ActiveTextEditor.ScrollToCaret();
             e.Handled = true;
         }
 
@@ -277,31 +300,43 @@ namespace MyPad.Views
             }
         }
 
+        private void Flyout_IsOpenChanged(object sender, RoutedEventArgs e)
+        {
+            if ((sender as Flyout)?.IsOpen != false)
+                return;
+
+            this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus(), DispatcherPriority.Input);
+        }
+
         private void HamburgerMenu_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (MouseButtonState.Released == Mouse.LeftButton &&
-                MouseButtonState.Released == Mouse.RightButton &&
-                MouseButtonState.Released == Mouse.MiddleButton &&
-                MouseButtonState.Released == Mouse.XButton1 &&
-                MouseButtonState.Released == Mouse.XButton2)
-            {
-                this.ActivateHamburgerMenuItem(e.ClickedItem);
-            }
+            // イベントが連発することがある
+            // マウスのいずれかのボタンが押されいる場合は何もしない
+            if (MouseButtonState.Pressed == Mouse.LeftButton ||
+                MouseButtonState.Pressed == Mouse.RightButton ||
+                MouseButtonState.Pressed == Mouse.MiddleButton ||
+                MouseButtonState.Pressed == Mouse.XButton1 ||
+                MouseButtonState.Pressed == Mouse.XButton2)
+                return;
+
+            this.ActivateHamburgerMenuItem(e.ClickedItem);
         }
 
         private void ContentSplitter_DragCompleted(object sender, DragCompletedEventArgs e)
         {
-            if (this.ToolContentRow.Height.Value == 0)
-            {
-                this.IsVisibleTerminalContent = !this.IsVisibleTerminalContent;
-                this.ToolContentRow.Height = new GridLength(100, GridUnitType.Star);
-            }
+            // ターミナルが開かれている場合は何もしない
+            if (this.TerminalContentRow.Height.Value != 0)
+                return;
+
+            this.IsVisibleTerminalContent = !this.IsVisibleTerminalContent;
+            this.TerminalContentRow.Height = new GridLength(100, GridUnitType.Star);
         }
 
         private void TextEditorTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.Handled || e.Source != e.OriginalSource)
                 return;
+
             this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus(), DispatcherPriority.Input);
             e.Handled = true;
         }
@@ -311,6 +346,7 @@ namespace MyPad.Views
             // ComboBox.SelectionChanged が伝播してくるためイベントの発生源を確認
             if (e.Handled || e.Source != e.OriginalSource)
                 return;
+
             this.Dispatcher.InvokeAsync(() => this.ActiveCommandBox?.Focus(), DispatcherPriority.Input);
             e.Handled = true;
         }
@@ -341,17 +377,11 @@ namespace MyPad.Views
 
         private void GoToLineInput_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
         {
-            if (this.GoToLineFlyout.IsOpen && e.NewValue.HasValue)
-            {
-                this.ActiveTextEditor.Line = (int)e.NewValue.Value;
-                this.ActiveTextEditor.ScrollToCaret();
-            }
-        }
+            if (e.NewValue.HasValue == false || this.GoToLineFlyout.IsOpen == false)
+                return;
 
-        private void Flyout_IsOpenChanged(object sender, RoutedEventArgs e)
-        {
-            if ((sender as Flyout)?.IsOpen == false)
-                this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus(), DispatcherPriority.Input);
+            this.ActiveTextEditor.Line = (int)e.NewValue.Value;
+            this.ActiveTextEditor.ScrollToCaret();
         }
 
         private TextEditor GetTextEditor(int index)
@@ -417,10 +447,10 @@ namespace MyPad.Views
             if (Keyboard.FocusedElement != this.ActiveCommandBox?.Template.FindName("PART_EditableTextBox", this.ActiveCommandBox) as TextBox)
             {
                 this.IsVisibleTerminalContent = true;
-                if (this.ViewModel.Terminals.Any() == false)
-                    this.ViewModel.AddTerminalCommand.Execute(null);
-                else
+                if (this.ViewModel.Terminals.Any())
                     this.Dispatcher.InvokeAsync(() => this.ActiveCommandBox?.Focus(), DispatcherPriority.Input);
+                else
+                    this.ViewModel.AddTerminalCommand.Execute(null);
             }
             else
             {

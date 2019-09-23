@@ -221,13 +221,23 @@
     </ApplicationDefinition>
     <None Include="Resources\PLSQL.xshd" />
     <Compile Include="ViewModels\FileTreeNodeViewModel.cs" />
+    <Compile Include="ViewModels\GrepViewModel.cs" />
     <Compile Include="ViewModels\TerminalViewModel.cs" />
+    <Compile Include="Views\AboutContent.xaml.cs">
+      <DependentUpon>AboutContent.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Behaviors\MessageActionEx.cs" />
+    <Compile Include="Views\OptionsContent.xaml.cs">
+      <DependentUpon>OptionsContent.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PrintPreviewContent.xaml.cs">
+      <DependentUpon>PrintPreviewContent.xaml</DependentUpon>
+    </Compile>
     <Compile Include="_common\UnhandledExceptionObserver.cs" />
     <Compile Include="AppConfig.cs" />
     <Compile Include="Consts.cs" />
     <Compile Include="Models\COPYDATASTRUCT.cs" />
-    <Compile Include="Models\EncodingDetector.cs" />
+    <Compile Include="Models\TextFileHelper.cs" />
     <Compile Include="Models\SystemSettings.cs" />
     <Compile Include="Models\WindowSettings.cs" />
     <Compile Include="Models\TextEditorSettings.cs" />
@@ -263,6 +273,10 @@
     <Compile Include="Views\Workspace.xaml.cs">
       <DependentUpon>Workspace.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\AboutContent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -277,6 +291,18 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\OptionsContent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PrintPreviewContent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Styles\App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Styles\Dragablz.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

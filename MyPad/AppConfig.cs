@@ -20,6 +20,15 @@ namespace MyPad
             }
         }
 
+        public static int LifetimeOfTempsLeftBehind
+            => int.TryParse(ConfigurationManager.AppSettings[nameof(LifetimeOfTempsLeftBehind)], out var value) && 0 <= value ? value : 7;
+
+        public static int TerminalBufferSize
+            => int.TryParse(ConfigurationManager.AppSettings[nameof(TerminalBufferSize)], out var value) && 300 <= value ? value : 10000;
+
+        public static int GrepBufferSize
+            => int.TryParse(ConfigurationManager.AppSettings[nameof(GrepBufferSize)], out var value) && 1 <= value ? value : 30;
+
         public static string InitialFileName
         {
             get
@@ -28,15 +37,6 @@ namespace MyPad
                 return string.IsNullOrEmpty(val) == false ? val : "NoName";
             }
         }
-
-        public static long LargeFileSize
-            => long.TryParse(ConfigurationManager.AppSettings[nameof(LargeFileSize)], out var value) && 1 <= value ? value : 100L * 1024 * 1024;
-
-        public static int TerminalLineSize
-            => int.TryParse(ConfigurationManager.AppSettings[nameof(TerminalLineSize)], out var value) && 1 <= value ? value : 10000;
-
-        public static int LifetimeOfTempsLeftBehind
-            => int.TryParse(ConfigurationManager.AppSettings[nameof(LifetimeOfTempsLeftBehind)], out var value) && 0 <= value ? value : 7;
 
         public static string ProjectSite
             => ConfigurationManager.AppSettings[nameof(ProjectSite)];

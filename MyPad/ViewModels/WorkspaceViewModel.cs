@@ -35,6 +35,9 @@ namespace MyPad.ViewModels
 
         #region プロパティ
 
+        public ObservableCollection<MainWindowViewModel> Windows { get; } = new ObservableCollection<MainWindowViewModel>();
+        public ObservableCollection<string> ClipboardItems { get; } = new ObservableCollection<string>();
+
         private string _selectedClipboardItem;
         public string SelectedClipboardItem
         {
@@ -48,10 +51,6 @@ namespace MyPad.ViewModels
             get => this._activeWindow;
             set => this.SetProperty(ref this._activeWindow, value);
         }
-
-        public ObservableCollection<MainWindowViewModel> Windows { get; } = new ObservableCollection<MainWindowViewModel>();
-
-        public ObservableCollection<string> ClipboardItems { get; } = new ObservableCollection<string>();
 
         public Func<MainWindowViewModel> WindowFactory =>
             () =>
@@ -110,16 +109,6 @@ namespace MyPad.ViewModels
                 this.Dispose();
             });
 
-        public ICommand ClearClipboardItemCommand
-           => new DelegateCommand(() =>
-           {
-               if (string.IsNullOrEmpty(this.SelectedClipboardItem) == false && this.ClipboardItems.Contains(this.SelectedClipboardItem))
-                   this.ClipboardItems.Remove(this.SelectedClipboardItem);
-           });
-
-        public ICommand ClearAllClipboardItemsCommand
-           => new DelegateCommand(() => this.ClipboardItems.Clear());
-
         #endregion
 
         #region メソッド
@@ -136,7 +125,6 @@ namespace MyPad.ViewModels
         {
             for (var i = this.Windows.Count - 1; 0 <= i; i--)
                 this.RemoveWindow(this.Windows[i]);
-
             Instance = null;
             base.Dispose(disposing);
         }
@@ -183,6 +171,7 @@ namespace MyPad.ViewModels
         {
             if (string.IsNullOrEmpty(text) || this.ClipboardItems.FirstOrDefault()?.Equals(text) == true)
                 return;
+
             if (SettingsService.Instance.System.ClipboardHistoryCount <= this.ClipboardItems.Count)
                 this.ClipboardItems.RemoveAt(this.ClipboardItems.Count - 1);
             this.ClipboardItems.Insert(0, text);
@@ -195,6 +184,7 @@ namespace MyPad.ViewModels
                 var editor = window.Editors.FirstOrDefault(e => e.FileName.Equals(path));
                 if (editor == null)
                     continue;
+
                 window.ActiveEditor = editor;
                 return editor;
             }
@@ -208,6 +198,7 @@ namespace MyPad.ViewModels
                 var editor = window.Editors.FirstOrDefault(e => e.FileName.Equals(path));
                 if (editor == null)
                     continue;
+
                 window.ReloadEditor(editor, encoding);
                 window.TransitionRequest.Raise(new TransitionNotification(TransitionKind.Activate));
                 return true;
@@ -238,11 +229,10 @@ namespace MyPad.ViewModels
         {
             var window = (MainWindowViewModel)sender;
             this.RemoveWindow(window);
-            if (this.Windows.Any() == false &&
-                (SettingsService.Instance.System.EnableNotificationIcon == false || SettingsService.Instance.System.EnableResident == false))
-            {
-                this.Dispose();
-            }
+            if (this.Windows.Any() || (SettingsService.Instance.System.EnableNotificationIcon && SettingsService.Instance.System.EnableResident))
+                return;
+
+            this.Dispose();
         }
 
         #endregion

@@ -135,6 +135,7 @@ namespace MyPad
             // System
             EquationTokenizer.AddNamespace(typeof(System.Object));                   // mscorlib              : System
             EquationTokenizer.AddNamespace(typeof(System.IO.Path));                  // mscorlib              : System.IO
+            EquationTokenizer.AddNamespace(typeof(System.Text.Encoding));            // mscorlib              : System.Text
             EquationTokenizer.AddNamespace(typeof(System.Reflection.Assembly));      // mscorlib              : System.Reflection
             EquationTokenizer.AddNamespace(typeof(System.Windows.Point));            // WindowsBase           : System.Windows
             EquationTokenizer.AddNamespace(typeof(System.Windows.UIElement));        // PresentationCore      : System.Windows
