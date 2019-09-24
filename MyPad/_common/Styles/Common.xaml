@@ -550,22 +550,22 @@
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource HamburgerMenuItemStyle}">
-                    <Setter Property="m:ItemHelper.SelectedBackgroundBrush" Value="{x:Null}"/>
-                    <Setter Property="m:ItemHelper.ActiveSelectionBackgroundBrush" Value="{x:Null}"/>
+                    <Setter Property="m:ItemHelper.HoverBackgroundBrush" Value="{DynamicResource AccentColorBrush2}"/>
+                    <Setter Property="m:ItemHelper.HoverSelectedBackgroundBrush" Value="{DynamicResource AccentColorBrush2}"/>
+                    <Setter Property="m:ItemHelper.SelectedBackgroundBrush" Value="{DynamicResource AccentColorBrush3}"/>
+                    <Setter Property="m:ItemHelper.ActiveSelectionBackgroundBrush" Value="{DynamicResource AccentColorBrush3}"/>
                     <Setter Property="m:ItemHelper.DisabledSelectedBackgroundBrush" Value="{x:Null}"/>
-                    <Setter Property="m:ItemHelper.HoverBackgroundBrush" Value="{x:Null}"/>
-                    <Setter Property="m:ItemHelper.HoverSelectedBackgroundBrush" Value="{x:Null}"/>
                 </Style>
             </Setter.Value>
         </Setter>
         <Setter Property="OptionsItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource HamburgerMenuItemStyle}">
-                    <Setter Property="m:ItemHelper.SelectedBackgroundBrush" Value="{x:Null}"/>
-                    <Setter Property="m:ItemHelper.ActiveSelectionBackgroundBrush" Value="{x:Null}"/>
+                    <Setter Property="m:ItemHelper.HoverBackgroundBrush" Value="{DynamicResource AccentColorBrush2}"/>
+                    <Setter Property="m:ItemHelper.HoverSelectedBackgroundBrush" Value="{DynamicResource AccentColorBrush2}"/>
+                    <Setter Property="m:ItemHelper.SelectedBackgroundBrush" Value="{DynamicResource AccentColorBrush3}"/>
+                    <Setter Property="m:ItemHelper.ActiveSelectionBackgroundBrush" Value="{DynamicResource AccentColorBrush3}"/>
                     <Setter Property="m:ItemHelper.DisabledSelectedBackgroundBrush" Value="{x:Null}"/>
-                    <Setter Property="m:ItemHelper.HoverBackgroundBrush" Value="{x:Null}"/>
-                    <Setter Property="m:ItemHelper.HoverSelectedBackgroundBrush" Value="{x:Null}"/>
                 </Style>
             </Setter.Value>
         </Setter>

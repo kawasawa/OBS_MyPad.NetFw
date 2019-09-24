@@ -1,8 +1,11 @@
 ﻿using MyLib.Wpf.Interactions;
 using MyPad.Models;
+using MyPad.Properties;
 using Prism.Commands;
 using Prism.Interactivity.InteractionRequest;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Text;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -11,6 +14,7 @@ namespace MyPad.ViewModels
 {
     public class GrepViewModel : ViewModelBase
     {
+        public InteractionRequest<MessageNotification> MessageRequest { get; } = new InteractionRequest<MessageNotification>();
         public InteractionRequest<OpenFileNotification> OpenDirectoryRequest { get; } = new InteractionRequest<OpenFileNotification>();
 
         public ObservableCollection<object> Results { get; } = new ObservableCollection<object>();
@@ -27,6 +31,7 @@ namespace MyPad.ViewModels
         }
 
         private string _searchText;
+        [Required(ErrorMessageResourceName = nameof(Resources.Message_Required), ErrorMessageResourceType = typeof(Resources))]
         public string SearchText
         {
             get => this._searchText;
@@ -38,6 +43,7 @@ namespace MyPad.ViewModels
         }
 
         private string _rootPath;
+        [Required(ErrorMessageResourceName = nameof(Resources.Message_Required), ErrorMessageResourceType = typeof(Resources))]
         public string RootPath
         {
             get => this._rootPath;
@@ -103,6 +109,12 @@ namespace MyPad.ViewModels
         public ICommand GrepCommand
             => new DelegateCommand(async () =>
                 {
+                    if (Directory.Exists(this.RootPath) == false)
+                    {
+                        this.MessageRequest.Raise(new MessageNotification(Resources.Message_NotifyDirectoryNotFound, MessageKind.Error));
+                        return;
+                    }
+
                     this.IsWorking = true;
                     this.Results.Clear();
                     await TextFileHelper.Grep(

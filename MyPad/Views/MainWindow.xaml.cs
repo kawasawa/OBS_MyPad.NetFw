@@ -44,12 +44,12 @@ namespace MyPad.Views
             = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.OemTilde, ModifierKeys.Control, "Ctrl+@") });
         public static readonly ICommand ActivateFileExplorer
             = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.E, ModifierKeys.Control | ModifierKeys.Shift) });
-        public static readonly ICommand ActivateProperty
-            = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.P, ModifierKeys.Control | ModifierKeys.Shift) });
-        public static readonly ICommand ActivateClipboardHistory
-            = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.C, ModifierKeys.Control | ModifierKeys.Shift) });
         public static readonly ICommand ActivateGrep
             = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.F, ModifierKeys.Control | ModifierKeys.Shift) });
+        public static readonly ICommand ActivateClipboardHistory
+            = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.C, ModifierKeys.Control | ModifierKeys.Shift) });
+        public static readonly ICommand ActivateProperty
+            = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.P, ModifierKeys.Control | ModifierKeys.Shift) });
 
         private static readonly DependencyProperty IsVisibleTerminalContentProperty
             = Interactor.RegisterDependencyProperty();
@@ -100,13 +100,14 @@ namespace MyPad.Views
             this.Closed += this.Window_Closed;
             ((Style)this.HamburgerMenu.Resources["__FileExplorerItem"]).Setters.Add(new EventSetter() { Event = MouseDoubleClickEvent, Handler = new MouseButtonEventHandler(this.FileExplorerItem_MouseDoubleClick) });
             ((Style)this.HamburgerMenu.Resources["__FileExplorerItem"]).Setters.Add(new EventSetter() { Event = KeyDownEvent, Handler = new KeyEventHandler(this.FileExplorerItem_KeyDown) });
-            ((Style)this.HamburgerMenu.Resources["__ClipboardHistoryItem"]).Setters.Add(new EventSetter() { Event = MouseDoubleClickEvent, Handler = new MouseButtonEventHandler(this.ClipboardHistoryItem_MouseDoubleClick) });
             ((Style)this.HamburgerMenu.Resources["__GrepItem"]).Setters.Add(new EventSetter() { Event = MouseDoubleClickEvent, Handler = new MouseButtonEventHandler(this.GrepItem_MouseDoubleClick) });
+            ((Style)this.HamburgerMenu.Resources["__ClipboardHistoryItem"]).Setters.Add(new EventSetter() { Event = MouseDoubleClickEvent, Handler = new MouseButtonEventHandler(this.ClipboardHistoryItem_MouseDoubleClick) });
             ((Style)this.TerminalTabControl.Resources["__TerminalTabItem"]).Setters.Add(new EventSetter() { Event = MouseRightButtonDownEvent, Handler = new MouseButtonEventHandler(this.TabItem_MouseRightButtonDown) });
             ((Style)this.TextEditorTabControl.Resources["__TextEditorTabItem"]).Setters.Add(new EventSetter() { Event = MouseRightButtonDownEvent, Handler = new MouseButtonEventHandler(this.TabItem_MouseRightButtonDown) });
             ((Style)this.TextEditorTabControl.Resources["__TextEditor"]).Setters.Add(new EventSetter() { Event = PreviewKeyDownEvent, Handler = new KeyEventHandler(this.TextEditor_PreviewKeyDown) });
             this.Flyouts.Items.OfType<Flyout>().ForEach(item => item.IsOpenChanged += this.Flyout_IsOpenChanged);
             this.HamburgerMenu.ItemClick += this.HamburgerMenu_ItemClick;
+            this.HamburgerMenu.OptionsItemClick += this.HamburgerMenu_OptionsItemClick;
             this.ContentSplitter.DragCompleted += this.ContentSplitter_DragCompleted;
             this.TextEditorTabControl.SelectionChanged += this.TextEditorTabControl_SelectionChanged;
             this.TerminalTabControl.SelectionChanged += this.TerminalTabControl_SelectionChanged; ;
@@ -166,19 +167,12 @@ namespace MyPad.Views
             User32_Gdi.InsertMenuItem(hMenu, (uint)SystemMenuIndex._Separater_, true, ref lpmiiSeparater);
 
             // 表示位置の復元
-            if (this.RestorePlacement)
+            if (this.RestorePlacement && SettingsService.Instance.System.SaveWindowPlacement && SettingsService.Instance.System.WindowPlacement.HasValue)
             {
-                if (SettingsService.Instance.Window.SaveWindowPosition && SettingsService.Instance.Window.Placement.HasValue)
-                {
-                    var lpwndpl = SettingsService.Instance.Window.Placement.Value;
-                    if (lpwndpl.showCmd == ShowWindowCommand.SW_SHOWMINIMIZED)
-                        lpwndpl.showCmd = ShowWindowCommand.SW_SHOWNORMAL;
-                    User32_Gdi.SetWindowPlacement(this._handleSource.Handle, ref lpwndpl);
-                }
-                else
-                {
-                    this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                }
+                var lpwndpl = SettingsService.Instance.System.WindowPlacement.Value;
+                if (lpwndpl.showCmd == ShowWindowCommand.SW_SHOWMINIMIZED)
+                    lpwndpl.showCmd = ShowWindowCommand.SW_SHOWNORMAL;
+                User32_Gdi.SetWindowPlacement(this._handleSource.Handle, ref lpwndpl);
             }
         }
 
@@ -188,12 +182,12 @@ namespace MyPad.Views
             this._handleSource.RemoveHook(this.WndProc);
 
             // 表示位置の記憶
-            var settings = SettingsService.Instance.Window;
-            if (settings.SaveWindowPosition && this._handleSource.IsDisposed == false)
+            var settings = SettingsService.Instance.System;
+            if (settings.SaveWindowPlacement && this._handleSource.IsDisposed == false)
             {
                 var lpwndpl = new User32_Gdi.WINDOWPLACEMENT();
                 User32_Gdi.GetWindowPlacement(this._handleSource.Handle, ref lpwndpl);
-                settings.Placement = lpwndpl;
+                settings.WindowPlacement = lpwndpl;
             }
         }
 
@@ -213,7 +207,7 @@ namespace MyPad.Views
             }
         }
 
-        private async void FileExplorerItem_KeyDown(object sender, KeyEventArgs e)
+        private void FileExplorerItem_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Handled)
                 return;
@@ -235,27 +229,12 @@ namespace MyPad.Views
                     }
                     if (File.Exists(node.FileName))
                     {
-                        await this.ViewModel.LoadEditor(new[] { node.FileName });
+                        this.ViewModel.LoadEditor(new[] { node.FileName });
                         e.Handled = true;
                         return;
                     }
                     break;
             }
-        }
-
-        private async void ClipboardHistoryItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            if (e.Handled)
-                return;
-
-            var text = ((ListBoxItem)sender).Content.ToString();
-            while (this.ActiveTextEditor == null)
-                await Task.Delay(100);
-            if (string.IsNullOrEmpty(text) == false)
-                this.ActiveTextEditor.TextArea.Selection.ReplaceSelectionWithText(text);
-            await this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor.Focus(), DispatcherPriority.Input);
-            this.ActiveTextEditor.ScrollToCaret();
-            e.Handled = true;
         }
 
         private async void GrepItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -270,6 +249,21 @@ namespace MyPad.Views
             this.ViewModel.ActiveEditor.Line = line;
             while (this.ActiveTextEditor == null)
                 await Task.Delay(100);
+            this.ActiveTextEditor.ScrollToCaret();
+            e.Handled = true;
+        }
+
+        private async void ClipboardHistoryItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (e.Handled)
+                return;
+
+            var text = ((ListBoxItem)sender).Content.ToString();
+            while (this.ActiveTextEditor == null)
+                await Task.Delay(100);
+            if (string.IsNullOrEmpty(text) == false)
+                this.ActiveTextEditor.TextArea.Selection.ReplaceSelectionWithText(text);
+            await this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor.Focus(), DispatcherPriority.Input);
             this.ActiveTextEditor.ScrollToCaret();
             e.Handled = true;
         }
@@ -320,6 +314,26 @@ namespace MyPad.Views
                 return;
 
             this.ActivateHamburgerMenuItem(e.ClickedItem);
+        }
+
+        private void HamburgerMenu_OptionsItemClick(object sender, ItemClickEventArgs e)
+        {
+            // イベントが連発することがある
+            // マウスのいずれかのボタンが押されいる場合は何もしない
+            if (MouseButtonState.Pressed == Mouse.LeftButton ||
+                MouseButtonState.Pressed == Mouse.RightButton ||
+                MouseButtonState.Pressed == Mouse.MiddleButton ||
+                MouseButtonState.Pressed == Mouse.XButton1 ||
+                MouseButtonState.Pressed == Mouse.XButton2)
+                return;
+
+            // オプション項目は選択状態にならないように調整する
+            if (e.ClickedItem == this.OptionsItem)
+            {
+                this.HamburgerMenu.SelectedItem = this.HamburgerMenu.Content;
+                this.HamburgerMenu.SelectedOptionsItem = null;
+                this.OptionsFlyout.IsOpen = true;
+            }
         }
 
         private void ContentSplitter_DragCompleted(object sender, DragCompletedEventArgs e)
@@ -420,14 +434,36 @@ namespace MyPad.Views
         {
             this.Dispatcher.InvokeAsync(() =>
                 {
-                    var isWidthChanged = double.IsNaN(this.HamburgerMenu.Width);
-                    var isActivated = targetItem?.Equals(this.HamburgerMenu.Content) == true;
+                    SettingsService.Instance.System.ShowSideBar = true;
 
-                    SettingsService.Instance.Window.ShowSideBar = true;
-                    this.HamburgerMenu.Width =
-                        isWidthChanged == false ? double.NaN :
-                        isActivated ? this.HamburgerMenu.HamburgerWidth : this.HamburgerMenu.Width;
-                    this.HamburgerMenu.Content = targetItem;
+                    var isOpened = double.IsNaN(this.HamburgerMenu.Width);
+                    var isSelected = targetItem?.Equals(this.HamburgerMenu.Content) == true;
+                    if (isOpened == false)
+                    {
+                        // 閉じた状態の場合
+                        // ・選択された項目をアクティブにする
+                        // ・メニューを開く
+                        this.HamburgerMenu.Content = targetItem;
+                        this.HamburgerMenu.SelectedItem = targetItem;
+                        this.HamburgerMenu.Width = double.NaN;
+                    }
+                    else if (isSelected == false)
+                    {
+                        // 開いた状態かつアクティブでない項目が選択された場合
+                        // ・選択された項目をアクティブにする
+                        this.HamburgerMenu.Content = targetItem;
+                        this.HamburgerMenu.SelectedItem = targetItem;
+                    }
+                    else
+                    {
+                        // 開いた状態かつアクティブな項目が選択された場合
+                        // ・選択された項目のアクティブにする
+                        // ・メニューを閉じる
+                        this.HamburgerMenu.Content = null;
+                        this.HamburgerMenu.SelectedItem = null;
+                        this.HamburgerMenu.Width = this.HamburgerMenu.HamburgerWidth;
+                    }
+
                     this.HamburgerMenu.IsPaneOpen = false;
                     this.HamburgerMenuColumn.Width = GridLength.Auto;
                 },
@@ -465,7 +501,7 @@ namespace MyPad.Views
             {
                 case User32_Gdi.WindowMessage.WM_INITMENUPOPUP:
                 {
-                    var settings = SettingsService.Instance.Window;
+                    var settings = SettingsService.Instance.System;
                     var hMenu = User32_Gdi.GetSystemMenu(this._handleSource.Handle, false);
                     this._lpmiiShowMenuBar.dwTypeData.Assign(Properties.Resources.Command_ShowMenuBar);
                     this._lpmiiShowToolBar.dwTypeData.Assign(Properties.Resources.Command_ShowToolBar);
@@ -484,7 +520,7 @@ namespace MyPad.Views
 
                 case User32_Gdi.WindowMessage.WM_SYSCOMMAND:
                 {
-                    var settings = SettingsService.Instance.Window;
+                    var settings = SettingsService.Instance.System;
                     var wID = wParam.ToInt32();
                     if (this._lpmiiShowMenuBar.wID == wID)
                         settings.ShowMenuBar = !settings.ShowMenuBar;
@@ -506,7 +542,7 @@ namespace MyPad.Views
             {
                 var viewModel = WorkspaceViewModel.Instance.AddWindow(null, false, false);
                 var view = new MainWindow() { DataContext = viewModel, RestorePlacement = false };
-                if (SettingsService.Instance.Window.ShowSingleTab == false)
+                if (SettingsService.Instance.System.ShowSingleTab == false)
                 {
                     // HACK: IsHeaderPanelVisible = false の状態でフローティングを行うと例外が発生する現象への対策
                     // ドラッグ移動中(マウスの左ボタンが押下されている間)はタブを表示する。
@@ -517,11 +553,11 @@ namespace MyPad.Views
 
                     void View_MoveEnd(object sender, EventArgs e)
                     {
-                        SettingsService.Instance.Window.ShowSingleTab = false;
+                        SettingsService.Instance.System.ShowSingleTab = false;
                         ((Window)sender).PreviewMouseLeftButtonUp -= View_MoveEnd;
                         ((Window)sender).Closed -= View_MoveEnd;
                     }
-                    SettingsService.Instance.Window.ShowSingleTab = true;
+                    SettingsService.Instance.System.ShowSingleTab = true;
                     view.PreviewMouseLeftButtonUp += View_MoveEnd;
                     view.Closed += View_MoveEnd;
                 }

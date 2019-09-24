@@ -31,7 +31,6 @@ namespace MyPad.ViewModels
         #region リクエスト
 
         public InteractionRequest<MessageNotification> MessageRequest { get; } = new InteractionRequest<MessageNotification>();
-        public InteractionRequest<OpenFileNotification> OpenDirectoryRequest { get; } = new InteractionRequest<OpenFileNotification>();
         public InteractionRequest<OpenFileNotificationEx> OpenFileRequest { get; } = new InteractionRequest<OpenFileNotificationEx>();
         public InteractionRequest<SaveFileNotificationEx> SaveFileRequest { get; } = new InteractionRequest<SaveFileNotificationEx>();
         public InteractionRequest<PrintDocumentNotification> PrintRequest { get; } = new InteractionRequest<PrintDocumentNotification>();
@@ -134,18 +133,6 @@ namespace MyPad.ViewModels
                     {
                         if (n.Result == true)
                             ResourceService.InitializeXshd(true);
-                    });
-            });
-
-        public ICommand InitializeFileExplorerRootCommand
-            => new DelegateCommand(() =>
-            {
-                this.OpenDirectoryRequest.Raise(
-                    new OpenFileNotification(),
-                    n =>
-                    {
-                        if (n.Result == true)
-                            SettingsService.Instance.System.FileExplorerRoot = n.FileName;
                     });
             });
 

@@ -301,8 +301,8 @@
   <data name="Text_RequireControlModifierForHyperlinkClick" xml:space="preserve">
     <value>Require control modifier for hyperlink click.</value>
   </data>
-  <data name="Text_SaveWindowPosition" xml:space="preserve">
-    <value>Save window position.</value>
+  <data name="Text_SaveWindowPlacement" xml:space="preserve">
+    <value>Save window placement.</value>
   </data>
   <data name="Text_ShowBoxForControlCharacters" xml:space="preserve">
     <value>Show box for control characters,</value>
@@ -336,9 +336,6 @@
   </data>
   <data name="Label_TextLength" xml:space="preserve">
     <value>Text length</value>
-  </data>
-  <data name="Label_Window" xml:space="preserve">
-    <value>Window</value>
   </data>
   <data name="Command_CaseSensitive" xml:space="preserve">
     <value>Case sensitive</value>
@@ -516,26 +513,11 @@ Definitions is reflected on restart. Do you want to continue?</value>
   <data name="Command_Show" xml:space="preserve">
     <value>Show</value>
   </data>
-  <data name="Label_Show" xml:space="preserve">
-    <value>Show</value>
-  </data>
-  <data name="Label_Advanced" xml:space="preserve">
-    <value>Advanced</value>
-  </data>
-  <data name="Label_Behavior" xml:space="preserve">
-    <value>Behavior</value>
-  </data>
   <data name="Command_Print" xml:space="preserve">
     <value>Print</value>
   </data>
-  <data name="Label_SystemDirectory" xml:space="preserve">
-    <value>System directory</value>
-  </data>
-  <data name="Label_SystemFile" xml:space="preserve">
-    <value>System file</value>
-  </data>
-  <data name="Label_SyntaxDefinition" xml:space="preserve">
-    <value>Syntax definition</value>
+  <data name="Label_Syntax" xml:space="preserve">
+    <value>Syntax</value>
   </data>
   <data name="Message_NotifyEmptyDocument" xml:space="preserve">
     <value>This document is empty.</value>
@@ -548,9 +530,6 @@ Definitions is reflected on restart. Do you want to continue?</value>
   </data>
   <data name="Python" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\python.xshd;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="Label_General" xml:space="preserve">
-    <value>General</value>
   </data>
   <data name="Label_AutoSaveInterval" xml:space="preserve">
     <value>Auto save interval in minutes</value>
@@ -645,8 +624,8 @@ Definitions is reflected on restart. Do you want to continue?</value>
   <data name="Command_ClipboardHistory" xml:space="preserve">
     <value>Clipboard history</value>
   </data>
-  <data name="Label_ClipboardHistoryCount" xml:space="preserve">
-    <value>Clipboard history count</value>
+  <data name="Label_ClipboardHistorySize" xml:space="preserve">
+    <value>Clipboard history size</value>
   </data>
   <data name="Command_OpenParentDirectory" xml:space="preserve">
     <value>Open parent directory</value>
@@ -663,8 +642,8 @@ Definitions is reflected on restart. Do you want to continue?</value>
   <data name="Label_Command" xml:space="preserve">
     <value>Command</value>
   </data>
-  <data name="Label_Other" xml:space="preserve">
-    <value>Other</value>
+  <data name="Label_Path" xml:space="preserve">
+    <value>Path</value>
   </data>
   <data name="Command_Terminals" xml:space="preserve">
     <value>List of terminals</value>
@@ -678,16 +657,13 @@ Definitions is reflected on restart. Do you want to continue?</value>
   <data name="Command_FileExplorer" xml:space="preserve">
     <value>File explorer</value>
   </data>
-  <data name="Label_FileExplorerRoot" xml:space="preserve">
-    <value>File explorer root</value>
-  </data>
   <data name="Command_Grep" xml:space="preserve">
     <value>Grep</value>
   </data>
   <data name="Command_AllDirectories" xml:space="preserve">
     <value>Search sub-directories</value>
   </data>
-  <data name="Label_RootPath" xml:space="preserve">
+  <data name="Label_Directory" xml:space="preserve">
     <value>Directory</value>
   </data>
   <data name="Label_SearchPattern" xml:space="preserve">
@@ -695,5 +671,11 @@ Definitions is reflected on restart. Do you want to continue?</value>
   </data>
   <data name="Label_SearchText" xml:space="preserve">
     <value>Text to find</value>
+  </data>
+  <data name="Message_Required" xml:space="preserve">
+    <value>Required field.</value>
+  </data>
+  <data name="Message_NotifyDirectoryNotFound" xml:space="preserve">
+    <value>Directory not found.</value>
   </data>
 </root>
