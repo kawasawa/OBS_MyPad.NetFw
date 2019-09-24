@@ -172,7 +172,7 @@ namespace MyPad.ViewModels
             if (string.IsNullOrEmpty(text) || this.ClipboardItems.FirstOrDefault()?.Equals(text) == true)
                 return;
 
-            if (SettingsService.Instance.System.ClipboardHistoryCount <= this.ClipboardItems.Count)
+            if (SettingsService.Instance.System.ClipboardHistorySize <= this.ClipboardItems.Count)
                 this.ClipboardItems.RemoveAt(this.ClipboardItems.Count - 1);
             this.ClipboardItems.Insert(0, text);
         }

@@ -14,19 +14,12 @@ namespace MyPad.Models
         public static SettingsService Instance { get; } = new SettingsService();
 
         private SystemSettings _system = new SystemSettings();
-        private WindowSettings _window = new WindowSettings();
         private TextEditorSettings _textEditor = new TextEditorSettings();
 
         public SystemSettings System
         {
             get => this._system;
             set => this.SetProperty(ref this._system, value);
-        }
-
-        public WindowSettings Window
-        {
-            get => this._window;
-            set => this.SetProperty(ref this._window, value);
         }
 
         public TextEditorSettings TextEditor

@@ -239,7 +239,6 @@
     <Compile Include="Models\COPYDATASTRUCT.cs" />
     <Compile Include="Models\TextFileHelper.cs" />
     <Compile Include="Models\SystemSettings.cs" />
-    <Compile Include="Models\WindowSettings.cs" />
     <Compile Include="Models\TextEditorSettings.cs" />
     <Compile Include="Models\ResourceService.cs" />
     <Compile Include="Models\SettingsService.cs" />
@@ -296,10 +295,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PrintPreviewContent.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Styles\App.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -139,7 +139,7 @@ namespace MyPad.Models
                 await Task.WhenAll(chunk.Select(path =>
                     Task.Run(() =>
                     {
-                        using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
+                        using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                         {
                             // 文字コードを推定する
                             var encoding = defaultEncoding;

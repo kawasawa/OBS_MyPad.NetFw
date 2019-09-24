@@ -57,43 +57,53 @@
         </TabControl.Resources>
 
         <TabItem DataContext="{Binding System, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}" Header="{Binding Resources.Label_System, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
-            <ScrollViewer>
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled">
                 <StackPanel>
-                    <Expander Header="{Binding Resources.Label_General, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
-                        <Grid ge:GridEx.ColumnDefinition="Auto, *" ge:GridEx.RowDefinition="Auto, Auto, Auto, Auto">
-                            <Label    Grid.Row="0" Grid.Column="0" Content="{Binding Resources.Label_Language, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            <ComboBox Grid.Row="0" Grid.Column="1" SelectedValue="{Binding Culture, Mode=TwoWay}" ItemsSource="{x:Static root:Consts.CULTURES}" SelectedValuePath="Name">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{qc:MultiBinding '$P0 + \' (\' + $P1 + \')\'', P0={Binding Description, Mode=OneWay}, P1={Binding Name, Mode=OneWay}}"/>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
+                    <Grid ge:GridEx.ColumnDefinition="Auto, *" ge:GridEx.RowDefinition="Auto, Auto, Auto, Auto, Auto">
+                        <Label    Grid.Row="0" Grid.Column="0" Content="{Binding Resources.Label_Language, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                        <ComboBox Grid.Row="0" Grid.Column="1" SelectedValue="{Binding Culture, Mode=TwoWay}" ItemsSource="{x:Static root:Consts.CULTURES}" SelectedValuePath="Name">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{qc:MultiBinding '$P0 + \' (\' + $P1 + \')\'', P0={Binding Description, Mode=OneWay}, P1={Binding Name, Mode=OneWay}}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
 
-                            <Label    Grid.Row="1" Grid.Column="0" Content="{Binding Resources.Label_Encoding, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            <ComboBox Grid.Row="1" Grid.Column="1" SelectedValue="{Binding Encoding, Mode=TwoWay}" ItemsSource="{x:Static root:Consts.ENCODINGS}">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{qc:MultiBinding '$P0 + \' - \' + $P1', P0={Binding CodePage, Mode=OneWay}, P1={Binding EncodingName, Mode=OneWay}}"/>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                            <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
-                                <CheckBox IsChecked="{Binding AutoDetectEncoding, Mode=TwoWay}" Content="{Binding Resources.Text_AutoDetectByDefault, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                                <Border Width="{StaticResource Const.Gap2}"/>
-                                <RadioButton IsChecked="{qc:Binding Convert='!$P', ConvertBack='!$value', P={Binding EmphasisOnQuality}}" Content="{Binding Resources.Label_EmphasisOnResponse, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                                <RadioButton IsChecked="{Binding EmphasisOnQuality, Mode=TwoWay}" Content="{Binding Resources.Label_EmphasisOnQuality, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            </StackPanel>
+                        <Label    Grid.Row="1" Grid.Column="0" Content="{Binding Resources.Label_Encoding, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                        <ComboBox Grid.Row="1" Grid.Column="1" SelectedValue="{Binding Encoding, Mode=TwoWay}" ItemsSource="{x:Static root:Consts.ENCODINGS}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{qc:MultiBinding '$P0 + \' - \' + $P1', P0={Binding CodePage, Mode=OneWay}, P1={Binding EncodingName, Mode=OneWay}}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+                            <CheckBox IsChecked="{Binding AutoDetectEncoding, Mode=TwoWay}" Content="{Binding Resources.Text_AutoDetectByDefault, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                            <Border Width="{StaticResource Const.Gap2}"/>
+                            <RadioButton IsChecked="{qc:Binding Convert='!$P', ConvertBack='!$value', P={Binding DetectEncodingStrict}}" Content="{Binding Resources.Label_EmphasisOnResponse, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                            <RadioButton IsChecked="{Binding DetectEncodingStrict, Mode=TwoWay}" Content="{Binding Resources.Label_EmphasisOnQuality, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                        </StackPanel>
 
-                            <Label    Grid.Row="3" Grid.Column="0" Content="{Binding Resources.Label_SyntaxDefinition, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{qc:Binding 'new string[] { string.Empty }.Concat($P.Keys)', P={Binding Source={x:Static root:Consts.SYNTAX_DEFINITIONS}}}" SelectedValue="{Binding SyntaxDefinitionName, Mode=TwoWay}"/>
-                        </Grid>
-                    </Expander>
+                        <Label    Grid.Row="3" Grid.Column="0" Content="{Binding Resources.Label_Syntax, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                        <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{qc:Binding 'new string[] { string.Empty }.Concat($P.Keys)', P={Binding Source={x:Static root:Consts.SYNTAX_DEFINITIONS}}}" SelectedValue="{Binding SyntaxDefinitionName, Mode=TwoWay}"/>
 
-                    <Expander Header="{Binding Resources.Label_Behavior, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
-                        <StackPanel>
+                        <Label    Grid.Row="4" Grid.Column="0" Content="{Binding Resources.Command_FileExplorer, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                        <TextBox  Grid.Row="4" Grid.Column="1" Text="{Binding FileExplorerRoot, Mode=TwoWay}" m:TextBoxHelper.Watermark="{x:Static root:Consts.DEFAULT_FILE_EXPLORER_ROOT}" m:TextBoxHelper.ClearTextButton="True"/>
+                    </Grid>
+
+                    <Border Height="{StaticResource Const.Gap2}"/>
+
+                    <ge:ResponsiveGrid>
+                        <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6">
+                            <CheckBox IsChecked="{Binding SaveWindowPlacement, Mode=TwoWay}" Content="{Binding Resources.Text_SaveWindowPlacement, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                            <CheckBox IsChecked="{Binding UseOverlayMessage, Mode=TwoWay}"  Content="{Binding Resources.Text_UseOverlayMessage, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                            <CheckBox IsChecked="{Binding ShowFullName, Mode=TwoWay}"       Content="{Binding Resources.Text_ShowFullName, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                            <CheckBox IsChecked="{Binding ShowSingleTab, Mode=TwoWay}"      Content="{Binding Resources.Text_ShowSingleTab, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                             <CheckBox IsChecked="{Binding EnableNotificationIcon, Mode=TwoWay}" Content="{Binding Resources.Text_EnableNotificationIcon, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                             <CheckBox IsChecked="{Binding EnableResident, Mode=TwoWay}" IsEnabled="{Binding EnableNotificationIcon, Mode=OneWay}" Content="{Binding Resources.Text_EnableResident, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                        </StackPanel>
+                        
+                        <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6">
                             <CheckBox IsChecked="{Binding EnableAutoSave, Mode=TwoWay}" Content="{Binding Resources.Text_EnableAutoSave, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                             <StackPanel Orientation="Horizontal">
                                 <Border Width="35"/>
@@ -103,75 +113,56 @@
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <Border Width="35"/>
-                                <TextBlock Text="{Binding Resources.Label_ClipboardHistoryCount, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                <TextBlock Text="{Binding Resources.Label_ClipboardHistorySize, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                                 <Border Width="{StaticResource Const.Gap2}"/>
-                                <m:NumericUpDown Value="{Binding ClipboardHistoryCount, Mode=TwoWay}" Minimum="1" MinWidth="100"/>
+                                <m:NumericUpDown Value="{Binding ClipboardHistorySize, Mode=TwoWay}" Minimum="1" MinWidth="100"/>
                             </StackPanel>
                         </StackPanel>
-                    </Expander>
-                </StackPanel>
-            </ScrollViewer>
-        </TabItem>
-
-        <TabItem DataContext="{Binding Window, Source={x:Static models:SettingsService.Instance}, Mode=TwoWay}" Header="{Binding Resources.Label_Window, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
-            <ScrollViewer>
-                <StackPanel>
-                    <Expander Header="{Binding Resources.Label_Show, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
-                        <StackPanel>
-                            <CheckBox IsChecked="{Binding ShowMenuBar, Mode=TwoWay}"   Content="{Binding Resources.Text_ShowMenuBar, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            <CheckBox IsChecked="{Binding ShowToolBar, Mode=TwoWay}"   Content="{Binding Resources.Text_ShowToolBar, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            <CheckBox IsChecked="{Binding ShowSideBar, Mode=TwoWay}"   Content="{Binding Resources.Text_ShowSideBar, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            <CheckBox IsChecked="{Binding ShowStatusBar, Mode=TwoWay}" Content="{Binding Resources.Text_ShowStatusBar, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            <CheckBox IsChecked="{Binding ShowSingleTab, Mode=TwoWay}" Content="{Binding Resources.Text_ShowSingleTab, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            <CheckBox IsChecked="{Binding ShowFullName, Mode=TwoWay}"  Content="{Binding Resources.Text_ShowFullName, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                        </StackPanel>
-                    </Expander>
-                    <Expander Header="{Binding Resources.Label_Behavior, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
-                        <StackPanel>
-                            <CheckBox IsChecked="{Binding SaveWindowPosition, Mode=TwoWay}" Content="{Binding Resources.Text_SaveWindowPosition, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            <CheckBox IsChecked="{Binding UseOverlayMessage, Mode=TwoWay}"  Content="{Binding Resources.Text_UseOverlayMessage, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                        </StackPanel>
-                    </Expander>
+                    </ge:ResponsiveGrid>
                 </StackPanel>
             </ScrollViewer>
         </TabItem>
 
         <TabItem DataContext="{Binding TextEditor, Source={x:Static models:SettingsService.Instance}, Mode=TwoWay}" Header="{Binding Resources.Label_TextEditor, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
-            <ScrollViewer>
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled">
                 <StackPanel>
-                    <Expander Header="{Binding Resources.Label_Font, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
-                        <Grid ge:GridEx.ColumnDefinition="*, Auto(50-)">
-                            <ComboBox Grid.Column="0" SelectedValue="{Binding FontFamily, Mode=TwoWay}" ItemsSource="{x:Static root:Consts.FONT_FAMILIES}">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Converter={StaticResource FontFamilyToName}}" FontFamily="{Binding}"/>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                            <ComboBox Grid.Column="1" SelectedValue="{Binding ActualFontSize, Mode=TwoWay}" ItemsSource="{x:Static root:Consts.FONT_SIZES}"/>
-                        </Grid>
-                    </Expander>
-                    <Expander Header="{Binding Resources.Label_Show, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
-                        <StackPanel>
-                            <CheckBox IsChecked="{Binding HighlightCurrentLine, Mode=TwoWay}"                    Content="{Binding Resources.Text_HighlightCurrentLine, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            <CheckBox IsChecked="{Binding ShowSpaces, Mode=TwoWay}"                              Content="{Binding Resources.Text_ShowSpaces, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            <CheckBox IsChecked="{Binding ShowTabs, Mode=TwoWay}"                                Content="{Binding Resources.Text_ShowTabs, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            <CheckBox IsChecked="{Binding ShowBoxForControlCharacters, Mode=TwoWay}"             Content="{Binding Resources.Text_ShowBoxForControlCharacters, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            <CheckBox IsChecked="{Binding ShowEndOfLine, Mode=TwoWay}"                           Content="{Binding Resources.Text_ShowEndOfLine, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            <CheckBox IsChecked="{Binding ShowLineNumbers, Mode=TwoWay}"                         Content="{Binding Resources.Text_ShowLineNumbers, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                    <Grid ge:GridEx.ColumnDefinition="Auto, *, Auto(50-)">
+                        <Label Grid.Column="0" Content="{Binding Resources.Label_Font, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                        <ComboBox Grid.Column="1" SelectedValue="{Binding FontFamily, Mode=TwoWay}" ItemsSource="{x:Static root:Consts.FONT_FAMILIES}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource FontFamilyToName}}" FontFamily="{Binding}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <ComboBox Grid.Column="2" SelectedValue="{Binding ActualFontSize, Mode=TwoWay}" ItemsSource="{x:Static root:Consts.FONT_SIZES}"/>
+                    </Grid>
+
+                    <Border Height="{StaticResource Const.Gap2}"/>
+
+                    <ge:ResponsiveGrid>
+                        <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6">
+                            <StackPanel>
+                                <CheckBox IsChecked="{Binding HighlightCurrentLine, Mode=TwoWay}"                    Content="{Binding Resources.Text_HighlightCurrentLine, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                <CheckBox IsChecked="{Binding ShowSpaces, Mode=TwoWay}"                              Content="{Binding Resources.Text_ShowSpaces, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                <CheckBox IsChecked="{Binding ShowTabs, Mode=TwoWay}"                                Content="{Binding Resources.Text_ShowTabs, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                <CheckBox IsChecked="{Binding ShowBoxForControlCharacters, Mode=TwoWay}"             Content="{Binding Resources.Text_ShowBoxForControlCharacters, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                <CheckBox IsChecked="{Binding ShowEndOfLine, Mode=TwoWay}"                           Content="{Binding Resources.Text_ShowEndOfLine, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                <CheckBox IsChecked="{Binding ShowLineNumbers, Mode=TwoWay}"                         Content="{Binding Resources.Text_ShowLineNumbers, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                            </StackPanel>
+
+                            <Border Height="{StaticResource Const.Gap2}"/>
+
+                            <StackPanel>
+                                <CheckBox IsChecked="{Binding HideCursorWhileTyping, Mode=TwoWay}"                   Content="{Binding Resources.Text_HideCursorWhileTyping, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                <CheckBox IsChecked="{Binding CutCopyWholeLine, Mode=TwoWay}"                        Content="{Binding Resources.Text_EnableCutCopyWholeLine, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                <CheckBox IsChecked="{Binding WordWrap, Mode=TwoWay}"                                Content="{Binding Resources.Text_EnableWordWrap, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                <CheckBox IsChecked="{Binding ConvertTabsToSpaces, Mode=TwoWay}"                     Content="{Binding Resources.Text_ConvertTabsToSpaces, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                <CheckBox IsChecked="{Binding RequireControlModifierForHyperlinkClick, Mode=TwoWay}" Content="{Binding Resources.Text_RequireControlModifierForHyperlinkClick, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                            </StackPanel>
                         </StackPanel>
-                    </Expander>
-                    <Expander Header="{Binding Resources.Label_Behavior, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
-                        <StackPanel>
-                            <CheckBox IsChecked="{Binding HideCursorWhileTyping, Mode=TwoWay}"                   Content="{Binding Resources.Text_HideCursorWhileTyping, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            <CheckBox IsChecked="{Binding CutCopyWholeLine, Mode=TwoWay}"                        Content="{Binding Resources.Text_EnableCutCopyWholeLine, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            <CheckBox IsChecked="{Binding WordWrap, Mode=TwoWay}"                                Content="{Binding Resources.Text_EnableWordWrap, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            <CheckBox IsChecked="{Binding ConvertTabsToSpaces, Mode=TwoWay}"                     Content="{Binding Resources.Text_ConvertTabsToSpaces, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            <CheckBox IsChecked="{Binding RequireControlModifierForHyperlinkClick, Mode=TwoWay}" Content="{Binding Resources.Text_RequireControlModifierForHyperlinkClick, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                        </StackPanel>
-                    </Expander>
-                    <Expander Header="{Binding Resources.Label_Advanced, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
-                        <StackPanel>
+
+                        <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6">
                             <CheckBox IsChecked="{Binding EnableImeSupport, Mode=TwoWay}"                        Content="{Binding Resources.Text_EnableImeSupport, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                             <CheckBox IsChecked="{Binding EnableAutoCompletion, Mode=TwoWay}"                    Content="{Binding Resources.Text_EnableAutoCompletion, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                             <CheckBox IsChecked="{Binding EnableTextDragDrop, Mode=TwoWay}"                      Content="{Binding Resources.Text_EnableTextDragDrop, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
@@ -182,111 +173,93 @@
                             <CheckBox IsChecked="{Binding AllowScrollBelowDocument, Mode=TwoWay}"                Content="{Binding Resources.Text_AllowScrollBelowDocument, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                             <CheckBox IsChecked="{Binding AllowToggleOverstrikeMode, Mode=TwoWay}"               Content="{Binding Resources.Text_AllowToggleOverstrikeMode, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                         </StackPanel>
-                    </Expander>
+                    </ge:ResponsiveGrid>
                 </StackPanel>
             </ScrollViewer>
         </TabItem>
 
-        <TabItem Header="{Binding Resources.Label_Other, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
+        <TabItem Header="{Binding Resources.Label_Path, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
             <ScrollViewer HorizontalScrollBarVisibility="Disabled">
-                <StackPanel>
-                    <Expander Header="{Binding Resources.Label_SystemFile, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
-                        <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto" ge:GridEx.RowDefinition="Auto, Auto">
-                            <Label   Grid.Row="0" Grid.Column="0" Content="{Binding Resources.Label_ExecutionFile, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            <TextBox Grid.Row="0" Grid.Column="1" Text="{x:Static ml:ProductInfo.Location}" IsReadOnly="True"/>
-                            <Button  Grid.Row="0" Grid.Column="3" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click">
-                                        <mlwb:ProcessStartAction FileName="explorer.exe" Argument="{qc:Binding '\'/select, \' + $P', P={Binding Source={x:Static ml:ProductInfo.Location}, Mode=OneWay}}" ThrowException="False"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                <mi:Modern Kind="FolderOpen"/>
-                            </Button>
-                            <Label   Grid.Row="1" Grid.Column="0" Content="{Binding Resources.Label_SettingFile, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Text="{x:Static models:SettingsService.SettingsFilePath}" IsReadOnly="True"/>
-                            <Button  Grid.Row="1" Grid.Column="3" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click">
-                                        <mlwb:ProcessStartAction FileName="explorer.exe" Argument="{qc:Binding '\'/select, \' + $P', P={Binding Source={x:Static models:SettingsService.SettingsFilePath}, Mode=OneWay}}" ThrowException="False"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                <mi:Modern Kind="FolderOpen"/>
-                            </Button>
-                        </Grid>
-                    </Expander>
+                <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto, 5, Auto" ge:GridEx.RowDefinition="Auto, Auto, 10, Auto, Auto, Auto, Auto, Auto">
+                    <Label   Grid.Row="0" Grid.Column="0" Content="{Binding Resources.Label_ExecutionFile, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Text="{x:Static ml:ProductInfo.Location}" IsReadOnly="True"/>
+                    <Button  Grid.Row="0" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <mlwb:ProcessStartAction FileName="explorer.exe" Argument="{qc:Binding '\'/select, \' + $P', P={Binding Source={x:Static ml:ProductInfo.Location}, Mode=OneWay}}" ThrowException="False"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <mi:Modern Kind="FolderOpen"/>
+                    </Button>
+                    <Label   Grid.Row="1" Grid.Column="0" Content="{Binding Resources.Label_SettingFile, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Text="{x:Static models:SettingsService.SettingsFilePath}" IsReadOnly="True"/>
+                    <Button  Grid.Row="1" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <mlwb:ProcessStartAction FileName="explorer.exe" Argument="{qc:Binding '\'/select, \' + $P', P={Binding Source={x:Static models:SettingsService.SettingsFilePath}, Mode=OneWay}}" ThrowException="False"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <mi:Modern Kind="FolderOpen"/>
+                    </Button>
 
-                    <Expander Header="{Binding Resources.Label_SystemDirectory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
-                        <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto, 5, Auto" ge:GridEx.RowDefinition="Auto, Auto, Auto, Auto, Auto">
-                            <Label   Grid.Row="0" Grid.Column="0" Content="{Binding Resources.Label_ExecutionDirectory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Text="{x:Static ml:ProductInfo.Working}" IsReadOnly="True"/>
-                            <Button  Grid.Row="0" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click">
-                                        <mlwb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Working}" ThrowException="False"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                <mi:Modern Kind="FolderOpen"/>
-                            </Button>
+                    <Label   Grid.Row="3" Grid.Column="0" Content="{Binding Resources.Label_ExecutionDirectory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Text="{x:Static ml:ProductInfo.Working}" IsReadOnly="True"/>
+                    <Button  Grid.Row="3" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <mlwb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Working}" ThrowException="False"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <mi:Modern Kind="FolderOpen"/>
+                    </Button>
 
-                            <Label   Grid.Row="1" Grid.Column="0" Content="{Binding Resources.Label_RoamingDirectory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Text="{x:Static ml:ProductInfo.Roaming}" IsReadOnly="True"/>
-                            <Button  Grid.Row="1" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click">
-                                        <mlwb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Roaming}" ThrowException="False"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                <mi:Modern Kind="FolderOpen"/>
-                            </Button>
+                    <Label   Grid.Row="4" Grid.Column="0" Content="{Binding Resources.Label_RoamingDirectory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                    <TextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Text="{x:Static ml:ProductInfo.Roaming}" IsReadOnly="True"/>
+                    <Button  Grid.Row="4" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <mlwb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Roaming}" ThrowException="False"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <mi:Modern Kind="FolderOpen"/>
+                    </Button>
 
-                            <Label   Grid.Row="2" Grid.Column="0" Content="{Binding Resources.Label_XshdDirectory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            <TextBox Grid.Row="2" Grid.Column="1" Text="{x:Static models:ResourceService.XshdDirectoryPath}" IsReadOnly="True"/>
-                            <Button  Grid.Row="2" Grid.Column="3" Command="{Binding DataContext.InitializeXshdCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneTime}" ToolTip="{Binding Resources.Command_Initialize, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
-                                <mi:Modern Kind="New"/>
-                            </Button>
-                            <Button  Grid.Row="2" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click">
-                                        <mlwb:ProcessStartAction FileName="{x:Static models:ResourceService.XshdDirectoryPath}" ThrowException="False"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                <mi:Modern Kind="FolderOpen"/>
-                            </Button>
+                    <Label   Grid.Row="5" Grid.Column="0" Content="{Binding Resources.Label_XshdDirectory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                    <TextBox Grid.Row="5" Grid.Column="1" Text="{x:Static models:ResourceService.XshdDirectoryPath}" IsReadOnly="True"/>
+                    <Button  Grid.Row="5" Grid.Column="3" Command="{Binding DataContext.InitializeXshdCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneTime}" ToolTip="{Binding Resources.Command_Initialize, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
+                        <mi:Modern Kind="New"/>
+                    </Button>
+                    <Button  Grid.Row="5" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <mlwb:ProcessStartAction FileName="{x:Static models:ResourceService.XshdDirectoryPath}" ThrowException="False"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <mi:Modern Kind="FolderOpen"/>
+                    </Button>
 
-                            <Label   Grid.Row="3" Grid.Column="0" Content="{Binding Resources.Label_LogDirectory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Text="{x:Static ml:Logger.LogDirectoryPath}" IsReadOnly="True"/>
-                            <Button  Grid.Row="3" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click">
-                                        <mlwb:ProcessStartAction FileName="{x:Static ml:Logger.LogDirectoryPath}" ThrowException="False"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                <mi:Modern Kind="FolderOpen"/>
-                            </Button>
+                    <Label   Grid.Row="6" Grid.Column="0" Content="{Binding Resources.Label_LogDirectory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                    <TextBox Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="3" Text="{x:Static ml:Logger.LogDirectoryPath}" IsReadOnly="True"/>
+                    <Button  Grid.Row="6" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <mlwb:ProcessStartAction FileName="{x:Static ml:Logger.LogDirectoryPath}" ThrowException="False"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <mi:Modern Kind="FolderOpen"/>
+                    </Button>
 
-                            <Label   Grid.Row="4" Grid.Column="0" Content="{Binding Resources.Label_TempDirectory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            <TextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Text="{x:Static ml:ProductInfo.Temporary}" IsReadOnly="True"/>
-                            <Button  Grid.Row="4" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click">
-                                        <mlwb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Temporary}" ThrowException="False"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                <mi:Modern Kind="FolderOpen"/>
-                            </Button>
-                        </Grid>
-                    </Expander>
-
-                    <Expander Header="{Binding Resources.Label_Advanced, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
-                        <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto, 5, Auto" ge:GridEx.RowDefinition="Auto">
-                            <Label   Grid.Row="0" Grid.Column="0" Content="{Binding Resources.Label_FileExplorerRoot, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                            <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding System.FileExplorerRoot, Source={x:Static models:SettingsService.Instance}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" m:TextBoxHelper.Watermark="{x:Static root:Consts.DEFAULT_FILE_EXPLORER_ROOT}"/>
-                            <Button  Grid.Row="0" Grid.Column="5" Command="{Binding DataContext.InitializeFileExplorerRootCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneTime}" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
-                                <mi:Modern Kind="FolderStar"/>
-                            </Button>
-                        </Grid>
-                    </Expander>
-                </StackPanel>
+                    <Label   Grid.Row="7" Grid.Column="0" Content="{Binding Resources.Label_TempDirectory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                    <TextBox Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="3" Text="{x:Static ml:ProductInfo.Temporary}" IsReadOnly="True"/>
+                    <Button  Grid.Row="7" Grid.Column="5" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <mlwb:ProcessStartAction FileName="{x:Static ml:ProductInfo.Temporary}" ThrowException="False"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <mi:Modern Kind="FolderOpen"/>
+                    </Button>
+                </Grid>
             </ScrollViewer>
         </TabItem>
     </TabControl>

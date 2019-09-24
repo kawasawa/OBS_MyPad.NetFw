@@ -25,7 +25,7 @@ namespace MyPad.ViewModels
         private static readonly TimeSpan _AUTO_SAVE_INTERVAL = new TimeSpan(0, SettingsService.Instance.System.AutoSaveInterval, 0);
         private static int _SEQUENCE = 0;
 
-        private readonly DispatcherTimer _autoSaveTimer = new DispatcherTimer();
+        private readonly DispatcherTimer _saveTimer = new DispatcherTimer();
         private Tuple<string, ITextSourceVersion> _temporary;
 
         public int Sequense { get; } = ++_SEQUENCE;
@@ -96,14 +96,14 @@ namespace MyPad.ViewModels
 
         public TextEditorViewModelCore()
         {
-            this._autoSaveTimer.Tick += this.AutoSaveTimer_Tick;
+            this._saveTimer.Tick += this.AutoSaveTimer_Tick;
             this.Document = new TextDocument();
             this.Clear();
         }
 
         protected override void Dispose(bool disposing)
         {
-            this._autoSaveTimer.Tick -= this.AutoSaveTimer_Tick;
+            this._saveTimer.Tick -= this.AutoSaveTimer_Tick;
             this.SafeDeleteTemporary();
             this.FileStream?.Dispose();
             this.FileStream = null;
@@ -112,7 +112,7 @@ namespace MyPad.ViewModels
 
         public void Clear()
         {
-            this.SuspendTimerDelegate(() =>
+            this.SuspendSaveTimer(() =>
             {
                 Task.Run(() => this.SafeDeleteTemporary());
 
@@ -147,14 +147,14 @@ namespace MyPad.ViewModels
             if (this.FileStream == null)
                 throw new InvalidOperationException($"{nameof(this.FileStream)} が null です。");
 
-            await this.SuspendTimerDelegate(async () =>
+            await this.SuspendSaveTimerAsync(async () =>
             {
                 var bytes = new byte[this.FileStream.Length];
                 this.FileStream.Position = 0;
                 await this.FileStream.ReadAsync(bytes, 0, bytes.Length);
 
                 if (encoding == null)
-                    encoding = await Task.Run(() => (SettingsService.Instance.System.EmphasisOnQuality ? TextFileHelper.DetectEncoding(bytes) : TextFileHelper.DetectEncodingFast(bytes)) ?? SettingsService.Instance.System.Encoding);
+                    encoding = await Task.Run(() => (SettingsService.Instance.System.DetectEncodingStrict ? TextFileHelper.DetectEncoding(bytes) : TextFileHelper.DetectEncodingFast(bytes)) ?? SettingsService.Instance.System.Encoding);
 
                 // HACK: UndoStack のリセット
                 // TextDocument.Text へ代入後に ClearAll() を実行したところ IsModified の変更が通知されなくなった。
@@ -185,7 +185,7 @@ namespace MyPad.ViewModels
             if (this.FileStream == null)
                 throw new InvalidOperationException($"{nameof(this.FileStream)} が null です。");
 
-            await this.SuspendTimerDelegate(async () =>
+            await this.SuspendSaveTimerAsync(async () =>
             {
                 var bytes = encoding.GetBytes(this.Document.Text);
                 this.FileStream.Position = 0;
@@ -248,7 +248,7 @@ namespace MyPad.ViewModels
             if (_ENABLED_AUTO_SAVE == false || this.IsModified == false || this.Document.Version == this._temporary?.Item2)
                 return;
 
-            await this.SuspendTimerDelegate(async () =>
+            await this.SuspendSaveTimerAsync(async () =>
             {
                 var path = Path.Combine(Consts.CURRENT_TEMPORARY, this.ConvertToCompressedBase64(this.FileName).Replace("/", "-"));
                 var bytes = Array.Empty<byte>();
@@ -297,20 +297,20 @@ namespace MyPad.ViewModels
             }
         }
 
-        private void SuspendTimerDelegate(Action action)
+        private void SuspendSaveTimer(Action action)
         {
-            this._autoSaveTimer.Stop();
+            this._saveTimer.Stop();
             action.Invoke();
-            this._autoSaveTimer.Interval = _AUTO_SAVE_INTERVAL;
-            this._autoSaveTimer.Start();
+            this._saveTimer.Interval = _AUTO_SAVE_INTERVAL;
+            this._saveTimer.Start();
         }
 
-        private async Task SuspendTimerDelegate(Func<Task> func)
+        private async Task SuspendSaveTimerAsync(Func<Task> func)
         {
-            this._autoSaveTimer.Stop();
+            this._saveTimer.Stop();
             await func.Invoke();
-            this._autoSaveTimer.Interval = _AUTO_SAVE_INTERVAL;
-            this._autoSaveTimer.Start();
+            this._saveTimer.Interval = _AUTO_SAVE_INTERVAL;
+            this._saveTimer.Start();
         }
     }
 }
