@@ -618,7 +618,7 @@
     <value>Grep</value>
   </data>
   <data name="Command_AllDirectories" xml:space="preserve">
-    <value>サブフォルダー含める</value>
+    <value>サブフォルダーを含める</value>
   </data>
   <data name="Label_Directory" xml:space="preserve">
     <value>フォルダ</value>
