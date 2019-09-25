@@ -273,8 +273,8 @@
   <data name="Label_AutoDetect" xml:space="preserve">
     <value>自動検出</value>
   </data>
-  <data name="Label_FileSize" xml:space="preserve">
-    <value>ファイルサイズ</value>
+  <data name="Label_Size" xml:space="preserve">
+    <value>サイズ</value>
   </data>
   <data name="Label_Font" xml:space="preserve">
     <value>フォント</value>
@@ -287,9 +287,6 @@
   </data>
   <data name="Label_Language" xml:space="preserve">
     <value>言語</value>
-  </data>
-  <data name="Label_LineCount" xml:space="preserve">
-    <value>行数</value>
   </data>
   <data name="Label_ModifiredDate" xml:space="preserve">
     <value>更新日時</value>
@@ -333,9 +330,6 @@
   <data name="Label_TextEditor" xml:space="preserve">
     <value>エディター</value>
   </data>
-  <data name="Label_TextLength" xml:space="preserve">
-    <value>文字列の長さ</value>
-  </data>
   <data name="Command_CaseSensitive" xml:space="preserve">
     <value>大文字と小文字を区別</value>
   </data>
@@ -378,8 +372,8 @@
   <data name="Label_EmphasisOnResponse" xml:space="preserve">
     <value>速度優先</value>
   </data>
-  <data name="Label_FileName" xml:space="preserve">
-    <value>ファイル名</value>
+  <data name="Label_Name" xml:space="preserve">
+    <value>名前</value>
   </data>
   <data name="Label_AccessDate" xml:space="preserve">
     <value>アクセス日時</value>
@@ -560,15 +554,6 @@
   <data name="Command_Editors" xml:space="preserve">
     <value>エディター一覧</value>
   </data>
-  <data name="Label_Permission" xml:space="preserve">
-    <value>権限</value>
-  </data>
-  <data name="Label_ReadOnly" xml:space="preserve">
-    <value>読み取り専用</value>
-  </data>
-  <data name="Label_ReadWrite" xml:space="preserve">
-    <value>読み書き</value>
-  </data>
   <data name="Text_UseOverlayMessage" xml:space="preserve">
     <value>メッセージをオーバーレイ表示する。</value>
   </data>
@@ -634,5 +619,11 @@
   </data>
   <data name="Message_NotifyDirectoryNotFound" xml:space="preserve">
     <value>指定されたフォルダは見つかりませんでした。</value>
+  </data>
+  <data name="Label_Type" xml:space="preserve">
+    <value>種類</value>
+  </data>
+  <data name="Label_Owner" xml:space="preserve">
+    <value>所有者</value>
   </data>
 </root>

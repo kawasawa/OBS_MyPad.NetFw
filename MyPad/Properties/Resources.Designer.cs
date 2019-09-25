@@ -1057,24 +1057,6 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   File name に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Label_FileName {
-            get {
-                return ResourceManager.GetString("Label_FileName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   File size に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Label_FileSize {
-            get {
-                return ResourceManager.GetString("Label_FileSize", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Folder に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Folder {
@@ -1102,15 +1084,6 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Line count に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Label_LineCount {
-            get {
-                return ResourceManager.GetString("Label_LineCount", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Log に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_LogDirectory {
@@ -1129,6 +1102,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   Name に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_Name {
+            get {
+                return ResourceManager.GetString("Label_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Opacity に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Opacity {
@@ -1138,38 +1120,20 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   Owner に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_Owner {
+            get {
+                return ResourceManager.GetString("Label_Owner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Path に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Path {
             get {
                 return ResourceManager.GetString("Label_Path", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Permission に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Label_Permission {
-            get {
-                return ResourceManager.GetString("Label_Permission", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   ReadOnly に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Label_ReadOnly {
-            get {
-                return ResourceManager.GetString("Label_ReadOnly", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   ReadWrite に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Label_ReadWrite {
-            get {
-                return ResourceManager.GetString("Label_ReadWrite", resourceCulture);
             }
         }
         
@@ -1210,6 +1174,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   Size に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_Size {
+            get {
+                return ResourceManager.GetString("Label_Size", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Syntax に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Syntax {
@@ -1246,11 +1219,11 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Text length に類似しているローカライズされた文字列を検索します。
+        ///   Type に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string Label_TextLength {
+        public static string Label_Type {
             get {
-                return ResourceManager.GetString("Label_TextLength", resourceCulture);
+                return ResourceManager.GetString("Label_Type", resourceCulture);
             }
         }
         

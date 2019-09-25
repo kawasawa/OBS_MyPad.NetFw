@@ -277,8 +277,8 @@
   <data name="Label_AutoDetect" xml:space="preserve">
     <value>Auto detect</value>
   </data>
-  <data name="Label_FileSize" xml:space="preserve">
-    <value>File size</value>
+  <data name="Label_Size" xml:space="preserve">
+    <value>Size</value>
   </data>
   <data name="Label_Font" xml:space="preserve">
     <value>Font</value>
@@ -291,9 +291,6 @@
   </data>
   <data name="Label_Language" xml:space="preserve">
     <value>Language</value>
-  </data>
-  <data name="Label_LineCount" xml:space="preserve">
-    <value>Line count</value>
   </data>
   <data name="Label_ModifiredDate" xml:space="preserve">
     <value>Modifired date</value>
@@ -333,9 +330,6 @@
   </data>
   <data name="Label_TextEditor" xml:space="preserve">
     <value>TextEditor</value>
-  </data>
-  <data name="Label_TextLength" xml:space="preserve">
-    <value>Text length</value>
   </data>
   <data name="Command_CaseSensitive" xml:space="preserve">
     <value>Case sensitive</value>
@@ -385,8 +379,8 @@
   <data name="Label_EmphasisOnResponse" xml:space="preserve">
     <value>Response</value>
   </data>
-  <data name="Label_FileName" xml:space="preserve">
-    <value>File name</value>
+  <data name="Label_Name" xml:space="preserve">
+    <value>Name</value>
   </data>
   <data name="Label_AccessDate" xml:space="preserve">
     <value>Access date</value>
@@ -600,15 +594,6 @@ Definitions is reflected on restart. Do you want to continue?</value>
   <data name="Command_Editors" xml:space="preserve">
     <value>List of editors</value>
   </data>
-  <data name="Label_Permission" xml:space="preserve">
-    <value>Permission</value>
-  </data>
-  <data name="Label_ReadOnly" xml:space="preserve">
-    <value>ReadOnly</value>
-  </data>
-  <data name="Label_ReadWrite" xml:space="preserve">
-    <value>ReadWrite</value>
-  </data>
   <data name="Text_UseOverlayMessage" xml:space="preserve">
     <value>Use overlay message.</value>
   </data>
@@ -677,5 +662,11 @@ Definitions is reflected on restart. Do you want to continue?</value>
   </data>
   <data name="Message_NotifyDirectoryNotFound" xml:space="preserve">
     <value>Directory not found.</value>
+  </data>
+  <data name="Label_Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Label_Owner" xml:space="preserve">
+    <value>Owner</value>
   </data>
 </root>

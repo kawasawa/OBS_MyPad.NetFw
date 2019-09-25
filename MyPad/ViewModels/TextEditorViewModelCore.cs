@@ -9,6 +9,8 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -30,8 +32,8 @@ namespace MyPad.ViewModels
 
         public int Sequense { get; } = ++_SEQUENCE;
         public bool IsNewFile => this.FileStream == null;
-        public string FileName => this.FileStream?.Name ?? $"{AppConfig.InitialFileName}-{this.Sequense}";
         public FileInfo FileInfo => this.IsNewFile ? null : new FileInfo(this.FileName);
+        public string FileName => this.FileStream?.Name ?? $"{AppConfig.InitialFileName}-{this.Sequense}";
 
         public string ShortFileName
         {
@@ -43,6 +45,19 @@ namespace MyPad.ViewModels
             }
         }
 
+        public string FileType
+        {
+            get
+            {
+                var psfi = new Shell32.SHFILEINFO();
+                Shell32.SHGetFileInfo(this.FileName, 0, ref psfi, Marshal.SizeOf(psfi), Shell32.SHGFI.SHGFI_TYPENAME);
+                return psfi.szTypeName;
+            }
+        }
+
+        public string FileOwner
+            => File.GetAccessControl(this.FileName).GetOwner(typeof(NTAccount)).Value;
+
         private FileStream _fileStream;
         public FileStream FileStream
         {
@@ -52,9 +67,11 @@ namespace MyPad.ViewModels
                 if (this.SetProperty(ref this._fileStream, value))
                 {
                     this.RaisePropertyChanged(nameof(this.IsNewFile));
+                    this.RaisePropertyChanged(nameof(this.FileInfo));
                     this.RaisePropertyChanged(nameof(this.FileName));
                     this.RaisePropertyChanged(nameof(this.ShortFileName));
-                    this.RaisePropertyChanged(nameof(this.FileInfo));
+                    this.RaisePropertyChanged(nameof(this.FileType));
+                    this.RaisePropertyChanged(nameof(this.FileOwner));
                 }
             }
         }
@@ -250,7 +267,7 @@ namespace MyPad.ViewModels
 
             await this.SuspendSaveTimerAsync(async () =>
             {
-                var path = Path.Combine(Consts.CURRENT_TEMPORARY, this.ConvertToCompressedBase64(this.FileName).Replace("/", "-"));
+                var path = Path.Combine(Consts.CURRENT_TEMPORARY, this.ConvertToCompressedBase64(this.IsNewFile ? this.FileName : this.ShortFileName).Replace("/", "-"));
                 var bytes = Array.Empty<byte>();
 
                 try
