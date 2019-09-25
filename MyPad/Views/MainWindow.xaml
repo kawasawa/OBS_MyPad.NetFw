@@ -616,29 +616,24 @@
                                 </m:HamburgerMenuIconItem.Icon>
                                 <m:HamburgerMenuIconItem.Tag>
                                     <ScrollViewer>
-                                        <Grid DataContext="{Binding Data.ActiveEditor, Source={StaticResource Proxy}, Mode=OneWay}"
-                                              ge:GridEx.ColumnDefinition="Auto, 5, *"
-                                              ge:GridEx.RowDefinition="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto">
-                                            <Label Grid.Row="0" Content="{Binding Resources.Label_LineCount,     Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                                            <Label Grid.Row="1" Content="{Binding Resources.Label_TextLength,    Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                                            <Label Grid.Row="2" Content="{Binding Resources.Label_FileName,      Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                                            <Label Grid.Row="3" Content="{Binding Resources.Label_FileName,      Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" ContentStringFormat="{}{0} (8.3)"/>
-                                            <Label Grid.Row="4" Content="{Binding Resources.Label_FileSize,      Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                                            <Label Grid.Row="5" Content="{Binding Resources.Label_Permission,    Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                                            <Label Grid.Row="6" Content="{Binding Resources.Label_CreationDate,  Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                                            <Label Grid.Row="7" Content="{Binding Resources.Label_ModifiredDate, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                                            <Label Grid.Row="8" Content="{Binding Resources.Label_AccessDate,    Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                                            <TextBlock Grid.Column="2" Grid.Row="0" Text="{Binding Document.LineCount, Mode=OneWay}"/>
-                                            <TextBlock Grid.Column="2" Grid.Row="1" Text="{qc:MultiBinding '$P0 + \' (\' + $P1 + \')\'', P0={Binding TextLength, Mode=OneWay}, P1={Binding VisualLength, Mode=OneWay}}"/>
-                                            <TextBlock Grid.Column="2" Grid.Row="2" Text="{Binding FileName, Mode=OneWay}"/>
-                                            <TextBlock Grid.Column="2" Grid.Row="3" Text="{Binding ShortFileName, Mode=OneWay}"/>
-                                            <TextBlock Grid.Column="2" Grid.Row="4" Text="{Binding FileInfo.Length, StringFormat={}{0:N0} bytes, Mode=OneWay}"/>
-                                            <TextBlock Grid.Column="2" Grid.Row="5" Text="{Binding Resources.Label_ReadOnly,  Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsReadOnly, Mode=OneWay}}"/>
-                                            <TextBlock Grid.Column="2" Grid.Row="5" Text="{Binding Resources.Label_ReadWrite, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Visibility="{qc:Binding '$P ? Visibility.Collapsed : Visibility.Visible', P={Binding IsReadOnly, Mode=OneWay}}"/>
-                                            <TextBlock Grid.Column="2" Grid.Row="6" Text="{Binding FileInfo.CreationTime,   StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"/>
-                                            <TextBlock Grid.Column="2" Grid.Row="7" Text="{Binding FileInfo.LastWriteTime,  StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"/>
-                                            <TextBlock Grid.Column="2" Grid.Row="8" Text="{Binding FileInfo.LastAccessTime, StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"/>
-                                        </Grid>
+                                        <StackPanel DataContext="{Binding Data.ActiveEditor, Source={StaticResource Proxy}, Mode=OneWay}">
+                                            <Label     Content="{Binding Resources.Label_Name,          Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                            <TextBlock Margin="20,0,0,5" Text="{qc:Binding 'Path.GetFileName($P)', P={Binding FileName, Mode=OneWay}}"/>
+                                            <Label     Content="{Binding Resources.Label_Type,          Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                            <TextBlock Margin="20,0,0,5" Text="{Binding FileType, Mode=OneWay}"/>
+                                            <Label     Content="{Binding Resources.Label_Directory,     Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                            <TextBlock Margin="20,0,0,5" Text="{Binding FileInfo.DirectoryName, Mode=OneWay}"/>
+                                            <Label     Content="{Binding Resources.Label_Size,          Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                            <TextBlock Margin="20,0,0,5" Text="{Binding FileInfo.Length, StringFormat={}{0:N0} bytes, Mode=OneWay}"/>
+                                            <Label     Content="{Binding Resources.Label_CreationDate,  Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                            <TextBlock Margin="20,0,0,5" Text="{Binding FileInfo.CreationTime,   StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"/>
+                                            <Label     Content="{Binding Resources.Label_ModifiredDate, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                            <TextBlock Margin="20,0,0,5" Text="{Binding FileInfo.LastWriteTime,  StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"/>
+                                            <Label     Content="{Binding Resources.Label_AccessDate,    Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                            <TextBlock Margin="20,0,0,5" Text="{Binding FileInfo.LastAccessTime, StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"/>
+                                            <Label     Content="{Binding Resources.Label_Owner,         Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                            <TextBlock Margin="20,0,0,5" Text="{Binding FileOwner, Mode=OneWay}"/>
+                                        </StackPanel>
                                     </ScrollViewer>
                                 </m:HamburgerMenuIconItem.Tag>
                             </m:HamburgerMenuIconItem>

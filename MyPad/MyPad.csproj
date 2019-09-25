@@ -29,12 +29,12 @@
     <ProductName>MyPad</ProductName>
     <PublisherName>Kazuki Awasawa</PublisherName>
     <SuiteName>MyPad</SuiteName>
-    <MinimumRequiredVersion>0.5.1.1</MinimumRequiredVersion>
+    <MinimumRequiredVersion>0.5.2.0</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>1</ApplicationRevision>
-    <ApplicationVersion>0.5.1.1</ApplicationVersion>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>0.5.2.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -117,8 +117,8 @@
     <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.8\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.AvalonEdit, Version=6.0.253.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
-      <HintPath>..\packages\AvalonEdit.6.0.0-rc1\lib\net45\ICSharpCode.AvalonEdit.dll</HintPath>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=6.0.0.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <HintPath>..\packages\AvalonEdit.6.0.0\lib\net45\ICSharpCode.AvalonEdit.dll</HintPath>
     </Reference>
     <Reference Include="MahApps.Metro, Version=1.6.5.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.6.5\lib\net46\MahApps.Metro.dll</HintPath>
@@ -196,14 +196,29 @@
     <Reference Include="Vanara.Core, Version=2.1.2.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
       <HintPath>..\packages\Vanara.Core.2.1.2\lib\net45\Vanara.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Vanara.PInvoke.ComCtl32, Version=2.1.2.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\Vanara.PInvoke.ComCtl32.2.1.2\lib\net45\Vanara.PInvoke.ComCtl32.dll</HintPath>
+    </Reference>
     <Reference Include="Vanara.PInvoke.Gdi32, Version=2.1.2.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
       <HintPath>..\packages\Vanara.PInvoke.Gdi32.2.1.2\lib\net45\Vanara.PInvoke.Gdi32.dll</HintPath>
     </Reference>
     <Reference Include="Vanara.PInvoke.Kernel32, Version=2.1.2.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
       <HintPath>..\packages\Vanara.PInvoke.Kernel32.2.1.2\lib\net45\Vanara.PInvoke.Kernel32.dll</HintPath>
     </Reference>
+    <Reference Include="Vanara.PInvoke.Ole, Version=2.1.2.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\Vanara.PInvoke.Ole.2.1.2\lib\net45\Vanara.PInvoke.Ole.dll</HintPath>
+    </Reference>
+    <Reference Include="Vanara.PInvoke.Security, Version=2.1.2.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\Vanara.PInvoke.Security.2.1.2\lib\net45\Vanara.PInvoke.Security.dll</HintPath>
+    </Reference>
     <Reference Include="Vanara.PInvoke.Shared, Version=2.1.2.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
       <HintPath>..\packages\Vanara.PInvoke.Shared.2.1.2\lib\net45\Vanara.PInvoke.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="Vanara.PInvoke.Shell32, Version=2.1.2.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\Vanara.PInvoke.Shell32.2.1.2\lib\net45\Vanara.PInvoke.Shell32.dll</HintPath>
+    </Reference>
+    <Reference Include="Vanara.PInvoke.ShlwApi, Version=2.1.2.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\Vanara.PInvoke.ShlwApi.2.1.2\lib\net45\Vanara.PInvoke.ShlwApi.dll</HintPath>
     </Reference>
     <Reference Include="Vanara.PInvoke.User32, Version=2.1.2.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
       <HintPath>..\packages\Vanara.PInvoke.User32.2.1.2\lib\net45\Vanara.PInvoke.User32.dll</HintPath>
