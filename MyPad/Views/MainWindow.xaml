@@ -536,10 +536,13 @@
                                     <mi:Material Kind="FileTree"/>
                                 </m:HamburgerMenuIconItem.Icon>
                                 <m:HamburgerMenuIconItem.Tag>
-                                    <TreeView ItemsSource="{Binding Data.FileTreeNodes, Source={StaticResource Proxy}, Mode=OneWay}" ItemContainerStyle="{StaticResource __FileExplorerItem}">
+                                    <TreeView ItemsSource="{Binding Data.FileNodes, Source={StaticResource Proxy}, Mode=OneWay}" ItemContainerStyle="{StaticResource __FileExplorerItem}">
                                         <TreeView.ItemTemplate>
-                                            <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="{x:Type viewModels:FileTreeNodeViewModel}">
-                                                <TextBlock Text="{qc:MultiBinding '$P0 ? \'empty\' : Path.GetFileName($P1)', P0={Binding IsEmpty, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}" ToolTip="{Binding FileName, Mode=OneWay}" ToolTipService.IsEnabled="{qc:Binding '!$P', P={Binding IsEmpty, Mode=OneWay}}"/>
+                                            <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="{x:Type viewModels:FileNodeViewModel}">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image Source="{Binding Image, Mode=OneWay}" Margin="{StaticResource Const.Gap1W}"/>
+                                                    <TextBlock Text="{qc:MultiBinding '$P0 ? \'empty\' : Path.GetFileName($P1)', P0={Binding IsEmpty, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}" ToolTip="{Binding FileName, Mode=OneWay}" ToolTipService.IsEnabled="{qc:Binding '!$P', P={Binding IsEmpty, Mode=OneWay}}"/>
+                                                </StackPanel>
                                             </HierarchicalDataTemplate>
                                         </TreeView.ItemTemplate>
                                     </TreeView>
@@ -958,7 +961,13 @@
                                     </TextBox>
                                     <Grid Grid.Row="1" ge:GridEx.ColumnDefinition="Auto, *">
                                         <Label Grid.Column="0" Content="{Binding LastLine, Mode=OneWay}"/>
-                                        <ComboBox Grid.Column="1" x:Name="CommandBox" ItemsSource="{Binding Histories, Mode=OneWay}" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" m:TextBoxHelper.Watermark="{Binding Resources.Label_Command, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" BorderThickness="0" IsEditable="True">
+                                        <ComboBox Grid.Column="1" x:Name="CommandBox"
+                                                  ItemsSource="{Binding Histories, Mode=OneWay}"
+                                                  Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                  m:TextBoxHelper.Watermark="{Binding Resources.Label_Command, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"
+                                                  IsReadOnly="{Binding IsWorking, Mode=OneWay}"
+                                                  IsEditable="True"
+                                                  BorderThickness="0">
                                             <i:Interaction.Triggers>
                                                 <ei:KeyTrigger ActiveOnFocus="True" Key="Return">
                                                     <p:InvokeCommandAction Command="{Binding SendValueCommand, Mode=OneTime}"/>

@@ -29,12 +29,12 @@
     <ProductName>MyPad</ProductName>
     <PublisherName>Kazuki Awasawa</PublisherName>
     <SuiteName>MyPad</SuiteName>
-    <MinimumRequiredVersion>0.5.2.0</MinimumRequiredVersion>
+    <MinimumRequiredVersion>0.5.3.0</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>0.5.2.0</ApplicationVersion>
+    <ApplicationVersion>0.5.3.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -235,7 +235,7 @@
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
     <None Include="Resources\PLSQL.xshd" />
-    <Compile Include="ViewModels\FileTreeNodeViewModel.cs" />
+    <Compile Include="ViewModels\FileNodeViewModel.cs" />
     <Compile Include="ViewModels\GrepViewModel.cs" />
     <Compile Include="ViewModels\TerminalViewModel.cs" />
     <Compile Include="Views\AboutContent.xaml.cs">
