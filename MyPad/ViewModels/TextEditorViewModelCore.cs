@@ -144,8 +144,10 @@ namespace MyPad.ViewModels
                 this.IsReadOnly = false;
                 this.IsModified = false;
 
-                this.SyntaxDefinition = Consts.SYNTAX_DEFINITIONS.ContainsKey(SettingsService.Instance.System.SyntaxDefinitionName) ?
-                    Consts.SYNTAX_DEFINITIONS[SettingsService.Instance.System.SyntaxDefinitionName] : null;
+                this.SyntaxDefinition =
+                    Consts.SYNTAX_DEFINITIONS.ContainsKey(SettingsService.Instance.System.SyntaxDefinitionName) ?
+                    Consts.SYNTAX_DEFINITIONS[SettingsService.Instance.System.SyntaxDefinitionName] :
+                    null;
             });
         }
 
@@ -171,21 +173,24 @@ namespace MyPad.ViewModels
                 await this.FileStream.ReadAsync(bytes, 0, bytes.Length);
 
                 if (encoding == null)
-                    encoding = await Task.Run(() => (SettingsService.Instance.System.DetectEncodingStrict ? TextFileHelper.DetectEncoding(bytes) : TextFileHelper.DetectEncodingFast(bytes)) ?? SettingsService.Instance.System.Encoding);
+                    encoding = await Task.Run(() =>
+                        (SettingsService.Instance.System.DetectEncodingStrict ? 
+                         TextFileHelper.DetectEncoding(bytes) : 
+                         TextFileHelper.DetectEncodingFast(bytes)) ??
+                        SettingsService.Instance.System.Encoding);
 
                 // HACK: UndoStack のリセット
                 // TextDocument.Text へ代入後に ClearAll() を実行したところ IsModified の変更が通知されなくなった。
                 // 正確には ClearAll() の実行後も UndoStack 内の未変更点が更新されず、変更済みとして扱われているのだと思われる。
                 // 仕方ないので、処理前にクリアして一時的にサスペンドし、処理後にレジュームする。
                 // (なお、同期処理で実装すると正常に動作する。TextDocument はスレッドを監視しているため、この辺りが怪しい気がする。)
-
                 this.Document.UndoStack.ClearAll();
-                var tmp = this.Document.UndoStack.SizeLimit;
+                var sizeLimit = this.Document.UndoStack.SizeLimit;
                 this.Document.UndoStack.SizeLimit = 0;
                 this.Document.Text = await Task.Run(() => encoding.GetString(bytes));
-                this.Document.UndoStack.SizeLimit = tmp;
-                this.Document.FileName = this.FileName;
+                this.Document.UndoStack.SizeLimit = sizeLimit;
 
+                this.Document.FileName = this.FileName;
                 this.Encoding = encoding;
                 this.IsReadOnly = !this.FileStream.CanWrite;
                 this.IsModified = false;
@@ -249,11 +254,11 @@ namespace MyPad.ViewModels
 
         private string ConvertToCompressedBase64(string str)
         {
-            var bytes = Encoding.UTF8.GetBytes(str);
             using (var memory = new MemoryStream())
             {
                 using (var deflate = new DeflateStream(memory, CompressionLevel.Optimal))
                 {
+                    var bytes = Encoding.UTF8.GetBytes(str);
                     deflate.Write(bytes, 0, bytes.Length);
                 }
                 return Convert.ToBase64String(memory.ToArray());

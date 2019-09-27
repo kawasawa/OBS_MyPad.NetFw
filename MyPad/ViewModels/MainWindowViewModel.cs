@@ -42,7 +42,7 @@ namespace MyPad.ViewModels
 
         public ObservableCollection<TextEditorViewModel> Editors { get; } = new ObservableCollection<TextEditorViewModel>();
         public ObservableCollection<TerminalViewModel> Terminals { get; } = new ObservableCollection<TerminalViewModel>();
-        public ObservableCollection<FileTreeNodeViewModel> FileTreeNodes { get; } = new ObservableCollection<FileTreeNodeViewModel>();
+        public ObservableCollection<FileNodeViewModel> FileNodes { get; } = new ObservableCollection<FileNodeViewModel>();
 
         public GrepViewModel Grep { get; } = new GrepViewModel();
 
@@ -146,6 +146,7 @@ namespace MyPad.ViewModels
                     return;
                 if (this.Editors.Any() == false)
                     this.AddEditor();
+                GC.Collect();
             });
 
         public ICommand CloseAllEditorCommand
@@ -155,6 +156,7 @@ namespace MyPad.ViewModels
                     return;
                 if (this.Editors.Any() == false)
                     this.AddEditor();
+                GC.Collect();
             });
 
         public ICommand CloseOtherEditorCommand
@@ -168,6 +170,7 @@ namespace MyPad.ViewModels
                     if (await this.SaveChangesIfAndRemove(this.Editors[i]) == false)
                         return;
                 }
+                GC.Collect();
             });
 
         public ICommand ActivateEditorCommand
@@ -187,6 +190,7 @@ namespace MyPad.ViewModels
             {
                 if (this.ActiveTerminal != null)
                     this.RemoveTerminal(this.ActiveTerminal);
+                GC.Collect();
             });
 
         public ICommand CloseAllTerminalCommand
@@ -194,6 +198,7 @@ namespace MyPad.ViewModels
             {
                 for (var i = this.Terminals.Count - 1; 0 <= i; i--)
                     this.RemoveTerminal(this.Terminals[i]);
+                GC.Collect();
             });
 
         public ICommand CloseOtherTerminalCommand
@@ -205,6 +210,7 @@ namespace MyPad.ViewModels
                     if (this.Terminals[i].Equals(currentTerminal) == false)
                         this.RemoveTerminal(this.Terminals[i]);
                 }
+                GC.Collect();
             });
 
         public ICommand ActivateTerminalCommand
@@ -245,15 +251,13 @@ namespace MyPad.ViewModels
             });
 
         public Delegate ClosingEditorHandler
-            => new ItemActionCallback(async e =>
+            => new ItemActionCallback(e =>
             {
                 if (e.IsCancelled || !(e.DragablzItem?.DataContext is TextEditorViewModel editor))
                     return;
 
-                if (await this.SaveChangesIfAndRemove(editor) == false)
-                    e.Cancel();
-                if (this.Editors.Any() == false)
-                    this.AddEditor();
+                this.ActiveEditor = editor;
+                this.CloseEditorCommand.Execute(null);
             });
 
         public Delegate ClosingTerminalHandler
@@ -262,7 +266,8 @@ namespace MyPad.ViewModels
                 if (e.IsCancelled || !(e.DragablzItem?.DataContext is TerminalViewModel terminal))
                     return;
 
-                this.RemoveTerminal(terminal);
+                this.ActiveTerminal = terminal;
+                this.CloseTerminalCommand.Execute(null);
             });
 
         #endregion
@@ -273,8 +278,8 @@ namespace MyPad.ViewModels
         {
             BindingOperations.EnableCollectionSynchronization(this.Editors, new object());
             BindingOperations.EnableCollectionSynchronization(this.Terminals, new object());
-            BindingOperations.EnableCollectionSynchronization(this.FileTreeNodes, new object());
-            this.RefreshFileTreeNodes();
+            BindingOperations.EnableCollectionSynchronization(this.FileNodes, new object());
+            this.RefreshFileNodes();
         }
 
         protected override void Dispose(bool disposing)
@@ -299,14 +304,13 @@ namespace MyPad.ViewModels
             this.ActiveEditor = editor;
         }
 
-        public bool RemoveEditor(TextEditorViewModel editor)
+        public void RemoveEditor(TextEditorViewModel editor)
         {
             if (this.Editors.Contains(editor) == false)
-                return false;
+                return;
 
             this.Editors.Remove(editor);
             editor.Dispose();
-            return true;
         }
 
         public async Task LoadEditor(IEnumerable<string> paths = null)
@@ -695,15 +699,14 @@ namespace MyPad.ViewModels
             this.ActiveTerminal = terminal;
         }
 
-        public bool RemoveTerminal(TerminalViewModel terminal)
+        public void RemoveTerminal(TerminalViewModel terminal)
         {
             if (this.Terminals.Contains(terminal) == false)
-                return false;
+                return;
 
             this.Terminals.Remove(terminal);
             terminal.Disposed -= this.Terminal_Disposed;
             terminal.Dispose();
-            return true;
         }
 
         private void Terminal_Disposed(object sender, EventArgs e)
@@ -711,16 +714,16 @@ namespace MyPad.ViewModels
             this.RemoveTerminal((TerminalViewModel)sender);
         }
 
-        private void RefreshFileTreeNodes()
+        private void RefreshFileNodes()
         {
             var root = SettingsService.Instance.System.FileExplorerRoot;
             if (string.IsNullOrEmpty(root) || Directory.Exists(root) == false)
                 root = Consts.DEFAULT_FILE_EXPLORER_ROOT;
 
-            var node = new FileTreeNodeViewModel(root);
+            var node = new FileNodeViewModel(root);
             node.IsExpanded = true;
-            this.FileTreeNodes.Clear();
-            this.FileTreeNodes.Add(node);
+            this.FileNodes.Clear();
+            this.FileNodes.Add(node);
         }
 
         #endregion

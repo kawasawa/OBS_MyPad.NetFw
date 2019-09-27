@@ -106,8 +106,7 @@ namespace MyPad.Views
             ((Style)this.TextEditorTabControl.Resources["__TextEditorTabItem"]).Setters.Add(new EventSetter() { Event = MouseRightButtonDownEvent, Handler = new MouseButtonEventHandler(this.TabItem_MouseRightButtonDown) });
             ((Style)this.TextEditorTabControl.Resources["__TextEditor"]).Setters.Add(new EventSetter() { Event = PreviewKeyDownEvent, Handler = new KeyEventHandler(this.TextEditor_PreviewKeyDown) });
             this.Flyouts.Items.OfType<Flyout>().ForEach(item => item.IsOpenChanged += this.Flyout_IsOpenChanged);
-            this.HamburgerMenu.ItemClick += this.HamburgerMenu_ItemClick;
-            this.HamburgerMenu.OptionsItemClick += this.HamburgerMenu_OptionsItemClick;
+            this.HamburgerMenu.ItemInvoked += this.HamburgerMenu_ItemInvoked;
             this.ContentSplitter.DragCompleted += this.ContentSplitter_DragCompleted;
             this.TextEditorTabControl.SelectionChanged += this.TextEditorTabControl_SelectionChanged;
             this.TerminalTabControl.SelectionChanged += this.TerminalTabControl_SelectionChanged; ;
@@ -196,7 +195,7 @@ namespace MyPad.Views
             if (e.Handled)
                 return;
 
-            var node = (FileTreeNodeViewModel)((TreeViewItem)sender).DataContext;
+            var node = (FileNodeViewModel)((TreeViewItem)sender).DataContext;
             if (node.IsEmpty)
                 return;
 
@@ -215,7 +214,7 @@ namespace MyPad.Views
             switch (e.Key)
             {
                 case Key.Enter:
-                    var node = (FileTreeNodeViewModel)((TreeViewItem)sender).DataContext;
+                    var node = (FileNodeViewModel)((TreeViewItem)sender).DataContext;
                     if (node.IsEmpty)
                     {
                         e.Handled = true;
@@ -302,37 +301,18 @@ namespace MyPad.Views
             this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus(), DispatcherPriority.Input);
         }
 
-        private void HamburgerMenu_ItemClick(object sender, ItemClickEventArgs e)
+        private void HamburgerMenu_ItemInvoked(object sender, HamburgerMenuItemInvokedEventArgs e)
         {
-            // イベントが連発することがある
-            // マウスのいずれかのボタンが押されいる場合は何もしない
-            if (MouseButtonState.Pressed == Mouse.LeftButton ||
-                MouseButtonState.Pressed == Mouse.RightButton ||
-                MouseButtonState.Pressed == Mouse.MiddleButton ||
-                MouseButtonState.Pressed == Mouse.XButton1 ||
-                MouseButtonState.Pressed == Mouse.XButton2)
-                return;
-
-            this.ActivateHamburgerMenuItem(e.ClickedItem);
-        }
-
-        private void HamburgerMenu_OptionsItemClick(object sender, ItemClickEventArgs e)
-        {
-            // イベントが連発することがある
-            // マウスのいずれかのボタンが押されいる場合は何もしない
-            if (MouseButtonState.Pressed == Mouse.LeftButton ||
-                MouseButtonState.Pressed == Mouse.RightButton ||
-                MouseButtonState.Pressed == Mouse.MiddleButton ||
-                MouseButtonState.Pressed == Mouse.XButton1 ||
-                MouseButtonState.Pressed == Mouse.XButton2)
-                return;
-
-            // オプション項目は選択状態にならないように調整する
-            if (e.ClickedItem == this.OptionsItem)
+            if (e.IsItemOptions)
             {
+                // オプション項目は選択状態にならないように調整する
                 this.HamburgerMenu.SelectedItem = this.HamburgerMenu.Content;
                 this.HamburgerMenu.SelectedOptionsItem = null;
                 this.OptionsFlyout.IsOpen = true;
+            }
+            else
+            {
+                this.ActivateHamburgerMenuItem(e.InvokedItem);
             }
         }
 

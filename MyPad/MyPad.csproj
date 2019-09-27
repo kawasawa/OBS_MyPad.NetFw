@@ -235,7 +235,7 @@
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
     <None Include="Resources\PLSQL.xshd" />
-    <Compile Include="ViewModels\FileTreeNodeViewModel.cs" />
+    <Compile Include="ViewModels\FileNodeViewModel.cs" />
     <Compile Include="ViewModels\GrepViewModel.cs" />
     <Compile Include="ViewModels\TerminalViewModel.cs" />
     <Compile Include="Views\AboutContent.xaml.cs">
