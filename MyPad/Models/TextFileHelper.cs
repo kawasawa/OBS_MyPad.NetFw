@@ -133,7 +133,7 @@ namespace MyPad.Models
             if (string.IsNullOrEmpty(searchPattern))
                 searchPattern = "*";
 
-            foreach (var chunk in Directory.EnumerateFiles(rootPath, searchPattern, allDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).Buffer(bufferSize))
+            foreach (var chunk in EnumerateFilesSafe(rootPath, searchPattern, allDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).Buffer(bufferSize))
             {
                 var chunkResult = new ConcurrentBag<object>();
                 await Task.WhenAll(chunk.Select(path =>
@@ -175,6 +175,28 @@ namespace MyPad.Models
                     .ToList());
                 output.AddRange(chunkResult);
                 GC.Collect();
+            }
+        }
+
+        /// <summary>
+        /// 検索パターンに一致するファイルのパスを列挙します。発生した例外は無視されます。
+        /// </summary>
+        /// <param name="path">検索対象のディレクトリ</param>
+        /// <param name="searchPattern">検索パターン</param>
+        /// <param name="searchOption">検索オプション</param>
+        /// <returns>ファイルのパス</returns>
+        private static IEnumerable<string> EnumerateFilesSafe(string path, string searchPattern, SearchOption searchOption)
+        {
+            try
+            {
+                var children = Enumerable.Empty<string>();
+                if (searchOption == SearchOption.AllDirectories)
+                    children = Directory.EnumerateDirectories(path).SelectMany(p => EnumerateFilesSafe(p, searchPattern, searchOption));
+                return children.Concat(Directory.EnumerateFiles(path, searchPattern));
+            }
+            catch (Exception)
+            {
+                return Enumerable.Empty<string>();
             }
         }
     }
