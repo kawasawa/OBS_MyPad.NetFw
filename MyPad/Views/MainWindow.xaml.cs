@@ -303,6 +303,13 @@ namespace MyPad.Views
 
         private void HamburgerMenu_ItemInvoked(object sender, HamburgerMenuItemInvokedEventArgs e)
         {
+            if (MouseButtonState.Pressed == Mouse.LeftButton ||
+                MouseButtonState.Pressed == Mouse.RightButton ||
+                MouseButtonState.Pressed == Mouse.MiddleButton ||
+                MouseButtonState.Pressed == Mouse.XButton1 ||
+                MouseButtonState.Pressed == Mouse.XButton2)
+                return;
+
             if (e.IsItemOptions)
             {
                 // オプション項目は選択状態にならないように調整する
