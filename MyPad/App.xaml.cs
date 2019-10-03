@@ -27,6 +27,7 @@ namespace MyPad
         public App()
         {
             UnhandledExceptionObserver.Observe(this);
+            Logger.MinLogLevel = AppConfig.MinLogLevel;
         }
 
         /// <summary>
@@ -35,8 +36,6 @@ namespace MyPad
         /// <param name="e">イベントの情報</param>
         protected override void OnStartup(StartupEventArgs e)
         {
-            Logger.LogWriting += this.Logger_LogWriting;
-
             if (this.TrySendArgs(e.Args))
             {
                 // MainWindow の表示前のため、確実にアプリケーションを終了させる
@@ -45,44 +44,56 @@ namespace MyPad
                 return;
             }
 
-            if (SettingsService.Load() == false)
-                Logger.Write(LogLevel.Warn, "設定ファイルの読み込みに失敗しました。");
-            if (ResourceService.InitializeXshd() == false)
-                Logger.Write(LogLevel.Warn, "シンタックス定義ファイルの初期化に失敗しました。");
+            Task.Run(() =>
+            {
+                try
+                {
+                    var info = new DirectoryInfo(ProductInfo.Temporary);
+                    if (info.Exists == false)
+                        return;
 
+                    // 残存する一時ファイルのうち指定の日数を超えたものを削除する
+                    // ファイルの場合は更新日時を、ディレクトリの場合はテンポラリの命名規則に従い日付に変換し判定を行う
+                    var basis = DateTime.Now.AddDays(-1 * AppConfig.LifetimeOfTempsLeftBehind);
+                    info.EnumerateFiles()
+                        .Where(i => i.LastWriteTime < basis)
+                        .ForEach(i => File.Delete(i.FullName));
+                    info.EnumerateDirectories()
+                        .Where(i => DateTime.TryParseExact(Path.GetFileName(i.FullName), Consts.TEMPORARY_NAME_FORMAT, CultureInfo.CurrentCulture, DateTimeStyles.None, out var value) == false || value < basis)
+                        .ForEach(i => Directory.Delete(i.FullName, true));
+                }
+                catch (Exception ex)
+                {
+                    Logger.Write(LogLevel.Warn, "一時ファイルの削除に失敗しました。(システム起動時)", ex);
+                }
+                finally
+                {
+                    if (Directory.Exists(Consts.CURRENT_TEMPORARY) == false)
+                        Directory.CreateDirectory(Consts.CURRENT_TEMPORARY);
+                }
+            });
+
+            SettingsService.Load();
+            ResourceService.InitializeXshd();
             this.InitializeQuickConverter();
-            this.CleanUpTemporary();
+
             this.MainWindow = new Workspace(e.Args);
             this.MainWindow.Closed += (_1, _2) =>
             {
-                // 設定ファイルを更新する
-                if (SettingsService.Instance.Save() == false)
-                    Logger.Write(LogLevel.Warn, "設定ファイルの保存に失敗しました。");
-
-                // 一時フォルダを削除する
+                SettingsService.Instance.Save();
                 try
                 {
                     if (Directory.Exists(Consts.CURRENT_TEMPORARY))
                         Directory.Delete(Consts.CURRENT_TEMPORARY, true);
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Logger.Write(LogLevel.Warn, $"一時フォルダの削除に失敗しました。(システム終了時) : {Consts.CURRENT_TEMPORARY}", ex);
                 }
             };
             this.MainWindow.Show();
 
             base.OnStartup(e);
-        }
-
-        /// <summary>
-        /// ログが出力されるときに行う処理を定義します。
-        /// </summary>
-        /// <param name="sender">イベントの発生源</param>
-        /// <param name="e">イベントの情報</param>
-        private void Logger_LogWriting(object sender, LogEventArgs e)
-        {
-            if (e.LogLevel < AppConfig.LogLevel)
-                e.Cancel = true;
         }
 
         /// <summary>
@@ -96,7 +107,8 @@ namespace MyPad
             // 本アプリは MainWindow が非表示であるため Process.MainWindowHandle からハンドルを取得できない。
             // すべてのハンドルを列挙し、ウィンドウテキストから特定を試みる。
             var target = HWND.NULL;
-            if (User32_Gdi.EnumWindows(new User32_Gdi.WNDENUMPROC((hWnd, _) => 
+            if (User32_Gdi.EnumWindows(
+                new User32_Gdi.WNDENUMPROC((hWnd, _) => 
                 {
                     try
                     {
@@ -111,7 +123,8 @@ namespace MyPad
                     {
                         return true;
                     }
-                }), IntPtr.Zero))
+                }),
+                IntPtr.Zero))
             {
                 return false;
             }
@@ -145,40 +158,6 @@ namespace MyPad
             // Additional
             EquationTokenizer.AddNamespace(typeof(Microsoft.VisualBasic.Globals));   // Microsoft.VisualBasic : Microsoft.VisualBasic
             EquationTokenizer.AddNamespace(typeof(MyLib.Wpf.Interactions.InteractionNotification));
-        }
-
-        /// <summary>
-        /// 一時ファイルをクリーンアップします。
-        /// </summary>
-        private void CleanUpTemporary()
-        {
-            Task.Run(() =>
-            {
-                try
-                {
-                    var info = new DirectoryInfo(ProductInfo.Temporary);
-                    if (info.Exists == false)
-                        return;
-
-                    // 残存する一時ファイルのうち指定の日数を超えたものを削除する
-                    // ファイルの場合は更新日時を、ディレクトリの場合はテンポラリの命名規則に従い日付に変換し判定を行う
-                    var basis = DateTime.Now.AddDays(-1 * AppConfig.LifetimeOfTempsLeftBehind);
-                    info.EnumerateFiles()
-                        .Where(i => i.LastWriteTime < basis)
-                        .ForEach(i => File.Delete(i.FullName));
-                    info.EnumerateDirectories()
-                        .Where(i => DateTime.TryParseExact(Path.GetFileName(i.FullName), Consts.TEMPORARY_NAME_FORMAT, CultureInfo.CurrentCulture, DateTimeStyles.None, out var value) == false || value < basis)
-                        .ForEach(i => Directory.Delete(i.FullName, true));
-                }
-                catch
-                {
-                }
-                finally
-                {
-                    if (Directory.Exists(Consts.CURRENT_TEMPORARY) == false)
-                        Directory.CreateDirectory(Consts.CURRENT_TEMPORARY);
-                }
-            });
         }
     }
 }

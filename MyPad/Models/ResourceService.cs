@@ -1,6 +1,7 @@
 ﻿using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using MyLib;
 using MyPad.Properties;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -53,8 +54,9 @@ namespace MyPad.Models
                     });
                 return true;
             }
-            catch
+            catch (Exception e)
             {
+                Logger.Write(LogLevel.Warn, $"シンタックス定義ファイルの初期化に失敗しました。: {XshdDirectoryPath}", e);
                 return false;
             }
         }

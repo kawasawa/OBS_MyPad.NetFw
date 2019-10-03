@@ -185,16 +185,17 @@ namespace MyPad.Models
         /// <param name="searchPattern">検索パターン</param>
         /// <param name="searchOption">検索オプション</param>
         /// <returns>ファイルのパス</returns>
-        private static IEnumerable<string> EnumerateFilesSafe(string path, string searchPattern, SearchOption searchOption)
+        private static IEnumerable<string> EnumerateFilesSafe(string path, string searchPattern = "*", SearchOption searchOption = SearchOption.TopDirectoryOnly)
         {
             try
             {
-                var children = Enumerable.Empty<string>();
-                if (searchOption == SearchOption.AllDirectories)
-                    children = Directory.EnumerateDirectories(path).SelectMany(p => EnumerateFilesSafe(p, searchPattern, searchOption));
+                var children =
+                    searchOption == SearchOption.AllDirectories ?
+                    Directory.EnumerateDirectories(path).SelectMany(p => EnumerateFilesSafe(p, searchPattern, searchOption)) :
+                    Enumerable.Empty<string>();
                 return children.Concat(Directory.EnumerateFiles(path, searchPattern));
             }
-            catch (Exception)
+            catch
             {
                 return Enumerable.Empty<string>();
             }

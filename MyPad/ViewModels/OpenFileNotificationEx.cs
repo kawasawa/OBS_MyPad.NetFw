@@ -6,5 +6,6 @@ namespace MyPad.ViewModels
     public class OpenFileNotificationEx : OpenFileNotification
     {
         public Encoding Encoding { get; set; } = null;
+        public bool IsReadOnly { get; set; }
     }
 }
