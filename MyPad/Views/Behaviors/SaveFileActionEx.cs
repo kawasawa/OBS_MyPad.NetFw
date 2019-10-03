@@ -1,6 +1,7 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
 using Microsoft.WindowsAPICodePack.Dialogs.Controls;
 using MyLib.Wpf.Interactions;
+using MyPad.Properties;
 using MyPad.ViewModels;
 using System.Linq;
 
@@ -14,7 +15,9 @@ namespace MyPad.Views.Behaviors
                 return;
 
             var encodingComboBox = FileActionExtensions.ConvertToComboBox(contextEx.Encoding);
-            fileDialog.Controls.Add(encodingComboBox);
+            var encodingGroupBox = new CommonFileDialogGroupBox($"{Resources.Label_Encoding}(&E):");
+            encodingGroupBox.Items.Add(encodingComboBox);
+            fileDialog.Controls.Add(encodingGroupBox);
             base.OnPreviewShowDialog(context, dialog);
         }
 
@@ -23,7 +26,8 @@ namespace MyPad.Views.Behaviors
             if (!(context is SaveFileNotificationEx contextEx) || !(dialog is CommonFileDialog fileDialog))
                 return;
 
-            var encodingComboBox = (CommonFileDialogComboBox)fileDialog.Controls.First();
+            var encodingGroupBox = (CommonFileDialogGroupBox)fileDialog.Controls.First();
+            var encodingComboBox = (CommonFileDialogComboBox)encodingGroupBox.Items.First();
             contextEx.Encoding = ((FileActionExtensions.CommonFileDialogEncodingComboBoxItem)encodingComboBox.Items[encodingComboBox.SelectedIndex]).Encoding;
             base.OnDialogClosed(context, dialog, dialogResult);
         }

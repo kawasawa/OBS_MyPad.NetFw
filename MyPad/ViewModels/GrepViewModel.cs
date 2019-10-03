@@ -111,7 +111,7 @@ namespace MyPad.ViewModels
                 {
                     if (Directory.Exists(this.RootPath) == false)
                     {
-                        this.MessageRequest.Raise(new MessageNotification(Resources.Message_NotifyDirectoryNotFound, MessageKind.Error));
+                        this.MessageRequest.Raise(new MessageNotification(Resources.Message_NotifyDirectoryNotFound, this.RootPath, MessageKind.Warning));
                         return;
                     }
 

@@ -1,5 +1,6 @@
 ﻿using MyLib;
 using Newtonsoft.Json;
+using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -8,20 +9,19 @@ namespace MyPad.Models
 {
     public sealed class SettingsService : ModelBase
     {
+        public static readonly Encoding FileEncoding = new UTF8Encoding(true);
         public static readonly string SettingsFilePath = Path.Combine(ProductInfo.Roaming, $"Settings.json");
-        public static readonly Encoding FILE_ENCODING = new UTF8Encoding(true);
 
         public static SettingsService Instance { get; } = new SettingsService();
 
         private SystemSettings _system = new SystemSettings();
-        private TextEditorSettings _textEditor = new TextEditorSettings();
-
         public SystemSettings System
         {
             get => this._system;
             set => this.SetProperty(ref this._system, value);
         }
 
+        private TextEditorSettings _textEditor = new TextEditorSettings();
         public TextEditorSettings TextEditor
         {
             get => this._textEditor;
@@ -39,7 +39,7 @@ namespace MyPad.Models
                 if (File.Exists(SettingsFilePath))
                 {
                     var json = string.Empty;
-                    using (var reader = new StreamReader(SettingsFilePath, FILE_ENCODING))
+                    using (var reader = new StreamReader(SettingsFilePath, FileEncoding))
                     {
                         json= reader.ReadToEnd();
                     }
@@ -51,8 +51,9 @@ namespace MyPad.Models
                 }
                 return true;
             }
-            catch
+            catch (Exception e)
             {
+                Logger.Write(LogLevel.Warn, $"設定ファイルの読み込みに失敗しました。: {SettingsFilePath}", e);
                 return false;
             }
         }
@@ -63,14 +64,15 @@ namespace MyPad.Models
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(SettingsFilePath));
                 var json = JsonConvert.SerializeObject(this, Formatting.Indented);
-                using (var writer = new StreamWriter(SettingsFilePath, false, FILE_ENCODING))
+                using (var writer = new StreamWriter(SettingsFilePath, false, FileEncoding))
                 {
                     writer.Write(json);
                 }
                 return true;
             }
-            catch
+            catch (Exception e)
             {
+                Logger.Write(LogLevel.Warn, $"設定ファイルの保存に失敗しました。: {SettingsFilePath}", e);
                 return false;
             }
         }

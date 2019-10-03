@@ -58,7 +58,7 @@ public static class UnhandledExceptionObserver
     /// <param name="e">例外の情報</param>
     private static void HandleException(Exception e)
     {
-        try { Logger.Write(LogLevel.Error, "ハンドルされていない例外が発生しました。", e); } catch { }
+        try { Logger.Write(LogLevel.Fatal, "ハンドルされていない例外が発生しました。", e); } catch { }
         try { MessageBox.Show($"{e.GetType().Name}{Environment.NewLine}{Environment.NewLine}{e.Message}", ProductInfo.Product, MessageBoxButton.OK, MessageBoxImage.Error); } catch { }
         Environment.Exit(1);
     }

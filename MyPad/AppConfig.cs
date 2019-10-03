@@ -1,22 +1,18 @@
 ﻿using MyLib;
+using System;
 using System.Configuration;
+using System.Linq;
 
 namespace MyPad
 {
     public static partial class AppConfig
     {
-        public static LogLevel LogLevel
+        public static LogLevel MinLogLevel
         {
             get
             {
-                var val = ConfigurationManager.AppSettings[nameof(LogLevel)]?.ToUpper() ?? string.Empty;
-                if (LogLevel.Info.ToString().ToUpper().Equals(val))
-                    return LogLevel.Info;
-                if (LogLevel.Warn.ToString().ToUpper().Equals(val))
-                    return LogLevel.Warn;
-                if (LogLevel.Error.ToString().ToUpper().Equals(val))
-                    return LogLevel.Error;
-                return LogLevel.Debug;
+                var val = ConfigurationManager.AppSettings[nameof(MinLogLevel)];
+                return val?.Any() == true && Enum.TryParse<LogLevel>(val, true, out var level) ? level : LogLevel.Info;
             }
         }
 

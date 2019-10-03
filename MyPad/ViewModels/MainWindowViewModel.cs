@@ -1,5 +1,6 @@
 ﻿using Dragablz;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+using MyLib;
 using MyLib.Wpf.Interactions;
 using MyPad.Models;
 using MyPad.Properties;
@@ -312,28 +313,24 @@ namespace MyPad.ViewModels
             this.Editors.Remove(editor);
             editor.Dispose();
         }
-
+        
         public async Task LoadEditor(IEnumerable<string> paths = null)
         {
-            bool decideConditions(string root, out IEnumerable<string> fileNames, out string filter, out Encoding encoding)
+            bool decideConditions(string root, out IEnumerable<string> fileNames, out string filter, out Encoding encoding, out bool isReadOnly)
             {
                 // 起点位置を設定する
                 // - ディレクトリが指定されている場合は、それを起点とする
                 // - ファイルが指定されている場合は、それを含む階層を起点とする
                 // - いずれでも無い場合は、既定値とする
                 if (Directory.Exists(root) == false)
-                {
-                    if (File.Exists(root))
-                        root = Path.GetDirectoryName(root);
-                    else
-                        root = string.Empty;
-                }
+                    root = File.Exists(root) ? Path.GetDirectoryName(root) : string.Empty;
 
                 // ダイアログを表示し、ファイルのパスと読み込み条件を選択させる
                 var ready = false;
                 IEnumerable<string> fn = null;
                 string f = null;
                 Encoding e = null;
+                var r = false;
                 this.OpenFileRequest.Raise(
                     new OpenFileNotificationEx()
                     {
@@ -348,6 +345,7 @@ namespace MyPad.ViewModels
                             fn = n.FileNames;
                             f = n.FilterName;
                             e = n.Encoding;
+                            r = n.IsReadOnly;
                         }
                     });
 
@@ -355,6 +353,7 @@ namespace MyPad.ViewModels
                 fileNames = fn;
                 filter = f;
                 encoding = e;
+                isReadOnly = r;
                 return ready;
             }
 
@@ -363,7 +362,7 @@ namespace MyPad.ViewModels
                 // パスが指定されていない場合
                 // - ファイルパスを選択させて読み込む
 
-                if (decideConditions(null, out var fileNames, out var filter, out var encoding) == false)
+                if (decideConditions(null, out var fileNames, out var filter, out var encoding, out var isReadOnly) == false)
                     return;
 
                 foreach (var path in fileNames)
@@ -371,7 +370,7 @@ namespace MyPad.ViewModels
                     var definition = Consts.SYNTAX_DEFINITIONS.ContainsKey(filter) ?
                         Consts.SYNTAX_DEFINITIONS[filter] :
                         Consts.SYNTAX_DEFINITIONS.Values.FirstOrDefault(d => d.Extensions.Contains(Path.GetExtension(path)));
-                    var editor = await this.ReadFile(path, encoding, definition);
+                    var editor = await this.ReadFile(path, encoding, definition, isReadOnly);
                     if (editor != null)
                         this.ActiveEditor = editor;
                 }
@@ -393,7 +392,7 @@ namespace MyPad.ViewModels
 
                 foreach (var path in paths.Where(path => Directory.Exists(path)))
                 {
-                    if (decideConditions(path, out var fileNames, out var filter, out var encoding) == false)
+                    if (decideConditions(path, out var fileNames, out var filter, out var encoding, out var isReadOnly) == false)
                         continue;
 
                     foreach (var fileName in fileNames)
@@ -401,7 +400,7 @@ namespace MyPad.ViewModels
                         var definition = Consts.SYNTAX_DEFINITIONS.ContainsKey(filter) ?
                             Consts.SYNTAX_DEFINITIONS[filter] :
                             Consts.SYNTAX_DEFINITIONS.Values.FirstOrDefault(d => d.Extensions.Contains(Path.GetExtension(fileName)));
-                        var editor = await this.ReadFile(fileName, encoding, definition);
+                        var editor = await this.ReadFile(fileName, encoding, definition, isReadOnly);
                         if (editor != null)
                             this.ActiveEditor = editor;
                     }
@@ -422,11 +421,11 @@ namespace MyPad.ViewModels
             }
             else
             {
-                return await this.ReadFile(editor.FileName, encoding, definition) != null;
+                return await this.ReadFile(editor.FileName, encoding, definition, editor.IsReadOnly) != null;
             }
         }
 
-        private async Task<TextEditorViewModel> ReadFile(string path, Encoding encoding, XshdSyntaxDefinition definition)
+        private async Task<TextEditorViewModel> ReadFile(string path, Encoding encoding, XshdSyntaxDefinition definition, bool isReadOnly = false)
         {
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentException("空のパスが指定されています。", nameof(path));
@@ -445,7 +444,7 @@ namespace MyPad.ViewModels
                     {
                         var r = false;
                         this.MessageRequest.Raise(
-                            new MessageNotification(Resources.Message_ConfirmDiscardChanges, MessageKind.CancelableWarning),
+                            new MessageNotification(Resources.Message_ConfirmDiscardChanges, sameEditor.FileName, MessageKind.Confirm),
                             n => r = n.Result == true);
                         if (r == false)
                             return null;
@@ -459,6 +458,7 @@ namespace MyPad.ViewModels
                     }
                     catch (Exception e)
                     {
+                        Logger.Write(LogLevel.Error, $"ファイルの再読み込みに失敗しました。: Path={path}, Encoding={encoding.EncodingName}", e);
                         this.MessageRequest.Raise(new MessageNotification(e.Message, MessageKind.Error));
                         return null;
                     }
@@ -491,16 +491,23 @@ namespace MyPad.ViewModels
                         return null;
                 }
 
-                // ストリームを取得する
+                // 可能であれば書き込み権限を取得する
                 FileStream stream = null;
-                try
+                if (isReadOnly == false)
                 {
-                    // 可能であれば読み取りと書き込みの権限を取得する
-                    stream = info.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.Read);
+                    try
+                    {
+                        stream = info.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.Read);
+                    }
+                    catch
+                    {
+                        // ここでのエラーは無視する
+                    }
                 }
-                catch
+
+                // 取得できない場合は、読み取り権限のみを取得する
+                if (stream == null)
                 {
-                    // 失敗した場合は読み取り権限のみを取得する
                     try
                     {
                         stream = info.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
@@ -508,6 +515,7 @@ namespace MyPad.ViewModels
                     }
                     catch (Exception e)
                     {
+                        Logger.Write(LogLevel.Error, $"ファイルの読み取り権限の取得に失敗しました。: Path={path}, Encoding={encoding.EncodingName}", e);
                         this.MessageRequest.Raise(new MessageNotification(e.Message, MessageKind.Error));
                         return null;
                     }
@@ -523,6 +531,7 @@ namespace MyPad.ViewModels
                 }
                 catch (Exception e)
                 {
+                    Logger.Write(LogLevel.Error, $"ファイルの読み込みに失敗しました。: Path={path}, Encoding={encoding.EncodingName}", e);
                     this.MessageRequest.Raise(new MessageNotification(e.Message, MessageKind.Error));
                     return null;
                 }
@@ -639,6 +648,7 @@ namespace MyPad.ViewModels
                 }
                 catch (Exception e)
                 {
+                    Logger.Write(LogLevel.Error, $"ファイルの上書き保存に失敗しました。: Path={path}, Encoding={encoding.EncodingName}", e);
                     this.MessageRequest.Raise(new MessageNotification(e.Message, MessageKind.Error));
                     return false;
                 }
@@ -672,6 +682,7 @@ namespace MyPad.ViewModels
                 }
                 catch (Exception e)
                 {
+                    Logger.Write(LogLevel.Error, $"ファイルの新規保存に失敗しました。: Path={path}, Encoding={encoding.EncodingName}", e);
                     this.MessageRequest.Raise(new MessageNotification(e.Message, MessageKind.Error));
                     return false;
                 }
