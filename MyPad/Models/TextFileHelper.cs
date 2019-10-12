@@ -174,7 +174,6 @@ namespace MyPad.Models
                     }))
                     .ToList());
                 output.AddRange(chunkResult);
-                GC.Collect();
             }
         }
 

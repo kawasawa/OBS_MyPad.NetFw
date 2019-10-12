@@ -46,7 +46,7 @@ namespace MyPad.Models
                     .Where(p => p.PropertyType == typeof(byte[]))
                     .ForEach(p =>
                     {
-                        using (var stream = new FileStream(Path.Combine(XshdDirectoryPath, $"{p.Name}.xshd"), FileMode.Create, FileAccess.Write))
+                        using (var stream = new FileStream(Path.Combine(XshdDirectoryPath, $"{p.Name}.xshd"), FileMode.Create, FileAccess.ReadWrite, FileShare.Read))
                         using (var writer = new BinaryWriter(stream, FileEncoding))
                         {
                             writer.Write((byte[])p.GetValue(null));
@@ -56,7 +56,7 @@ namespace MyPad.Models
             }
             catch (Exception e)
             {
-                Logger.Write(LogLevel.Warn, $"シンタックス定義ファイルの初期化に失敗しました。: {XshdDirectoryPath}", e);
+                Logger.Write(LogLevel.Warn, $"シンタックス定義ファイルの初期化に失敗しました。: Path={XshdDirectoryPath}", e);
                 return false;
             }
         }

@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:qc="http://QuickConverter.CodePlex.com/"
              xmlns:mi="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:qc="http://QuickConverter.CodePlex.com/"
              xmlns:ge="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
              xmlns:ml="clr-namespace:MyLib;assembly=MyLib"
              xmlns:mlwb="clr-namespace:MyLib.Wpf.Behaviors;assembly=MyLib.Wpf"
@@ -41,5 +41,4 @@
             </ListBox.ItemTemplate>
         </ListBox>
     </Grid>
-    
 </UserControl>

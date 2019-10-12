@@ -6,15 +6,15 @@
                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+               xmlns:s="clr-namespace:System;assembly=mscorlib"
                xmlns:p="http://prismlibrary.com/"
-               xmlns:qc="http://QuickConverter.CodePlex.com/"
                xmlns:m="http://metro.mahapps.com/winfx/xaml/controls"
                xmlns:mi="http://metro.mahapps.com/winfx/xaml/iconpacks"
+               xmlns:qc="http://QuickConverter.CodePlex.com/"
                xmlns:ge="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
                xmlns:dr="clr-namespace:Dragablz;assembly=Dragablz"
-               xmlns:a="http://icsharpcode.net/sharpdevelop/avalonedit"
+               xmlns:ae="http://icsharpcode.net/sharpdevelop/avalonedit"
                xmlns:ml="clr-namespace:MyLib;assembly=MyLib"
-               xmlns:mlw="clr-namespace:MyLib.Wpf;assembly=MyLib.Wpf"
                xmlns:mlwb="clr-namespace:MyLib.Wpf.Behaviors;assembly=MyLib.Wpf"
                xmlns:mlwi="clr-namespace:MyLib.Wpf.Interactions;assembly=MyLib.Wpf"
                xmlns:mlwm="clr-namespace:MyLib.Wpf.Markup;assembly=MyLib.Wpf"
@@ -218,12 +218,12 @@
                             <mi:Material Kind="Magnify"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Command="a:SearchCommands.FindNext" Header="{Binding Resources.Command_FindNext, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
+                    <MenuItem Command="ae:SearchCommands.FindNext" Header="{Binding Resources.Command_FindNext, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
                         <MenuItem.Icon>
                             <mi:Modern Kind="MagnifyArrowDown"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Command="a:SearchCommands.FindPrevious" Header="{Binding Resources.Command_FindPrev, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
+                    <MenuItem Command="ae:SearchCommands.FindPrevious" Header="{Binding Resources.Command_FindPrev, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
                         <MenuItem.Icon>
                             <mi:Modern Kind="MagnifyArrowUp"/>
                         </MenuItem.Icon>
@@ -264,12 +264,12 @@
                         <MenuItem Command="components:TextEditorCommands.ConvertToNarrow" Header="{Binding Resources.Command_ConvertToNarrow, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                         <MenuItem Command="components:TextEditorCommands.ConvertToWide"   Header="{Binding Resources.Command_ConvertToWide, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                         <Separator/>
-                        <MenuItem Command="a:AvalonEditCommands.ConvertToLowercase" Header="{Binding Resources.Command_ConvertToLowerCase, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                        <MenuItem Command="a:AvalonEditCommands.ConvertToUppercase" Header="{Binding Resources.Command_ConvertToUpperCase, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                        <MenuItem Command="a:AvalonEditCommands.ConvertToTitleCase" Header="{Binding Resources.Command_ConvertToTitleCase, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                        <MenuItem Command="ae:AvalonEditCommands.ConvertToLowercase" Header="{Binding Resources.Command_ConvertToLowerCase, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                        <MenuItem Command="ae:AvalonEditCommands.ConvertToUppercase" Header="{Binding Resources.Command_ConvertToUpperCase, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                        <MenuItem Command="ae:AvalonEditCommands.ConvertToTitleCase" Header="{Binding Resources.Command_ConvertToTitleCase, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                         <Separator/>
-                        <MenuItem Command="a:AvalonEditCommands.ConvertTabsToSpaces" Header="{Binding Resources.Command_ConvertTabsToSpaces, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                        <MenuItem Command="a:AvalonEditCommands.ConvertSpacesToTabs" Header="{Binding Resources.Command_ConvertSpacesToTabs, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                        <MenuItem Command="ae:AvalonEditCommands.ConvertTabsToSpaces" Header="{Binding Resources.Command_ConvertTabsToSpaces, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                        <MenuItem Command="ae:AvalonEditCommands.ConvertSpacesToTabs" Header="{Binding Resources.Command_ConvertSpacesToTabs, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                     </MenuItem>
                 </MenuItem>
                 <MenuItem Header="{Binding Resources.Command_View, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
@@ -671,10 +671,6 @@
                         </dr:TabablzControl.InterTabController>
                         <dr:TabablzControl.Resources>
                             <Style TargetType="{x:Type components:DraggableTabControl}" BasedOn="{StaticResource Default.TabablzControl}">
-                                <Style.Resources>
-                                    <!-- MahApps との競合を解消 -->
-                                    <Style TargetType="{x:Type ScrollViewer}"/>
-                                </Style.Resources>
                                 <Setter Property="IsHeaderPanelVisible" Value="{qc:MultiBinding '$P0 || $P1.CompareTo(1) == 1', P0={Binding System.ShowSingleTab, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}, P1={Binding Items.Count, RelativeSource={RelativeSource Self}, Mode=OneWay}}"/>
                             </Style>
                             <Style x:Key="__TextEditorTabItem" TargetType="{x:Type dr:DragablzItem}" BasedOn="{StaticResource Default.DragablzItem}">
@@ -698,10 +694,6 @@
                                 </Style.Triggers>
                             </Style>
                             <Style x:Key="__TextEditor" TargetType="{x:Type components:TextEditor}" BasedOn="{StaticResource Default.TextEditor}">
-                                <Style.Resources>
-                                    <!-- Dragablz との競合を解消 -->
-                                    <Style TargetType="{x:Type ScrollViewer}" BasedOn="{StaticResource Default.ScrollViewer}"/>
-                                </Style.Resources>
                                 <Setter Property="Settings"         Value="{Binding TextEditor, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}"/>
                                 <Setter Property="Document"         Value="{Binding Document, Mode=OneWay}"/>
                                 <Setter Property="IsReadOnly"       Value="{Binding IsReadOnly, Mode=TwoWay}"/>
@@ -733,7 +725,7 @@
                                     </Setter.Value>
                                 </Setter>
                             </Style>
-                            <Style TargetType="{x:Type a:SearchPanel}" BasedOn="{StaticResource Default.SearchPanel}">
+                            <Style TargetType="{x:Type ae:SearchPanel}" BasedOn="{StaticResource Default.SearchPanel}">
                                 <Setter Property="Localization" Value="{Binding Localization, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
                             </Style>
                         </dr:TabablzControl.Resources>
@@ -861,12 +853,12 @@
                                                 <MenuItem Command="components:TextEditorCommands.ConvertToNarrow" Header="{Binding Resources.Command_ConvertToNarrow, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                                                 <MenuItem Command="components:TextEditorCommands.ConvertToWide"   Header="{Binding Resources.Command_ConvertToWide, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                                                 <Separator/>
-                                                <MenuItem Command="a:AvalonEditCommands.ConvertToLowercase" Header="{Binding Resources.Command_ConvertToLowerCase, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                                                <MenuItem Command="a:AvalonEditCommands.ConvertToUppercase" Header="{Binding Resources.Command_ConvertToUpperCase, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                                                <MenuItem Command="a:AvalonEditCommands.ConvertToTitleCase" Header="{Binding Resources.Command_ConvertToTitleCase, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                                <MenuItem Command="ae:AvalonEditCommands.ConvertToLowercase" Header="{Binding Resources.Command_ConvertToLowerCase, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                                <MenuItem Command="ae:AvalonEditCommands.ConvertToUppercase" Header="{Binding Resources.Command_ConvertToUpperCase, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                                <MenuItem Command="ae:AvalonEditCommands.ConvertToTitleCase" Header="{Binding Resources.Command_ConvertToTitleCase, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                                                 <Separator/>
-                                                <MenuItem Command="a:AvalonEditCommands.ConvertTabsToSpaces" Header="{Binding Resources.Command_ConvertTabsToSpaces, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                                                <MenuItem Command="a:AvalonEditCommands.ConvertSpacesToTabs" Header="{Binding Resources.Command_ConvertSpacesToTabs, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                                <MenuItem Command="ae:AvalonEditCommands.ConvertTabsToSpaces" Header="{Binding Resources.Command_ConvertTabsToSpaces, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                                <MenuItem Command="ae:AvalonEditCommands.ConvertSpacesToTabs" Header="{Binding Resources.Command_ConvertSpacesToTabs, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                                             </MenuItem>
                                         </ContextMenu>
                                     </components:TextEditor.ContextMenu>
@@ -881,12 +873,6 @@
                     <components:DraggableTabControl x:Name="TerminalTabControl" Grid.Row="2" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsVisibleTerminalContent, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}}"
                                                     ItemsSource="{Binding Terminals, Mode=OneWay}" SelectedItem="{Binding ActiveTerminal, Mode=TwoWay}" NewItemFactory="{Binding TerminalFactory, Mode=OneWay}" ClosingItemCallback="{Binding ClosingTerminalHandler, Mode=OneTime}">
                         <dr:TabablzControl.Resources>
-                            <Style TargetType="{x:Type components:DraggableTabControl}" BasedOn="{StaticResource Default.TabablzControl}">
-                                <Style.Resources>
-                                    <!-- MahApps との競合を解消 -->
-                                    <Style TargetType="{x:Type ScrollViewer}"/>
-                                </Style.Resources>
-                            </Style>
                             <Style x:Key="__TerminalTabItem" TargetType="{x:Type dr:DragablzItem}" BasedOn="{StaticResource Default.DragablzItem}">
                                 <Style.Triggers>
                                     <MultiDataTrigger>
@@ -986,7 +972,7 @@
             </Grid>
             
             <!-- ステータスバー -->
-            <StatusBar x:Name="StatusBar" Grid.Row="2">
+            <StatusBar Grid.Row="2">
                 <StatusBar.ItemsPanel>
                     <ItemsPanelTemplate>
                         <Grid ge:GridEx.ColumnDefinition="*, Auto, Auto, Auto, Auto, Auto, 5"/>
@@ -1050,10 +1036,16 @@
                 <i:Interaction.Behaviors>
                     <behaviors:FlyoutBehavior CloseByEsc="True"/>
                 </i:Interaction.Behaviors>
-                <components:NumericUpDownEx x:Name="GoToLineInput" Margin="0,0,5,0"
-                    Background="Transparent" BorderThickness="0" FontSize="{StaticResource FlyoutHeaderFontSize}"
-                    Value="{qc:MultiBinding '$P0 ? $P1 : 1', P0={Binding IsOpen, ElementName=GoToLineFlyout, Mode=OneWay}, P1={Binding ActiveEditor.Line, Mode=TwoWay}}"
-                    Minimum="1" Maximum="{Binding ActiveEditor.Document.LineCount, Mode=OneWay}" ReverseOnMouseWheel="True"/>
+                <components:NumericUpDownEx x:Name="GoToLineInput"
+                                            Margin="0,0,5,0"
+                                            Background="Transparent" 
+                                            BorderThickness="0"
+                                            FontSize="{StaticResource FlyoutHeaderFontSize}"
+                                            DataContext="{Binding ActiveEditor, Mode=OneWay}"
+                                            Value="{Binding Line, Mode=TwoWay}"
+                                            Minimum="1"
+                                            Maximum="{Binding Document.LineCount, Mode=OneWay}"
+                                            ReverseOnMouseWheel="True"/>
             </m:Flyout>
 
             <!-- 印刷 -->

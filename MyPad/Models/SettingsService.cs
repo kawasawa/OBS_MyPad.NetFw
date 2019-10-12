@@ -53,7 +53,7 @@ namespace MyPad.Models
             }
             catch (Exception e)
             {
-                Logger.Write(LogLevel.Warn, $"設定ファイルの読み込みに失敗しました。: {SettingsFilePath}", e);
+                Logger.Write(LogLevel.Warn, $"設定ファイルの読み込みに失敗しました。: Path={SettingsFilePath}", e);
                 return false;
             }
         }
@@ -72,7 +72,7 @@ namespace MyPad.Models
             }
             catch (Exception e)
             {
-                Logger.Write(LogLevel.Warn, $"設定ファイルの保存に失敗しました。: {SettingsFilePath}", e);
+                Logger.Write(LogLevel.Warn, $"設定ファイルの保存に失敗しました。: Path={SettingsFilePath}", e);
                 return false;
             }
         }

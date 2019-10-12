@@ -128,6 +128,7 @@ namespace MyPad.ViewModels
                         this.UseRegex,
                         this.AutoDetectEncoding,
                         AppConfig.GrepBufferSize);
+                    this.ForceGC();
                     this.IsWorking = false;
                 }, 
                 () => this.CanGrep)

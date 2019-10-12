@@ -144,6 +144,7 @@
         <Setter Property="KeyboardNavigation.TabNavigation" Value="Local"/>
         <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
         <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{DynamicResource AccentColorBrush2}"/>
+        <Setter Property="m:TextBoxHelper.Watermark" Value="{x:Null}"/>
         <Setter Property="CalendarStyle">
             <Setter.Value>
                 <Style TargetType="{x:Type Calendar}" BasedOn="{StaticResource MetroCalendar}">
@@ -208,6 +209,37 @@
 
     <Style x:Key="Default.GridViewColumnHeader" TargetType="{x:Type GridViewColumnHeader}" BasedOn="{StaticResource MetroGridViewColumnHeader}">
         <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="Default.DataGridColumnHeader" TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource MetroDataGridColumnHeader}">
+        <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="Cursor" Value="Arrow"/>
+    </Style>
+
+    <Style x:Key="Default.DataGridRowHeader" TargetType="{x:Type DataGridRowHeader}" BasedOn="{StaticResource MetroDataGridRowHeader}">
+        <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="BorderThickness" Value="0,0,1,0"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="Cursor" Value="Arrow"/>
+    </Style>
+
+    <Style x:Key="Default.DataGridRow" TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource MetroDataGridRow}">
+    </Style>
+
+    <Style x:Key="Default.DataGridCell" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource MetroDataGridCell}">
+    </Style>
+
+    <Style x:Key="Default.DataGrid" TargetType="{x:Type DataGrid}" BasedOn="{StaticResource MetroDataGrid}">
+        <Setter Property="ColumnHeaderStyle" Value="{StaticResource Default.DataGridColumnHeader}"/>
+        <Setter Property="RowHeaderStyle" Value="{StaticResource Default.DataGridRowHeader}"/>
+        <Setter Property="RowStyle" Value="{StaticResource Default.DataGridRow}"/>
+        <Setter Property="CellStyle" Value="{StaticResource Default.DataGridCell}"/>
+        <Setter Property="GridLinesVisibility" Value="All"/>
     </Style>
 
     <Style x:Key="Default.CheckBox" TargetType="{x:Type CheckBox}" BasedOn="{StaticResource MetroCheckBox}">

@@ -43,7 +43,7 @@ namespace MyPad.Views
         private void ViewModel_Disposed(object sender, EventArgs e)
         {
             this.ViewModel.Disposed -= this.ViewModel_Disposed;
-            this.Dispatcher.InvokeAsync(() => this.Close(), DispatcherPriority.ApplicationIdle);
+            this.Dispatcher.InvokeAsync(() => this.Close());
         }
 
         private IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)

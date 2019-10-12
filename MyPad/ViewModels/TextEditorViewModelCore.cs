@@ -2,11 +2,11 @@
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Utils;
+using MyLib;
 using MyLib.Wpf.Interactions;
 using MyPad.Models;
 using MyPad.Properties;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
@@ -127,27 +127,30 @@ namespace MyPad.ViewModels
             base.Dispose(disposing);
         }
 
-        public void Clear()
+        public async void Clear()
         {
-            this.SuspendSaveTimer(() =>
+            await this.SuspendAutoSaveTimer(async () =>
             {
-                Task.Run(() => this.SafeDeleteTemporary());
-
+                // ストリームを解放する
                 this.FileStream?.Dispose();
                 this.FileStream = null;
 
-                this.Document.Text = string.Empty;
-                this.Document.FileName = string.Empty;
+                // テキストをクリアする
+                await Application.Current.Dispatcher.InvokeAsync(() => this.Document.Text = string.Empty);
                 this.Document.UndoStack.ClearAll();
 
+                // 関連要素をクリアする
+                this.Document.FileName = string.Empty;
                 this.Encoding = SettingsService.Instance.System.Encoding;
                 this.IsReadOnly = false;
                 this.IsModified = false;
-
                 this.SyntaxDefinition =
                     Consts.SYNTAX_DEFINITIONS.ContainsKey(SettingsService.Instance.System.SyntaxDefinitionName) ?
                     Consts.SYNTAX_DEFINITIONS[SettingsService.Instance.System.SyntaxDefinitionName] :
                     null;
+
+                // 一時ファイルを削除する
+                await Task.Run(() => this.SafeDeleteTemporary());
             });
         }
 
@@ -166,19 +169,21 @@ namespace MyPad.ViewModels
             if (this.FileStream == null)
                 throw new InvalidOperationException($"{nameof(this.FileStream)} が null です。");
 
-            await this.SuspendSaveTimerAsync(async () =>
+            await this.SuspendAutoSaveTimer(async () =>
             {
+                // ストリームからバイト配列を読み取る
                 var bytes = new byte[this.FileStream.Length];
                 this.FileStream.Position = 0;
                 await this.FileStream.ReadAsync(bytes, 0, bytes.Length);
 
+                // 文字コードを推定する
                 if (encoding == null)
-                    encoding = await Task.Run(() =>
-                        (SettingsService.Instance.System.DetectEncodingStrict ? 
-                         TextFileHelper.DetectEncoding(bytes) : 
-                         TextFileHelper.DetectEncodingFast(bytes)) ??
-                        SettingsService.Instance.System.Encoding);
+                    encoding = await Task.Run(() => TextFileHelper.DetectEncodingFast(bytes) ?? SettingsService.Instance.System.Encoding);
 
+                // バイト配列をテキストを変換する
+                var text = await Task.Run(() => encoding.GetString(bytes));
+
+                // テキストを設定する
                 // HACK: UndoStack のリセット
                 // TextDocument.Text へ代入後に ClearAll() を実行したところ IsModified の変更が通知されなくなった。
                 // 正確には ClearAll() の実行後も UndoStack 内の未変更点が更新されず、変更済みとして扱われているのだと思われる。
@@ -187,38 +192,42 @@ namespace MyPad.ViewModels
                 this.Document.UndoStack.ClearAll();
                 var sizeLimit = this.Document.UndoStack.SizeLimit;
                 this.Document.UndoStack.SizeLimit = 0;
-                this.Document.Text = await Task.Run(() => encoding.GetString(bytes));
+                await Application.Current.Dispatcher.InvokeAsync(() => this.Document.Text = text);
                 this.Document.UndoStack.SizeLimit = sizeLimit;
 
+                // 関連要素を設定する
                 this.Document.FileName = this.FileName;
                 this.Encoding = encoding;
                 this.IsReadOnly = !this.FileStream.CanWrite;
                 this.IsModified = false;
 
+                // 一時ファイルを削除する
                 await Task.Run(() => this.SafeDeleteTemporary());
             });
         }
-
-        public async Task Save()
-            => await this.Save(this.Encoding);
 
         public async Task Save(Encoding encoding)
         {
             if (this.FileStream == null)
                 throw new InvalidOperationException($"{nameof(this.FileStream)} が null です。");
 
-            await this.SuspendSaveTimerAsync(async () =>
+            await this.SuspendAutoSaveTimer(async () =>
             {
-                var bytes = encoding.GetBytes(this.Document.Text);
+                // テキストをバイト配列に変換する
+                var bytes = await Application.Current.Dispatcher.InvokeAsync(() => encoding.GetBytes(this.Document.Text));
+
+                // ストリームに書き込む
                 this.FileStream.Position = 0;
                 this.FileStream.SetLength(0);
                 await this.FileStream.WriteAsync(bytes, 0, bytes.Length);
                 this.FileStream.Flush();
 
+                // 関連要素を設定する
                 this.Encoding = encoding;
                 this.IsReadOnly = false;
                 this.IsModified = false;
 
+                // 一時ファイルを削除する
                 await Task.Run(() => this.SafeDeleteTemporary());
             });
         }
@@ -233,24 +242,26 @@ namespace MyPad.ViewModels
             await this.Save(encoding);
         }
 
-        public async Task<FlowDocument> CreateFlowDocument()
-            => await Application.Current.Dispatcher.InvokeAsync(() => 
+        public FlowDocument CreateFlowDocument()
+        {
+            IHighlighter highlighter = null;
+            if (this.SyntaxDefinition != null)
             {
-                var highlighter =
-                    this.SyntaxDefinition != null ?
-                    new DocumentHighlighter(this.Document, HighlightingLoader.Load(this.SyntaxDefinition, HighlightingManager.Instance)) :
-                    null;
-                var block = DocumentPrinter.ConvertTextDocumentToBlock(this.Document, highlighter);
-                var flowDocument = new FlowDocument(block);
-                flowDocument.FontFamily = SettingsService.Instance.TextEditor.FontFamily;
-                flowDocument.FontSize = SettingsService.Instance.TextEditor.ActualFontSize;
-                flowDocument.Background = Brushes.White;
-                flowDocument.Foreground = Brushes.Black;
-                flowDocument.PagePadding = new Thickness(50);
-                flowDocument.ColumnGap = 0;
-                return flowDocument;
-            },
-            DispatcherPriority.Input);
+                var definition = HighlightingLoader.Load(this.SyntaxDefinition, HighlightingManager.Instance);
+                highlighter = new DocumentHighlighter(this.Document, definition);
+            }
+            var block = DocumentPrinter.ConvertTextDocumentToBlock(this.Document, highlighter);
+            highlighter?.Dispose();
+
+            var flowDocument = new FlowDocument(block);
+            flowDocument.FontFamily = SettingsService.Instance.TextEditor.FontFamily;
+            flowDocument.FontSize = SettingsService.Instance.TextEditor.ActualFontSize;
+            flowDocument.Background = Brushes.White;
+            flowDocument.Foreground = Brushes.Black;
+            flowDocument.PagePadding = new Thickness(50);
+            flowDocument.ColumnGap = 0;
+            return flowDocument;
+        }
 
         private string ConvertToCompressedBase64(string str)
         {
@@ -270,22 +281,22 @@ namespace MyPad.ViewModels
             if (_ENABLED_AUTO_SAVE == false || this.IsModified == false || this.Document.Version == this._temporary?.Item2)
                 return;
 
-            await this.SuspendSaveTimerAsync(async () =>
+            await this.SuspendAutoSaveTimer(async () =>
             {
                 var path = Path.Combine(Consts.CURRENT_TEMPORARY, this.ConvertToCompressedBase64(this.IsNewFile ? this.FileName : this.ShortFileName).Replace("/", "-"));
                 var bytes = Array.Empty<byte>();
 
                 try
                 {
-                    await WorkspaceViewModel.Dispatcher.InvokeAsync(() => bytes = this.Encoding.GetBytes(this.Document.Text));
+                    await Application.Current.Dispatcher.InvokeAsync(() => bytes = this.Encoding.GetBytes(this.Document.Text));
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"自動保存に失敗しました。バイト配列に変換できませんでした。  Path: {path}  Exception: {ex.Message}");
+                    Logger.Write(LogLevel.Warn, $"自動保存に失敗しました。テキストをバイト配列に変換できませんでした。: Path={path}", ex);
                     return;
                 }
 
-                var r = await Task.Run(() =>
+                var result = await Task.Run(() =>
                 {
                     try
                     {
@@ -295,15 +306,15 @@ namespace MyPad.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine($"自動保存に失敗しました。一時ファイルへの書き込みに失敗しました。  Path: {path}  Exception: {ex.Message}");
+                        Logger.Write(LogLevel.Warn, $"自動保存に失敗しました。一時ファイルへの書き込みに失敗しました。: Path={path}", ex);
                         return false;
                     }
                 });
-                if (r == false)
+                if (result == false)
                     return;
 
                 this._temporary = new Tuple<string, ITextSourceVersion>(path, this.Document.Version);
-                WorkspaceViewModel.Instance.NotifyRequest.Raise(new MessageNotification(Resources.Message_NotifyAutoSaved, $"{Path.GetFileName(this.FileName)}{Environment.NewLine}Temp: {Path.GetFileName(path)}"));
+                WorkspaceViewModel.Instance.NotifyRequest.Raise(new MessageNotification(Resources.Message_NotifyAutoSaved, $"{Path.GetFileName(this.FileName)}{Environment.NewLine}{Path.GetFileName(path)}"));
             });
         }
 
@@ -314,20 +325,13 @@ namespace MyPad.ViewModels
                 if (File.Exists(this._temporary?.Item1))
                     File.Delete(this._temporary.Item1);
             }
-            catch
+            catch (Exception e)
             {
+                Logger.Write(LogLevel.Warn, $"一時ファイルの削除に失敗しました。: Path={this._temporary?.Item1}", e);
             }
         }
 
-        private void SuspendSaveTimer(Action action)
-        {
-            this._saveTimer.Stop();
-            action.Invoke();
-            this._saveTimer.Interval = _AUTO_SAVE_INTERVAL;
-            this._saveTimer.Start();
-        }
-
-        private async Task SuspendSaveTimerAsync(Func<Task> func)
+        private async Task SuspendAutoSaveTimer(Func<Task> func)
         {
             this._saveTimer.Stop();
             await func.Invoke();

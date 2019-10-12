@@ -15,7 +15,6 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Threading;
 using Vanara.InteropServices;
 using Vanara.PInvoke;
 
@@ -126,7 +125,7 @@ namespace MyPad.Views
         private void ViewModel_Disposed(object sender, EventArgs e)
         {
             ((ViewModelBase)sender).Disposed -= this.ViewModel_Disposed;
-            this.Dispatcher.InvokeAsync(() => this.Close(), DispatcherPriority.ApplicationIdle);
+            this.Dispatcher.InvokeAsync(() => this.Close());
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -262,7 +261,7 @@ namespace MyPad.Views
                 await Task.Delay(100);
             if (string.IsNullOrEmpty(text) == false)
                 this.ActiveTextEditor.TextArea.Selection.ReplaceSelectionWithText(text);
-            await this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor.Focus(), DispatcherPriority.Input);
+            await this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor.Focus());
             this.ActiveTextEditor.ScrollToCaret();
             e.Handled = true;
         }
@@ -298,7 +297,7 @@ namespace MyPad.Views
             if ((sender as Flyout)?.IsOpen != false)
                 return;
 
-            this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus(), DispatcherPriority.Input);
+            this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus());
         }
 
         private void HamburgerMenu_ItemInvoked(object sender, HamburgerMenuItemInvokedEventArgs e)
@@ -338,7 +337,7 @@ namespace MyPad.Views
             if (e.Handled || e.Source != e.OriginalSource)
                 return;
 
-            this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus(), DispatcherPriority.Input);
+            this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus());
             e.Handled = true;
         }
 
@@ -348,7 +347,7 @@ namespace MyPad.Views
             if (e.Handled || e.Source != e.OriginalSource)
                 return;
 
-            this.Dispatcher.InvokeAsync(() => this.ActiveCommandBox?.Focus(), DispatcherPriority.Input);
+            this.Dispatcher.InvokeAsync(() => this.ActiveCommandBox?.Focus());
             e.Handled = true;
         }
 
@@ -378,10 +377,8 @@ namespace MyPad.Views
 
         private void GoToLineInput_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
         {
-            if (e.NewValue.HasValue == false || this.GoToLineFlyout.IsOpen == false)
+            if (this.GoToLineFlyout.IsOpen == false || e.NewValue.HasValue == false)
                 return;
-
-            this.ActiveTextEditor.Line = (int)e.NewValue.Value;
             this.ActiveTextEditor.ScrollToCaret();
         }
 
@@ -453,16 +450,15 @@ namespace MyPad.Views
 
                     this.HamburgerMenu.IsPaneOpen = false;
                     this.HamburgerMenuColumn.Width = GridLength.Auto;
-                },
-                DispatcherPriority.ApplicationIdle);
+                });
         }
 
         private void SwitchActiveContent()
         {
             if (Keyboard.FocusedElement != this.ActiveTextEditor?.TextArea)
-                this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus(), DispatcherPriority.Input);
+                this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus());
             else
-                this.Dispatcher.InvokeAsync(() => this.ActiveCommandBox?.Focus(), DispatcherPriority.Input);
+                this.Dispatcher.InvokeAsync(() => this.ActiveCommandBox?.Focus());
         }
 
         private void SwitchTerminalVisibility()
@@ -471,14 +467,14 @@ namespace MyPad.Views
             {
                 this.IsVisibleTerminalContent = true;
                 if (this.ViewModel.Terminals.Any())
-                    this.Dispatcher.InvokeAsync(() => this.ActiveCommandBox?.Focus(), DispatcherPriority.Input);
+                    this.Dispatcher.InvokeAsync(() => this.ActiveCommandBox?.Focus());
                 else
                     this.ViewModel.AddTerminalCommand.Execute(null);
             }
             else
             {
                 this.IsVisibleTerminalContent = false;
-                this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus(), DispatcherPriority.Input);
+                this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus());
             }
         }
 

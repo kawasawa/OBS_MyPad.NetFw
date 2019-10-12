@@ -28,6 +28,7 @@ namespace MyPad
         {
             UnhandledExceptionObserver.Observe(this);
             Logger.MinLogLevel = AppConfig.MinLogLevel;
+            Logger.ConfigurationFactory = () => Logger.CreateCommonConfig();
         }
 
         /// <summary>
@@ -88,7 +89,7 @@ namespace MyPad
                 }
                 catch (Exception ex)
                 {
-                    Logger.Write(LogLevel.Warn, $"一時フォルダの削除に失敗しました。(システム終了時) : {Consts.CURRENT_TEMPORARY}", ex);
+                    Logger.Write(LogLevel.Warn, $"一時フォルダの削除に失敗しました。(システム終了時) : Path={Consts.CURRENT_TEMPORARY}", ex);
                 }
             };
             this.MainWindow.Show();

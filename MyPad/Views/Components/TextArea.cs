@@ -9,7 +9,6 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Threading;
 
 namespace MyPad.Views.Components
 {
@@ -203,9 +202,7 @@ namespace MyPad.Views.Components
             => this.TextView.Redraw();
 
         public bool CanZoomIn()
-        {
-            return this.FontSize < MAX_FONT_SIZE;
-        }
+            => this.FontSize < MAX_FONT_SIZE;
 
         public void ZoomIn()
         {
@@ -217,9 +214,7 @@ namespace MyPad.Views.Components
         }
 
         public bool CanZoomOut()
-        {
-            return MIN_FONT_SIZE < this.FontSize;
-        }
+            => MIN_FONT_SIZE < this.FontSize;
 
         public void ZoomOut()
         {
@@ -231,9 +226,7 @@ namespace MyPad.Views.Components
         }
 
         public bool CanZoomReset()
-        {
-            return this.FontSize != this.ActualFontSize;
-        }
+            => this.FontSize != this.ActualFontSize;
 
         public void ZoomReset()
         {
@@ -252,7 +245,7 @@ namespace MyPad.Views.Components
             this.SearchPanel.Open();
             if (this.Selection.IsEmpty == false && this.Selection.IsMultiline == false)
                 this.SearchPanel.SearchPattern = this.Selection.GetText();
-            this.Dispatcher.InvokeAsync(() => this.SearchPanel.Reactivate(), DispatcherPriority.Input);
+            this.Dispatcher.InvokeAsync(() => this.SearchPanel.Reactivate());
         }
 
         public void FindNext()
