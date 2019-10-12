@@ -120,7 +120,7 @@ namespace MyPad.ViewModels
             });
 
         public ICommand PrintPreviewCommand
-            => new DelegateCommand(async () => this.FlowDocument = await this.ActiveEditor.CreateFlowDocument());
+            => new DelegateCommand(() => this.FlowDocument = this.ActiveEditor.CreateFlowDocument());
 
         public ICommand PrintCommand
             => new DelegateCommand(() => this.PrintRequest.Raise(new PrintDocumentNotification(this.FlowDocument)));
@@ -147,7 +147,7 @@ namespace MyPad.ViewModels
                     return;
                 if (this.Editors.Any() == false)
                     this.AddEditor();
-                GC.Collect();
+                this.ForceGC();
             });
 
         public ICommand CloseAllEditorCommand
@@ -157,7 +157,7 @@ namespace MyPad.ViewModels
                     return;
                 if (this.Editors.Any() == false)
                     this.AddEditor();
-                GC.Collect();
+                this.ForceGC();
             });
 
         public ICommand CloseOtherEditorCommand
@@ -171,7 +171,7 @@ namespace MyPad.ViewModels
                     if (await this.SaveChangesIfAndRemove(this.Editors[i]) == false)
                         return;
                 }
-                GC.Collect();
+                this.ForceGC();
             });
 
         public ICommand ActivateEditorCommand
@@ -191,7 +191,7 @@ namespace MyPad.ViewModels
             {
                 if (this.ActiveTerminal != null)
                     this.RemoveTerminal(this.ActiveTerminal);
-                GC.Collect();
+                this.ForceGC();
             });
 
         public ICommand CloseAllTerminalCommand
@@ -199,7 +199,7 @@ namespace MyPad.ViewModels
             {
                 for (var i = this.Terminals.Count - 1; 0 <= i; i--)
                     this.RemoveTerminal(this.Terminals[i]);
-                GC.Collect();
+                this.ForceGC();
             });
 
         public ICommand CloseOtherTerminalCommand
@@ -211,7 +211,7 @@ namespace MyPad.ViewModels
                     if (this.Terminals[i].Equals(currentTerminal) == false)
                         this.RemoveTerminal(this.Terminals[i]);
                 }
-                GC.Collect();
+                this.ForceGC();
             });
 
         public ICommand ActivateTerminalCommand
@@ -720,11 +720,6 @@ namespace MyPad.ViewModels
             terminal.Dispose();
         }
 
-        private void Terminal_Disposed(object sender, EventArgs e)
-        {
-            this.RemoveTerminal((TerminalViewModel)sender);
-        }
-
         private void RefreshFileNodes()
         {
             var root = SettingsService.Instance.System.FileExplorerRoot;
@@ -735,6 +730,11 @@ namespace MyPad.ViewModels
             node.IsExpanded = true;
             this.FileNodes.Clear();
             this.FileNodes.Add(node);
+        }
+
+        private void Terminal_Disposed(object sender, EventArgs e)
+        {
+            this.RemoveTerminal((TerminalViewModel)sender);
         }
 
         #endregion

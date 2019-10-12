@@ -1012,24 +1012,6 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Quality に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Label_EmphasisOnQuality {
-            get {
-                return ResourceManager.GetString("Label_EmphasisOnQuality", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Response に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Label_EmphasisOnResponse {
-            get {
-                return ResourceManager.GetString("Label_EmphasisOnResponse", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Encoding に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Encoding {

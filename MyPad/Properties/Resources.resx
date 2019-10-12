@@ -373,12 +373,6 @@
   <data name="Label_AllFiles" xml:space="preserve">
     <value>All Files</value>
   </data>
-  <data name="Label_EmphasisOnQuality" xml:space="preserve">
-    <value>Quality</value>
-  </data>
-  <data name="Label_EmphasisOnResponse" xml:space="preserve">
-    <value>Response</value>
-  </data>
   <data name="Label_Name" xml:space="preserve">
     <value>Name</value>
   </data>

@@ -7,20 +7,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Threading;
 
 namespace MyPad.ViewModels
 {
     public class WorkspaceViewModel : ViewModelBase
     {
         #region スタティック
-
-        private static Dispatcher _dispatcher;
-        public static Dispatcher Dispatcher
-            => _dispatcher ?? (_dispatcher = Application.Current.Dispatcher);
 
         public static WorkspaceViewModel Instance { get; private set; }
 

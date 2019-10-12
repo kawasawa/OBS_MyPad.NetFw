@@ -366,12 +366,6 @@
   <data name="Label_AllFiles" xml:space="preserve">
     <value>すべてのファイル</value>
   </data>
-  <data name="Label_EmphasisOnQuality" xml:space="preserve">
-    <value>精度優先</value>
-  </data>
-  <data name="Label_EmphasisOnResponse" xml:space="preserve">
-    <value>速度優先</value>
-  </data>
   <data name="Label_Name" xml:space="preserve">
     <value>名前</value>
   </data>

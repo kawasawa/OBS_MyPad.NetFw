@@ -57,13 +57,6 @@ namespace MyPad.Models
             set => this.SetProperty(ref this._autoDetectEncoding, value);
         }
 
-        private bool _detectEncodingStrict;
-        public bool DetectEncodingStrict
-        {
-            get => this._detectEncodingStrict;
-            set => this.SetProperty(ref this._detectEncodingStrict, value);
-        }
-
         private string _syntaxDefinitionName = string.Empty;
         public string SyntaxDefinitionName
         {

@@ -21,6 +21,11 @@
     <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource Default.TreeViewItem}"/>
     <Style TargetType="{x:Type TreeView}" BasedOn="{StaticResource Default.TreeView}"/>
     <Style TargetType="{x:Type GridViewColumnHeader}" BasedOn="{StaticResource Default.GridViewColumnHeader}"/>
+    <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource Default.DataGridColumnHeader}"/>
+    <Style TargetType="{x:Type DataGridRowHeader}" BasedOn="{StaticResource Default.DataGridRowHeader}"/>
+    <Style TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource Default.DataGridRow}"/>
+    <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource Default.DataGridCell}"/>
+    <Style TargetType="{x:Type DataGrid}" BasedOn="{StaticResource Default.DataGrid}"/>
     <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource Default.CheckBox}"/>
     <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}"/>
     <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource Default.RadioButton}"/>
