@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CsvHelper;
+using Microsoft.VisualBasic;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -130,9 +132,20 @@ namespace MyPad.Models
             if (defaultEncoding == null)
                 throw new ArgumentNullException(nameof(defaultEncoding));
 
+            // 検索パターンを調整する
             if (string.IsNullOrEmpty(searchPattern))
                 searchPattern = "*";
 
+            // 比較用のメソッドを定義する
+            Func<string, bool> func;
+            if (useRegex)
+                func = (text) => Regex.IsMatch(text, targetText);
+            else if (ignoreCase)
+                func = (text) => 0 <= text.IndexOf(targetText, StringComparison.OrdinalIgnoreCase);
+            else
+                func = (text) => 0 <= text.IndexOf(targetText, StringComparison.Ordinal);
+
+            // テキストを検索する
             foreach (var chunk in EnumerateFilesSafe(rootPath, searchPattern, allDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).Buffer(bufferSize))
             {
                 var chunkResult = new ConcurrentBag<object>();
@@ -141,7 +154,6 @@ namespace MyPad.Models
                     {
                         using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                         {
-                            // 文字コードを推定する
                             var encoding = defaultEncoding;
                             if (autoDetectEncoding)
                             {
@@ -151,21 +163,12 @@ namespace MyPad.Models
                                 encoding = DetectEncoding(buffer) ?? defaultEncoding;
                             }
 
-                            // 比較用のメソッドを定義する
-                            Func<string, bool> func;
-                            if (useRegex)
-                                func = (text) => Regex.IsMatch(text, targetText);
-                            else if (ignoreCase)
-                                func = (text) => 0 <= text.IndexOf(targetText, StringComparison.OrdinalIgnoreCase);
-                            else
-                                func = (text) => 0 <= text.IndexOf(targetText, StringComparison.Ordinal);
-
-                            // テキストを検索する
                             using (var reader = new StreamReader(stream, encoding))
                             {
                                 for (var i = 1; 0 <= reader.Peek(); i++)
                                 {
-                                    var text = reader.ReadLine();
+                                    // 制御文字を除外する
+                                    var text = new string(reader.ReadLine().Where(c => char.IsControl(c) == false).ToArray());
                                     if (func(text))
                                         chunkResult.Add(new { Path = path, Line = i, Text = text, Encoding = encoding });
                                 }
@@ -174,6 +177,42 @@ namespace MyPad.Models
                     }))
                     .ToList());
                 output.AddRange(chunkResult);
+            }
+        }
+
+        /// <summary>
+        /// Grep 処理の結果をテキスト形式に変換します。
+        /// </summary>
+        /// <param name="grepResults">Grep 処理の結果</param>
+        /// <param name="encoding">文字コード</param>
+        /// <returns>変換後のテキスト</returns>
+        public static IEnumerable<string> ConvertGrepResults(IEnumerable<dynamic> grepResults, Encoding encoding)
+        {
+            using (var stream = new MemoryStream())
+            using (var reader = new StreamReader(stream, encoding))
+            using (var writer = new StreamWriter(stream, encoding))
+            using (var csvWriter = new CsvWriter(writer))
+            {
+                csvWriter.Configuration.Delimiter = ControlChars.Tab.ToString();
+                csvWriter.WriteField("Path");
+                csvWriter.WriteField("Line");
+                csvWriter.WriteField("Text");
+                csvWriter.WriteField("Encoding");
+                csvWriter.NextRecord();
+                grepResults.ForEach(x =>
+                {
+                    csvWriter.WriteField(x.Path);
+                    csvWriter.WriteField(x.Line);
+                    csvWriter.WriteField(x.Text);
+                    csvWriter.WriteField(x.Encoding?.EncodingName);
+                    csvWriter.NextRecord();
+                });
+                
+                csvWriter.Flush();
+                stream.Position = 0;
+
+                while (reader.EndOfStream == false)
+                    yield return reader.ReadLine();
             }
         }
 

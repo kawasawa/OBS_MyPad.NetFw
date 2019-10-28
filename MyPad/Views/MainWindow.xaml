@@ -557,7 +557,7 @@
                                     <mi:Material Kind="FolderSearchOutline"/>
                                 </m:HamburgerMenuIconItem.Icon>
                                 <m:HamburgerMenuIconItem.Tag>
-                                    <Grid DataContext="{Binding Data.Grep, Source={StaticResource Proxy}, Mode=OneWay}" ge:GridEx.RowDefinition="Auto, 10, *">
+                                    <Grid DataContext="{Binding Data.Grep, Source={StaticResource Proxy}, Mode=OneWay}" ge:GridEx.RowDefinition="Auto, 10, *, 3, Auto">
                                         <i:Interaction.Triggers>
                                             <p:InteractionRequestTrigger SourceObject="{Binding MessageRequest, Mode=OneTime}">
                                                 <behaviors:MessageActionEx UseOverlayMessage="{Binding System.UseOverlayMessage, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}"/>
@@ -599,6 +599,12 @@
                                                 </DataTemplate>
                                             </ListBox.ItemTemplate>
                                         </ListBox>
+                                        <Grid Grid.Row="4" ge:GridEx.ColumnDefinition="*, 5, Auto">
+                                            <TextBlock Grid.Column="0" Text="{Binding Results.Count, StringFormat={}{0} Lines, Mode=OneWay}"/>
+                                            <Button Grid.Column="2" Command="{Binding CopyGrepResultsCommand, Mode=OneTime}" ToolTip="{Binding Resources.Command_CopyToClipboard, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
+                                                <mi:Modern Kind="ClipboardPaper"/>
+                                            </Button>
+                                        </Grid>
                                         <Border d:IsHidden="True" Style="{StaticResource Common.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsWorking, Mode=OneWay}}">
                                             <m:ProgressRing/>
                                         </Border>
