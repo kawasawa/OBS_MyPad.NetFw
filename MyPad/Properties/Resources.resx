@@ -663,4 +663,7 @@ Definitions is reflected on restart. Do you want to continue?</value>
   <data name="Label_Owner" xml:space="preserve">
     <value>Owner</value>
   </data>
+  <data name="Command_CopyToClipboard" xml:space="preserve">
+    <value>Copy to clipboard</value>
+  </data>
 </root>

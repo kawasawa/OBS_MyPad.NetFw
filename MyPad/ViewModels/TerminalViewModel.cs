@@ -16,7 +16,6 @@ namespace MyPad.ViewModels
         private const string _COMSPEC = "COMSPEC";
         private Process _terminal;
         private StreamWriter _writer;
-        private bool _opening = true;
         private bool _closing;
 
         public int Sequense { get; } = ++_SEQUENCE;
@@ -124,24 +123,14 @@ namespace MyPad.ViewModels
 
         public async void Start()
         {
-            try
+            this.IsWorking = true;
+            await Task.Run(() =>
             {
-                this.IsWorking = true;
-                await Task.WhenAll(
-                    Task.Delay(2000), // 少し間を持たせる
-                    Task.Run(() =>
-                    {
-                        this._terminal.Start();
-                        this._terminal.BeginOutputReadLine();
-                        this._terminal.BeginErrorReadLine();
-                        this._writer = this._terminal.StandardInput;
-                    })
-                );
-            }
-            finally
-            {
-                this.IsWorking = false;
-            }
+                this._terminal.Start();
+                this._terminal.BeginOutputReadLine();
+                this._terminal.BeginErrorReadLine();
+                this._writer = this._terminal.StandardInput;
+            });
         }
 
         private void Terminal_DataReceived(object sender, DataReceivedEventArgs e)
@@ -153,11 +142,11 @@ namespace MyPad.ViewModels
             this.LastLine = e.Data;
             // HACK: 初期表示でカレントディレクトリを表示
             // マジックナンバーなのでほかに良い方法があれば直したい
-            if (this._opening && this.DataLines.Count == INITIAL_LINES_COUNT)
+            if (this.IsWorking && this.DataLines.Count == INITIAL_LINES_COUNT)
             {
                 this.DataLines.Add(this.LastLine);
                 this.LastLine = $"{this._terminal.StartInfo.WorkingDirectory}>";
-                this._opening = false;
+                this.IsWorking = false;
             }
             if (AppConfig.TerminalBufferSize < this.DataLines.Count)
                 this.DataLines.RemoveAt(0);

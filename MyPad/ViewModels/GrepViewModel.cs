@@ -1,4 +1,5 @@
-﻿using MyLib.Wpf.Interactions;
+﻿using Microsoft.VisualBasic;
+using MyLib.Wpf.Interactions;
 using MyPad.Models;
 using MyPad.Properties;
 using Prism.Commands;
@@ -7,6 +8,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -106,6 +109,18 @@ namespace MyPad.ViewModels
                 string.IsNullOrEmpty(this.RootPath) == false &&
                 this.Encoding != null;
 
+        public ICommand SelectRootPathCommand
+            => new DelegateCommand(() =>
+            {
+                this.OpenDirectoryRequest.Raise(
+                    new OpenFileNotification(),
+                    n =>
+                    {
+                        if (n.Result == true)
+                            this.RootPath = n.FileName;
+                    });
+            });
+
         public ICommand GrepCommand
             => new DelegateCommand(async () =>
                 {
@@ -134,16 +149,13 @@ namespace MyPad.ViewModels
                 () => this.CanGrep)
             .ObservesProperty(() => this.CanGrep);
 
-        public ICommand SelectRootPathCommand
-            => new DelegateCommand(() =>
+        public ICommand CopyGrepResultsCommand
+            => new DelegateCommand(async () =>
             {
-                this.OpenDirectoryRequest.Raise(
-                    new OpenFileNotification(),
-                    n =>
-                    {
-                        if (n.Result == true)
-                            this.RootPath = n.FileName;
-                    });
+                this.IsWorking = true;
+                var text = await Task.Run(() => string.Join(ControlChars.CrLf, TextFileHelper.ConvertGrepResults(this.Results, new UTF8Encoding(true))));
+                Clipboard.SetText(text);
+                this.IsWorking = false;
             });
 
         public GrepViewModel()

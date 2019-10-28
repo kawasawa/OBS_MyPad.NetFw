@@ -620,4 +620,7 @@
   <data name="Label_Owner" xml:space="preserve">
     <value>所有者</value>
   </data>
+  <data name="Command_CopyToClipboard" xml:space="preserve">
+    <value>クリップボードにコピー</value>
+  </data>
 </root>

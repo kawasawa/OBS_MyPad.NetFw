@@ -10,7 +10,6 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Interop;
-using System.Windows.Threading;
 using Vanara.PInvoke;
 
 namespace MyPad.Views
@@ -29,9 +28,6 @@ namespace MyPad.Views
         {
             this.InitializeComponent();
             this.ViewModel.Disposed += this.ViewModel_Disposed;
-            this.Loaded += this.Window_Loaded;
-            this.Closed += this.Window_Closed;
-            this.TaskbarIcon.TrayMouseDoubleClick += this.TaskbarIcon_TrayMouseDoubleClick;
         }
 
         public Workspace(IEnumerable<string> args)

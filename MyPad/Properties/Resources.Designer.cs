@@ -224,6 +224,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   Copy to clipboard に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_CopyToClipboard {
+            get {
+                return ResourceManager.GetString("Command_CopyToClipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Cut に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Cut {
