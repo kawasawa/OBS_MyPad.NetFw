@@ -33,7 +33,10 @@
                        P2={Binding ActiveEditor.FileName, Mode=OneWay},
                        P3={Binding ActiveEditor.IsModified, Mode=OneWay},
                        P4={Binding Source={x:Static ml:ProductInfo.Product}, Mode=OneWay}}"
-               AllowDrop="True" WindowStartupLocation="CenterScreen" Height="625" Width="1000">
+               AllowDrop="True" WindowStartupLocation="CenterScreen" Height="625" Width="1000"
+               DataContextChanged="Window_DataContextChanged"
+               Loaded="Window_Loaded"
+               Closed="Window_Closed">
     
     <!-- ビヘイビア -->
     <i:Interaction.Behaviors>
@@ -89,36 +92,9 @@
         </Style>
         <Style TargetType="{x:Type m:HamburgerMenu}" BasedOn="{StaticResource Default.HamburgerMenu}">
             <Setter Property="Visibility" Value="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding System.ShowSideBar, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}}"/>
-            <Setter Property="HamburgerVisibility" Value="Collapsed"/>
-            <Setter Property="HamburgerHeight" Value="0"/>
         </Style>
         <Style TargetType="{x:Type StatusBar}" BasedOn="{StaticResource Default.StatusBar}">
             <Setter Property="Visibility" Value="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding System.ShowStatusBar, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}}"/>
-        </Style>
-        <ContextMenu x:Key="ContextMenu">
-            <MenuItem IsCheckable="True" IsChecked="{Binding System.ShowMenuBar,   Source={x:Static models:SettingsService.Instance}, Mode=TwoWay}" Header="{Binding Resources.Command_ShowMenuBar,   Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-            <MenuItem IsCheckable="True" IsChecked="{Binding System.ShowToolBar,   Source={x:Static models:SettingsService.Instance}, Mode=TwoWay}" Header="{Binding Resources.Command_ShowToolBar,   Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-            <MenuItem IsCheckable="True" IsChecked="{Binding System.ShowSideBar,   Source={x:Static models:SettingsService.Instance}, Mode=TwoWay}" Header="{Binding Resources.Command_ShowSideBar,   Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-            <MenuItem IsCheckable="True" IsChecked="{Binding System.ShowStatusBar, Source={x:Static models:SettingsService.Instance}, Mode=TwoWay}" Header="{Binding Resources.Command_ShowStatusBar, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-        </ContextMenu>
-        <Style x:Key="ReadOnlyTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
-            <Setter Property="IsReadOnly" Value="True"/>
-            <Setter Property="IsTabStop" Value="False"/>
-            <Setter Property="VerticalContentAlignment" Value="Top"/>
-            <Setter Property="VerticalScrollBarVisibility" Value="Hidden"/>
-            <Setter Property="HorizontalScrollBarVisibility" Value="Hidden"/>
-            <Setter Property="ContextMenu">
-                <Setter.Value>
-                    <ContextMenu Visibility="Collapsed"/>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <Style x:Key="TabItemButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
-            <Setter Property="Padding" Value="0"/>
-            <Setter Property="Height" Value="20"/>
-            <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
-            <Setter Property="Background" Value="{x:Null}"/>
-            <Setter Property="BorderBrush" Value="{x:Null}"/>
         </Style>
     </Window.Resources>
 
@@ -405,6 +381,34 @@
 
     <!-- ウィンドウコンテンツ -->
     <Grid>
+        <Grid.Resources>
+            <ContextMenu x:Key="ContextMenu">
+                <MenuItem IsCheckable="True" IsChecked="{Binding System.ShowMenuBar,   Source={x:Static models:SettingsService.Instance}, Mode=TwoWay}" Header="{Binding Resources.Command_ShowMenuBar,   Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                <MenuItem IsCheckable="True" IsChecked="{Binding System.ShowToolBar,   Source={x:Static models:SettingsService.Instance}, Mode=TwoWay}" Header="{Binding Resources.Command_ShowToolBar,   Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                <MenuItem IsCheckable="True" IsChecked="{Binding System.ShowSideBar,   Source={x:Static models:SettingsService.Instance}, Mode=TwoWay}" Header="{Binding Resources.Command_ShowSideBar,   Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                <MenuItem IsCheckable="True" IsChecked="{Binding System.ShowStatusBar, Source={x:Static models:SettingsService.Instance}, Mode=TwoWay}" Header="{Binding Resources.Command_ShowStatusBar, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+            </ContextMenu>
+            <Style x:Key="ReadOnlyTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
+                <Setter Property="IsReadOnly" Value="True"/>
+                <Setter Property="IsTabStop" Value="False"/>
+                <Setter Property="VerticalContentAlignment" Value="Top"/>
+                <Setter Property="VerticalScrollBarVisibility" Value="Hidden"/>
+                <Setter Property="HorizontalScrollBarVisibility" Value="Hidden"/>
+                <Setter Property="ContextMenu">
+                    <Setter.Value>
+                        <ContextMenu Visibility="Collapsed"/>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="TabItemButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="Height" Value="20"/>
+                <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
+                <Setter Property="Background" Value="{x:Null}"/>
+                <Setter Property="BorderBrush" Value="{x:Null}"/>
+            </Style>
+        </Grid.Resources>
+        
         <Grid ge:GridEx.RowDefinition="Auto, *, Auto" ContextMenu="{StaticResource ContextMenu}">
 
             <!-- 共通キーバインディング -->
@@ -474,27 +478,13 @@
                 </Grid.ColumnDefinitions>
                 
                 <!-- ハンバーガーメニュー -->
-                <m:HamburgerMenu x:Name="HamburgerMenu" Grid.Column="0" Width="48" HamburgerWidth="48">
+                <m:HamburgerMenu x:Name="HamburgerMenu" Grid.Column="0" Width="48" HamburgerWidth="48" HamburgerHeight="0" HamburgerVisibility="Collapsed" ItemInvoked="HamburgerMenu_ItemInvoked">
                     <i:Interaction.Triggers>
                         <ei:PropertyChangedTrigger Binding="{Binding Visibility, ElementName=HamburgerMenu, Mode=OneWay}">
                             <ei:ChangePropertyAction PropertyName="Width" Value="Auto" TargetName="HamburgerMenuColumn"/>
                         </ei:PropertyChangedTrigger>
                     </i:Interaction.Triggers>
                     <m:HamburgerMenu.Resources>
-                        <Style x:Key="__FileExplorerItem" TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource Default.TreeViewItem}">
-                            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsEmpty, Mode=OneWay}" Value="True">
-                                    <Setter Property="Foreground" Value="{DynamicResource GrayBrush5}"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                        <Style x:Key="__GrepItem" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource Default.ListBoxItem}">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        </Style>
-                        <Style x:Key="__ClipboardHistoryItem" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource Default.ListBoxItem}">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        </Style>
                         <Style x:Key="IconButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
                             <Setter Property="Padding" Value="0"/>
                             <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
@@ -536,13 +526,27 @@
                                     <mi:Material Kind="FileTree"/>
                                 </m:HamburgerMenuIconItem.Icon>
                                 <m:HamburgerMenuIconItem.Tag>
-                                    <TreeView ItemsSource="{Binding Data.FileNodes, Source={StaticResource Proxy}, Mode=OneWay}" ItemContainerStyle="{StaticResource __FileExplorerItem}">
+                                    <TreeView ItemsSource="{Binding Data.FileNodes, Source={StaticResource Proxy}, Mode=OneWay}">
+                                        <TreeView.ItemContainerStyle>
+                                            <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource Default.TreeViewItem}">
+                                                <EventSetter Event="MouseDoubleClick" Handler="FileExplorerItem_MouseDoubleClick"/>
+                                                <EventSetter Event="KeyDown" Handler="FileExplorerItem_KeyDown"/>
+                                                <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsEmpty, Mode=OneWay}" Value="True">
+                                                        <Setter Property="Foreground" Value="{DynamicResource GrayBrush5}"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TreeView.ItemContainerStyle>
                                         <TreeView.ItemTemplate>
                                             <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="{x:Type viewModels:FileNodeViewModel}">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Image Source="{Binding Image, Mode=OneWay}" Margin="{StaticResource Const.Gap1W}"/>
-                                                    <TextBlock Text="{qc:MultiBinding '$P0 ? \'empty\' : Path.GetFileName($P1)', P0={Binding IsEmpty, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}" ToolTip="{Binding FileName, Mode=OneWay}" ToolTipService.IsEnabled="{qc:Binding '!$P', P={Binding IsEmpty, Mode=OneWay}}"/>
-                                                </StackPanel>
+                                                <Border Background="Transparent" ToolTip="{Binding FileName, Mode=OneWay}" ToolTipService.IsEnabled="{qc:Binding '!$P', P={Binding IsEmpty, Mode=OneWay}}">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Image Source="{Binding Image, Mode=OneWay}" Margin="{StaticResource Const.Gap1W}"/>
+                                                        <TextBlock Text="{qc:MultiBinding '$P0 ? \'empty\' : Path.GetFileName($P1)', P0={Binding IsEmpty, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}"/>
+                                                    </StackPanel>
+                                                </Border>
                                             </HierarchicalDataTemplate>
                                         </TreeView.ItemTemplate>
                                     </TreeView>
@@ -582,7 +586,13 @@
                                             <CheckBox  Grid.Row="12" IsChecked="{qc:Binding Convert='!$P', ConvertBack='!$value', P={Binding IgnoreCase, Mode=TwoWay}}" Content="{Binding Resources.Command_CaseSensitive, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                                             <CheckBox  Grid.Row="14" IsChecked="{Binding UseRegex, Mode=TwoWay}" Content="{Binding Resources.Command_UseRegex, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                                         </Grid>
-                                        <ListBox Grid.Row="2" ItemsSource="{Binding Results, Mode=OneWay}" ItemContainerStyle="{StaticResource __GrepItem}">
+                                        <ListBox Grid.Row="2" ItemsSource="{Binding Results, Mode=OneWay}">
+                                            <ListBox.ItemContainerStyle>
+                                                <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource Default.ListBoxItem}">
+                                                    <EventSetter Event="MouseDoubleClick" Handler="GrepItem_MouseDoubleClick"/>
+                                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                                </Style>
+                                            </ListBox.ItemContainerStyle>
                                             <ListBox.ItemTemplate>
                                                 <DataTemplate>
                                                     <TextBlock Text="{qc:MultiBinding '$P1.Substring($P0.Length) + \'(\' + $P2 + \'): \' + ($P3.Length.CompareTo(80) == 1 ? $P3.Substring(0, 80) : $P3)', P0={Binding Data.Grep.RootPath, Source={StaticResource Proxy}, Mode=OneTime}, P1={Binding Path, Mode=OneWay}, P2={Binding Line, Mode=OneWay}, P3={Binding Text, Mode=OneWay}}"/>
@@ -601,7 +611,13 @@
                                 </m:HamburgerMenuIconItem.Icon>
                                 <m:HamburgerMenuIconItem.Tag>
                                     <Grid ge:GridEx.RowDefinition="3*(50-), Auto, *(50-)">
-                                        <ListBox Grid.Row="0" ItemsSource="{Binding ClipboardItems, Source={x:Static viewModels:WorkspaceViewModel.Instance}, Mode=OneWay}" ItemContainerStyle="{StaticResource __ClipboardHistoryItem}">
+                                        <ListBox Grid.Row="0" ItemsSource="{Binding ClipboardItems, Source={x:Static viewModels:WorkspaceViewModel.Instance}, Mode=OneWay}">
+                                            <ListBox.ItemContainerStyle>
+                                                <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource Default.ListBoxItem}">
+                                                    <EventSetter Event="MouseDoubleClick" Handler="ClipboardHistoryItem_MouseDoubleClick"/>
+                                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                                </Style>
+                                            </ListBox.ItemContainerStyle>
                                             <ListBox.ItemTemplate>
                                                 <DataTemplate>
                                                     <TextBlock Text="{qc:Binding '$P.Replace(ControlChars.Cr.ToString(), string.Empty).Replace(ControlChars.Lf.ToString(), string.Empty)', P={Binding Mode=OneWay}}"/>
@@ -664,16 +680,21 @@
                     </Grid.RowDefinitions>
 
                     <!-- テキストエディター -->
-                    <components:DraggableTabControl x:Name="TextEditorTabControl" Grid.Row="0" Grid.RowSpan="{qc:Binding '$P ? 1 : 3', P={Binding IsVisibleTerminalContent, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}}"
-                                                    ItemsSource="{Binding Editors, Mode=OneWay}" SelectedItem="{Binding ActiveEditor, Mode=TwoWay}" NewItemFactory="{Binding EditorFactory}" ClosingItemCallback="{Binding ClosingEditorHandler, Mode=OneTime}">
+                    <components:DraggableTabControl x:Name="TextEditorTabControl"
+                                                    Grid.Row="0"
+                                                    Grid.RowSpan="{qc:Binding '$P ? 1 : 3', P={Binding IsVisibleTerminalContent, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}}"
+                                                    IsHeaderPanelVisible="{qc:MultiBinding '$P0 || $P1.CompareTo(1) == 1', P0={Binding System.ShowSingleTab, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}, P1={Binding Items.Count, RelativeSource={RelativeSource Self}, Mode=OneWay}}"
+                                                    ItemsSource="{Binding Editors, Mode=OneWay}"
+                                                    SelectedItem="{Binding ActiveEditor, Mode=TwoWay}"
+                                                    NewItemFactory="{Binding EditorFactory}"
+                                                    ClosingItemCallback="{Binding ClosingEditorHandler, Mode=OneTime}"
+                                                    SelectionChanged="TextEditorTabControl_SelectionChanged">
                         <dr:TabablzControl.InterTabController>
                             <dr:InterTabController InterTabClient="{Binding InterTabClient, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
                         </dr:TabablzControl.InterTabController>
-                        <dr:TabablzControl.Resources>
-                            <Style TargetType="{x:Type components:DraggableTabControl}" BasedOn="{StaticResource Default.TabablzControl}">
-                                <Setter Property="IsHeaderPanelVisible" Value="{qc:MultiBinding '$P0 || $P1.CompareTo(1) == 1', P0={Binding System.ShowSingleTab, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}, P1={Binding Items.Count, RelativeSource={RelativeSource Self}, Mode=OneWay}}"/>
-                            </Style>
-                            <Style x:Key="__TextEditorTabItem" TargetType="{x:Type dr:DragablzItem}" BasedOn="{StaticResource Default.DragablzItem}">
+                        <dr:TabablzControl.ItemContainerStyle>
+                            <Style TargetType="{x:Type dr:DragablzItem}" BasedOn="{StaticResource Default.DragablzItem}">
+                                <EventSetter Event="MouseRightButtonDown" Handler="TabItem_MouseRightButtonDown"/>
                                 <Setter Property="ToolTipService.IsEnabled" Value="{qc:Binding '!$P', P={Binding IsNewFile, Mode=OneWay}}"/>
                                 <Setter Property="ToolTip" Value="{Binding FileName, Mode=OneWay}"/>
                                 <Style.Triggers>
@@ -693,44 +714,6 @@
                                     </MultiDataTrigger>
                                 </Style.Triggers>
                             </Style>
-                            <Style x:Key="__TextEditor" TargetType="{x:Type components:TextEditor}" BasedOn="{StaticResource Default.TextEditor}">
-                                <Setter Property="Settings"         Value="{Binding TextEditor, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}"/>
-                                <Setter Property="Document"         Value="{Binding Document, Mode=OneWay}"/>
-                                <Setter Property="IsReadOnly"       Value="{Binding IsReadOnly, Mode=TwoWay}"/>
-                                <Setter Property="IsModified"       Value="{Binding IsModified, Mode=TwoWay}"/>
-                                <Setter Property="SyntaxDefinition" Value="{Binding SyntaxDefinition, Mode=TwoWay}"/>
-                                <Setter Property="OverstrikeMode"   Value="{Binding OverstrikeMode, Mode=TwoWay}"/>
-                                <Setter Property="Line"             Value="{Binding Line, Mode=TwoWay}"/>
-                                <Setter Property="Column"           Value="{Binding Column, Mode=TwoWay}"/>
-                                <Setter Property="VisualColumn"     Value="{Binding VisualColumn, Mode=TwoWay}"/>
-                                <Setter Property="mlwm:PushBindingManager.StylePushBindings">
-                                    <Setter.Value>
-                                        <mlwm:PushBindingCollection>
-                                            <mlwm:PushBinding TargetProperty="ActualFontSize"       Path="ActualFontSize"/>
-                                            <mlwm:PushBinding TargetProperty="ZoomIncrement"        Path="ZoomIncrement"/>
-                                            <mlwm:PushBinding TargetProperty="VisualLength"         Path="VisualLength"/>
-                                            <mlwm:PushBinding TargetProperty="TextLength"           Path="TextLength"/>
-                                            <mlwm:PushBinding TargetProperty="SelectionLength"      Path="SelectionLength"/>
-                                            <mlwm:PushBinding TargetProperty="SelectionStart"       Path="SelectionStart"/>
-                                            <mlwm:PushBinding TargetProperty="SelectionEnd"         Path="SelectionEnd"/>
-                                            <mlwm:PushBinding TargetProperty="SelectionStartLine"   Path="SelectionStartLine"/>
-                                            <mlwm:PushBinding TargetProperty="SelectionEndLine"     Path="SelectionEndLine"/>
-                                            <mlwm:PushBinding TargetProperty="SelectionLineCount"   Path="SelectionLineCount"/>
-                                            <mlwm:PushBinding TargetProperty="SelectedText"         Path="SelectedText"/>
-                                            <mlwm:PushBinding TargetProperty="CharName"             Path="CharName"/>
-                                            <mlwm:PushBinding TargetProperty="IsAtEndOfLine"        Path="IsAtEndOfLine"/>
-                                            <mlwm:PushBinding TargetProperty="IsInVirtualSpace"     Path="IsInVirtualSpace"/>
-                                            <mlwm:PushBinding TargetProperty="EnableAutoCompletion" Path="EnableAutoCompletion"/>
-                                        </mlwm:PushBindingCollection>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                            <Style TargetType="{x:Type ae:SearchPanel}" BasedOn="{StaticResource Default.SearchPanel}">
-                                <Setter Property="Localization" Value="{Binding Localization, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
-                            </Style>
-                        </dr:TabablzControl.Resources>
-                        <dr:TabablzControl.ItemContainerStyle>
-                            <Style TargetType="{x:Type dr:DragablzItem}" BasedOn="{StaticResource __TextEditorTabItem}"/>
                         </dr:TabablzControl.ItemContainerStyle>
                         <dr:TabablzControl.HeaderItemTemplate>
                             <DataTemplate>
@@ -783,13 +766,53 @@
                         </dr:TabablzControl.ContextMenu>
                         <dr:TabablzControl.ContentTemplate>
                             <DataTemplate>
-                                <components:TextEditor x:Name="TextEditor" DataContext="{Binding Mode=OneWay}" Style="{StaticResource __TextEditor}">
+                                <components:TextEditor x:Name="TextEditor" DataContext="{Binding Mode=OneWay}">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="Loaded">
                                             <mlwb:CallElementMethodAction MethodName="Focus"/>
                                             <mlwb:CallElementMethodAction MethodName="Redraw"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
+                                    <components:TextEditor.Style>
+                                        <Style TargetType="{x:Type components:TextEditor}" BasedOn="{StaticResource Default.TextEditor}">
+                                            <EventSetter Event="PreviewKeyDown" Handler="TextEditor_PreviewKeyDown"/>
+                                            <Setter Property="Settings"         Value="{Binding TextEditor, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}"/>
+                                            <Setter Property="Document"         Value="{Binding Document, Mode=OneWay}"/>
+                                            <Setter Property="IsReadOnly"       Value="{Binding IsReadOnly, Mode=TwoWay}"/>
+                                            <Setter Property="IsModified"       Value="{Binding IsModified, Mode=TwoWay}"/>
+                                            <Setter Property="SyntaxDefinition" Value="{Binding SyntaxDefinition, Mode=TwoWay}"/>
+                                            <Setter Property="OverstrikeMode"   Value="{Binding OverstrikeMode, Mode=TwoWay}"/>
+                                            <Setter Property="Line"             Value="{Binding Line, Mode=TwoWay}"/>
+                                            <Setter Property="Column"           Value="{Binding Column, Mode=TwoWay}"/>
+                                            <Setter Property="VisualColumn"     Value="{Binding VisualColumn, Mode=TwoWay}"/>
+                                            <Setter Property="mlwm:PushBindingManager.StylePushBindings">
+                                                <Setter.Value>
+                                                    <mlwm:PushBindingCollection>
+                                                        <mlwm:PushBinding TargetProperty="ActualFontSize"       Path="ActualFontSize"/>
+                                                        <mlwm:PushBinding TargetProperty="ZoomIncrement"        Path="ZoomIncrement"/>
+                                                        <mlwm:PushBinding TargetProperty="VisualLength"         Path="VisualLength"/>
+                                                        <mlwm:PushBinding TargetProperty="TextLength"           Path="TextLength"/>
+                                                        <mlwm:PushBinding TargetProperty="SelectionLength"      Path="SelectionLength"/>
+                                                        <mlwm:PushBinding TargetProperty="SelectionStart"       Path="SelectionStart"/>
+                                                        <mlwm:PushBinding TargetProperty="SelectionEnd"         Path="SelectionEnd"/>
+                                                        <mlwm:PushBinding TargetProperty="SelectionStartLine"   Path="SelectionStartLine"/>
+                                                        <mlwm:PushBinding TargetProperty="SelectionEndLine"     Path="SelectionEndLine"/>
+                                                        <mlwm:PushBinding TargetProperty="SelectionLineCount"   Path="SelectionLineCount"/>
+                                                        <mlwm:PushBinding TargetProperty="SelectedText"         Path="SelectedText"/>
+                                                        <mlwm:PushBinding TargetProperty="CharName"             Path="CharName"/>
+                                                        <mlwm:PushBinding TargetProperty="IsAtEndOfLine"        Path="IsAtEndOfLine"/>
+                                                        <mlwm:PushBinding TargetProperty="IsInVirtualSpace"     Path="IsInVirtualSpace"/>
+                                                        <mlwm:PushBinding TargetProperty="EnableAutoCompletion" Path="EnableAutoCompletion"/>
+                                                    </mlwm:PushBindingCollection>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </components:TextEditor.Style>
+                                    <components:TextEditor.Resources>
+                                        <Style TargetType="{x:Type ae:SearchPanel}" BasedOn="{StaticResource Default.SearchPanel}">
+                                            <Setter Property="Localization" Value="{Binding Localization, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
+                                        </Style>
+                                    </components:TextEditor.Resources>
                                     <components:TextEditor.ContextMenu>
                                         <ContextMenu>
                                             <MenuItem Command="Undo" Header="{Binding Resources.Command_Undo, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
@@ -867,13 +890,20 @@
                         </dr:TabablzControl.ContentTemplate>
                     </components:DraggableTabControl>
 
-                    <GridSplitter x:Name="ContentSplitter" Grid.Row="1" Height="{StaticResource Const.Gap1}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsVisibleTerminalContent, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}}"/>
+                    <GridSplitter x:Name="ContentSplitter" Grid.Row="1" Height="{StaticResource Const.Gap1}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsVisibleTerminalContent, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}}" DragCompleted="ContentSplitter_DragCompleted"/>
 
                     <!-- ターミナル -->
-                    <components:DraggableTabControl x:Name="TerminalTabControl" Grid.Row="2" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsVisibleTerminalContent, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}}"
-                                                    ItemsSource="{Binding Terminals, Mode=OneWay}" SelectedItem="{Binding ActiveTerminal, Mode=TwoWay}" NewItemFactory="{Binding TerminalFactory, Mode=OneWay}" ClosingItemCallback="{Binding ClosingTerminalHandler, Mode=OneTime}">
-                        <dr:TabablzControl.Resources>
-                            <Style x:Key="__TerminalTabItem" TargetType="{x:Type dr:DragablzItem}" BasedOn="{StaticResource Default.DragablzItem}">
+                    <components:DraggableTabControl x:Name="TerminalTabControl"
+                                                    Grid.Row="2"
+                                                    Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsVisibleTerminalContent, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}}"
+                                                    ItemsSource="{Binding Terminals, Mode=OneWay}"
+                                                    SelectedItem="{Binding ActiveTerminal, Mode=TwoWay}"
+                                                    NewItemFactory="{Binding TerminalFactory, Mode=OneWay}"
+                                                    ClosingItemCallback="{Binding ClosingTerminalHandler, Mode=OneTime}"
+                                                    SelectionChanged="TerminalTabControl_SelectionChanged">
+                        <dr:TabablzControl.ItemContainerStyle>
+                            <Style TargetType="{x:Type dr:DragablzItem}" BasedOn="{StaticResource Default.DragablzItem}">
+                                <EventSetter Event="MouseRightButtonDown" Handler="TabItem_MouseRightButtonDown"/>
                                 <Style.Triggers>
                                     <MultiDataTrigger>
                                         <MultiDataTrigger.Conditions>
@@ -889,9 +919,6 @@
                                     </MultiDataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </dr:TabablzControl.Resources>
-                        <dr:TabablzControl.ItemContainerStyle>
-                            <Style TargetType="{x:Type dr:DragablzItem}" BasedOn="{StaticResource __TerminalTabItem}"/>
                         </dr:TabablzControl.ItemContainerStyle>
                         <dr:TabablzControl.HeaderItemTemplate>
                             <DataTemplate>
@@ -997,7 +1024,7 @@
                 </StatusBarItem>
                 <StatusBarItem Grid.Column="3" DataContext="{Binding ActiveEditor, Mode=OneWay}">
                     <!-- ViewModel とコードビハインドで帳尻合わせするため Mode=OneWay で -->
-                    <ComboBox x:Name="EncodingComboBox" ItemsSource="{x:Static root:Consts.ENCODINGS}" SelectedValue="{Binding Encoding, Mode=OneWay}">
+                    <ComboBox x:Name="EncodingComboBox" ItemsSource="{x:Static root:Consts.ENCODINGS}" SelectedValue="{Binding Encoding, Mode=OneWay}" SelectionChanged="StatusComboBox_SelectionChanged">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{qc:MultiBinding '$P0 + \' - \' + $P1', P0={Binding CodePage, Mode=OneWay}, P1={Binding EncodingName, Mode=OneWay}}"/>
@@ -1007,7 +1034,7 @@
                 </StatusBarItem>
                 <StatusBarItem Grid.Column="4" DataContext="{Binding ActiveEditor, Mode=OneWay}">
                     <!-- ViewModel とコードビハインドで帳尻合わせするため Mode=OneWay で -->
-                    <ComboBox x:Name="LanguageComboBox" ItemsSource="{qc:Binding 'new string\[\] { string.Empty }.Concat($P.Keys)', P={Binding Source={x:Static root:Consts.SYNTAX_DEFINITIONS}, Mode=OneWay}}" SelectedValue="{Binding SyntaxDefinition.Name, Mode=OneWay}" m:TextBoxHelper.Watermark="Plain Text"/>
+                    <ComboBox x:Name="LanguageComboBox" ItemsSource="{qc:Binding 'new string\[\] { string.Empty }.Concat($P.Keys)', P={Binding Source={x:Static root:Consts.SYNTAX_DEFINITIONS}, Mode=OneWay}}" SelectedValue="{Binding SyntaxDefinition.Name, Mode=OneWay}" m:TextBoxHelper.Watermark="Plain Text" SelectionChanged="StatusComboBox_SelectionChanged"/>
                 </StatusBarItem>
                 <StatusBarItem Grid.Column="5" DataContext="{Binding ActiveEditor, Mode=OneWay}">
                     <ToggleButton IsChecked="{Binding OverstrikeMode, Mode=TwoWay}" Content="{qc:Binding '$P ? \'OVER\' : \'INS\'', P={Binding OverstrikeMode, Mode=OneWay}}"/>
@@ -1029,6 +1056,9 @@
         <m:FlyoutsControl>
             <m:FlyoutsControl.Resources>
                 <Thickness x:Key="Flyout.Margin" Left="10" Right="10" Bottom="20"/>
+                <Style TargetType="{x:Type m:Flyout}" BasedOn="{StaticResource Default.Flyout}">
+                    <EventSetter Event="IsOpenChanged" Handler="Flyout_IsOpenChanged"/>
+                </Style>
             </m:FlyoutsControl.Resources>
 
             <!-- 指定行へ移動 -->
@@ -1045,7 +1075,8 @@
                                             Value="{Binding Line, Mode=TwoWay}"
                                             Minimum="1"
                                             Maximum="{Binding Document.LineCount, Mode=OneWay}"
-                                            ReverseOnMouseWheel="True"/>
+                                            ReverseOnMouseWheel="True"
+                                            ValueChanged="GoToLineInput_ValueChanged"/>
             </m:Flyout>
 
             <!-- 印刷 -->

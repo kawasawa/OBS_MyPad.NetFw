@@ -15,6 +15,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Threading;
 using Vanara.InteropServices;
 using Vanara.PInvoke;
 
@@ -31,6 +32,7 @@ namespace MyPad.Views
             _Separater_ = 10,
         }
 
+        private readonly bool _restorePlacement = true;
         private HwndSource _handleSource;
         private User32_Gdi.MENUITEMINFO _lpmiiShowMenuBar;
         private User32_Gdi.MENUITEMINFO _lpmiiShowToolBar;
@@ -38,7 +40,7 @@ namespace MyPad.Views
         private User32_Gdi.MENUITEMINFO _lpmiiShowStatusBar;
 
         public static readonly ICommand SwitchFocus
-            = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.F6, ModifierKeys.None, "F6") });
+            = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.F6) });
         public static readonly ICommand ActivateTerminal
             = Interactor.CreateRoutedCommand<MainWindow>(new InputGestureCollection { new KeyGesture(Key.OemTilde, ModifierKeys.Control, "Ctrl+@") });
         public static readonly ICommand ActivateFileExplorer
@@ -60,10 +62,44 @@ namespace MyPad.Views
         }
 
         private TextEditor ActiveTextEditor
-            => this.GetTextEditor(this.TextEditorTabControl.SelectedIndex);
+        {
+            get
+            {
+                try
+                {
+                    // HACK: 選択されたタブ内のコントロールを取得
+                    // ItemsSource を使用する (具体的には ViewModel 等をバインドする) 場合、
+                    // Item に関係するあらゆるプロパティに上記の要素の参照が設定されるため、
+                    // 子要素の UIElement のインスタンスを直接取得する方法が無い。(仕様)
+                    // 親要素の VisualTree をたどり ContentPreseneter を取得し、内包する UIElement を要素名から探す。
+                    // ただし VisualTree からは一度も描画されていないエレメントを取得できないため注意が必要。
+                    var index = this.TextEditorTabControl.SelectedIndex;
+                    var presenter = this.TextEditorTabControl.GetChild<ContentPresenter>(index);
+                    return presenter?.ContentTemplate?.FindName("TextEditor", presenter) as TextEditor;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+        }
 
         private ComboBox ActiveCommandBox
-            => this.GetCommandBox(this.TerminalTabControl.SelectedIndex);
+        {
+            get
+            {
+                try
+                {
+                    var index = this.TerminalTabControl.SelectedIndex;
+                    var presenter = this.TerminalTabControl.GetChild<ContentPresenter>(index);
+                    return presenter?.ContentTemplate?.FindName("CommandBox", presenter) as ComboBox;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+        }
 
         private ComboBox ActiveStatusComboBox
         {
@@ -81,37 +117,22 @@ namespace MyPad.Views
         public MainWindowViewModel ViewModel => this.DataContext as MainWindowViewModel;
         public IInterTabClient InterTabClient { get; } = new MainWindowInterTabClient();
         public ICSharpCode.AvalonEdit.Search.Localization Localization { get; } = new LocalizationWrapper();
-        public bool RestorePlacement { get; set; } = true;
 
         public MainWindow()
         {
             this.InitializeComponent();
-
             this.CommandBindings.Add(new CommandBinding(SwitchFocus, (sender, e) => this.SwitchActiveContent()));
             this.CommandBindings.Add(new CommandBinding(ActivateTerminal, (sender, e) => this.SwitchTerminalVisibility()));
             this.CommandBindings.Add(new CommandBinding(ActivateFileExplorer, (sender, e) => this.ActivateHamburgerMenuItem(this.FileExplorerItem)));
             this.CommandBindings.Add(new CommandBinding(ActivateProperty, (sender, e) => this.ActivateHamburgerMenuItem(this.PropertyItem)));
             this.CommandBindings.Add(new CommandBinding(ActivateClipboardHistory, (sender, e) => this.ActivateHamburgerMenuItem(this.ClipboardHistoryItem)));
             this.CommandBindings.Add(new CommandBinding(ActivateGrep, (sender, e) => this.ActivateHamburgerMenuItem(this.GrepItem)));
+        }
 
-            this.DataContextChanged += this.Window_DataContextChanged;
-            this.Loaded += this.Window_Loaded;
-            this.Closed += this.Window_Closed;
-            ((Style)this.HamburgerMenu.Resources["__FileExplorerItem"]).Setters.Add(new EventSetter() { Event = MouseDoubleClickEvent, Handler = new MouseButtonEventHandler(this.FileExplorerItem_MouseDoubleClick) });
-            ((Style)this.HamburgerMenu.Resources["__FileExplorerItem"]).Setters.Add(new EventSetter() { Event = KeyDownEvent, Handler = new KeyEventHandler(this.FileExplorerItem_KeyDown) });
-            ((Style)this.HamburgerMenu.Resources["__GrepItem"]).Setters.Add(new EventSetter() { Event = MouseDoubleClickEvent, Handler = new MouseButtonEventHandler(this.GrepItem_MouseDoubleClick) });
-            ((Style)this.HamburgerMenu.Resources["__ClipboardHistoryItem"]).Setters.Add(new EventSetter() { Event = MouseDoubleClickEvent, Handler = new MouseButtonEventHandler(this.ClipboardHistoryItem_MouseDoubleClick) });
-            ((Style)this.TerminalTabControl.Resources["__TerminalTabItem"]).Setters.Add(new EventSetter() { Event = MouseRightButtonDownEvent, Handler = new MouseButtonEventHandler(this.TabItem_MouseRightButtonDown) });
-            ((Style)this.TextEditorTabControl.Resources["__TextEditorTabItem"]).Setters.Add(new EventSetter() { Event = MouseRightButtonDownEvent, Handler = new MouseButtonEventHandler(this.TabItem_MouseRightButtonDown) });
-            ((Style)this.TextEditorTabControl.Resources["__TextEditor"]).Setters.Add(new EventSetter() { Event = PreviewKeyDownEvent, Handler = new KeyEventHandler(this.TextEditor_PreviewKeyDown) });
-            this.Flyouts.Items.OfType<Flyout>().ForEach(item => item.IsOpenChanged += this.Flyout_IsOpenChanged);
-            this.HamburgerMenu.ItemInvoked += this.HamburgerMenu_ItemInvoked;
-            this.ContentSplitter.DragCompleted += this.ContentSplitter_DragCompleted;
-            this.TextEditorTabControl.SelectionChanged += this.TextEditorTabControl_SelectionChanged;
-            this.TerminalTabControl.SelectionChanged += this.TerminalTabControl_SelectionChanged; ;
-            this.EncodingComboBox.SelectionChanged += this.StatusComboBox_SelectionChanged;
-            this.LanguageComboBox.SelectionChanged += this.StatusComboBox_SelectionChanged;
-            this.GoToLineInput.ValueChanged += this.GoToLineInput_ValueChanged;
+        private MainWindow(bool restorePlacement)
+            : this()
+        {
+            this._restorePlacement = restorePlacement;
         }
 
         private void Window_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -165,7 +186,7 @@ namespace MyPad.Views
             User32_Gdi.InsertMenuItem(hMenu, (uint)SystemMenuIndex._Separater_, true, ref lpmiiSeparater);
 
             // 表示位置の復元
-            if (this.RestorePlacement && SettingsService.Instance.System.SaveWindowPlacement && SettingsService.Instance.System.WindowPlacement.HasValue)
+            if (this._restorePlacement && SettingsService.Instance.System.SaveWindowPlacement && SettingsService.Instance.System.WindowPlacement.HasValue)
             {
                 var lpwndpl = SettingsService.Instance.System.WindowPlacement.Value;
                 if (lpwndpl.showCmd == ShowWindowCommand.SW_SHOWMINIMIZED)
@@ -347,7 +368,8 @@ namespace MyPad.Views
             if (e.Handled || e.Source != e.OriginalSource)
                 return;
 
-            this.Dispatcher.InvokeAsync(() => this.ActiveCommandBox?.Focus());
+            // ターミナルの表示が完了するまでにラグがあるため、処理の優先順位を落としておく
+            this.Dispatcher.InvokeAsync(() => this.ActiveCommandBox?.Focus(), DispatcherPriority.ApplicationIdle);
             e.Handled = true;
         }
 
@@ -379,39 +401,8 @@ namespace MyPad.Views
         {
             if (this.GoToLineFlyout.IsOpen == false || e.NewValue.HasValue == false)
                 return;
+
             this.ActiveTextEditor.ScrollToCaret();
-        }
-
-        private TextEditor GetTextEditor(int index)
-        {
-            try
-            {
-                // HACK: 選択されたタブ内のコントロールを取得
-                // ItemsSource を使用する (具体的には ViewModel 等をバインドする) 場合、
-                // Item に関係するあらゆるプロパティに上記の要素の参照が設定されるため、
-                // 子要素の UIElement のインスタンスを直接取得する方法が無い。(仕様)
-                // 親要素の VisualTree をたどり ContentPreseneter を取得し、内包する UIElement を要素名から探す。
-                // ただし VisualTree からは一度も描画されていないエレメントを取得できないため注意が必要。
-                var presenter = this.TextEditorTabControl.GetChild<ContentPresenter>(index);
-                return presenter?.ContentTemplate?.FindName("TextEditor", presenter) as TextEditor;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        private ComboBox GetCommandBox(int index)
-        {
-            try
-            {
-                var presenter = this.TerminalTabControl.GetChild<ContentPresenter>(index);
-                return presenter?.ContentTemplate?.FindName("CommandBox", presenter) as ComboBox;
-            }
-            catch
-            {
-                return null;
-            }
         }
 
         private void ActivateHamburgerMenuItem(object targetItem)
@@ -524,7 +515,7 @@ namespace MyPad.Views
             INewTabHost<Window> IInterTabClient.GetNewHost(IInterTabClient interTabClient, object partition, TabablzControl source)
             {
                 var viewModel = WorkspaceViewModel.Instance.AddWindow(null, false, false);
-                var view = new MainWindow() { DataContext = viewModel, RestorePlacement = false };
+                var view = new MainWindow(false) { DataContext = viewModel };
                 if (SettingsService.Instance.System.ShowSingleTab == false)
                 {
                     // HACK: IsHeaderPanelVisible = false の状態でフローティングを行うと例外が発生する現象への対策
