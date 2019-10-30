@@ -289,7 +289,10 @@ namespace MyPad.ViewModels
                 this.RemoveEditor(this.Editors[i]);
             for (var i = this.Terminals.Count - 1; 0 <= i; i--)
                 this.RemoveTerminal(this.Terminals[i]);
+            this.FileNodes.Clear();
+
             base.Dispose(disposing);
+            this.ForceGC();
         }
 
         public TextEditorViewModel AddEditor()
