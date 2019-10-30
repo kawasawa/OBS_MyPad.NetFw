@@ -29,7 +29,10 @@ namespace MyPad.ViewModels
             set
             {
                 if (this.SetProperty(ref this._isWorking, value))
+                {
                     this.RaisePropertyChanged(nameof(this.CanGrep));
+                    this.RaisePropertyChanged(nameof(this.CanCopy));
+                }
             }
         }
 
@@ -109,6 +112,9 @@ namespace MyPad.ViewModels
                 string.IsNullOrEmpty(this.RootPath) == false &&
                 this.Encoding != null;
 
+        public bool CanCopy
+            => this.IsWorking == false;
+
         public ICommand SelectRootPathCommand
             => new DelegateCommand(() =>
             {
@@ -123,30 +129,29 @@ namespace MyPad.ViewModels
 
         public ICommand GrepCommand
             => new DelegateCommand(async () =>
+            {
+                if (Directory.Exists(this.RootPath) == false)
                 {
-                    if (Directory.Exists(this.RootPath) == false)
-                    {
-                        this.MessageRequest.Raise(new MessageNotification(Resources.Message_NotifyDirectoryNotFound, this.RootPath, MessageKind.Warning));
-                        return;
-                    }
+                    this.MessageRequest.Raise(new MessageNotification(Resources.Message_NotifyDirectoryNotFound, this.RootPath, MessageKind.Warning));
+                    return;
+                }
 
-                    this.IsWorking = true;
-                    this.Results.Clear();
-                    await TextFileHelper.Grep(
-                        this.Results,
-                        this.SearchText,
-                        this.RootPath, 
-                        this.Encoding,
-                        this.SearchPattern,
-                        this.AllDirectories,
-                        this.IgnoreCase, 
-                        this.UseRegex,
-                        this.AutoDetectEncoding,
-                        AppConfig.GrepBufferSize);
-                    this.ForceGC();
-                    this.IsWorking = false;
-                }, 
-                () => this.CanGrep)
+                this.IsWorking = true;
+                this.Results.Clear();
+                await TextFileHelper.Grep(
+                    this.Results,
+                    this.SearchText,
+                    this.RootPath, 
+                    this.Encoding,
+                    this.SearchPattern,
+                    this.AllDirectories,
+                    this.IgnoreCase, 
+                    this.UseRegex,
+                    this.AutoDetectEncoding,
+                    AppConfig.GrepBufferSize);
+                this.ForceGC();
+                this.IsWorking = false;
+            }, () => this.CanGrep)
             .ObservesProperty(() => this.CanGrep);
 
         public ICommand CopyGrepResultsCommand
@@ -156,7 +161,8 @@ namespace MyPad.ViewModels
                 var text = await Task.Run(() => string.Join(ControlChars.CrLf, TextFileHelper.ConvertGrepResults(this.Results, new UTF8Encoding(true))));
                 Clipboard.SetText(text);
                 this.IsWorking = false;
-            });
+            }, () => this.CanCopy)
+            .ObservesProperty(() => this.CanCopy);
 
         public GrepViewModel()
         {

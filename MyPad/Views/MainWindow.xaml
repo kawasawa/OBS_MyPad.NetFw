@@ -568,18 +568,18 @@
                                         </i:Interaction.Triggers>
                                         <Grid Grid.Row="0" ge:GridEx.RowDefinition="Auto, 5, Auto, 5, Auto, 5, Auto, 5, Auto, 10, Auto, 5, Auto, 5, Auto">
                                             <Grid Grid.Row="0" ge:GridEx.ColumnDefinition="*, 5, Auto">
-                                                <TextBox Grid.Column="0" Text="{Binding RootPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{Binding Resources.Label_Directory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" m:TextBoxHelper.UseFloatingWatermark="True"/>
+                                                <TextBox Grid.Column="0" Text="{Binding RootPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{Binding Resources.Label_Directory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" m:TextBoxHelper.UseFloatingWatermark="True" m:TextBoxHelper.ClearTextButton="True"/>
                                                 <Button  Grid.Column="2" Command="{Binding SelectRootPathCommand, Mode=OneTime}" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
                                                     <mi:Modern Kind="FolderOpen"/>
                                                 </Button>
                                             </Grid>
                                             <Grid Grid.Row="2" ge:GridEx.ColumnDefinition="*, 5, Auto">
-                                                <TextBox Grid.Column="0" Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{Binding Resources.Label_SearchText, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" m:TextBoxHelper.UseFloatingWatermark="True"/>
+                                                <TextBox Grid.Column="0" Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{Binding Resources.Label_SearchText, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" m:TextBoxHelper.UseFloatingWatermark="True" m:TextBoxHelper.ClearTextButton="True"/>
                                                 <Button  Grid.Column="2" Command="{Binding GrepCommand, Mode=OneTime}" ToolTip="{Binding Resources.Command_Find, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
                                                     <mi:Material Kind="Magnify"/>
                                                 </Button>
                                             </Grid>
-                                            <TextBox   Grid.Row="4"  Text="{Binding SearchPattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{Binding Resources.Label_SearchPattern, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" m:TextBoxHelper.UseFloatingWatermark="True"/>
+                                            <TextBox   Grid.Row="4"  Text="{Binding SearchPattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{Binding Resources.Label_SearchPattern, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" m:TextBoxHelper.UseFloatingWatermark="True" m:TextBoxHelper.ClearTextButton="True"/>
                                             <ComboBox  Grid.Row="6"  SelectedValue="{Binding Encoding, Mode=TwoWay}" ItemsSource="{x:Static root:Consts.ENCODINGS}" DisplayMemberPath="EncodingName" m:TextBoxHelper.Watermark="{Binding Resources.Label_Encoding, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" m:TextBoxHelper.UseFloatingWatermark="True"/>
                                             <CheckBox  Grid.Row="8"  IsChecked="{Binding AutoDetectEncoding, Mode=TwoWay}" Content="{Binding Resources.Label_AutoDetect, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
                                             <CheckBox  Grid.Row="10" IsChecked="{Binding AllDirectories, Mode=TwoWay}" Content="{Binding Resources.Command_AllDirectories, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
