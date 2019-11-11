@@ -1094,6 +1094,9 @@
                     <ei:DataTrigger Binding="{Binding IsOpen, ElementName=PrintFlyout, Mode=OneWay}" Value="True">
                         <p:InvokeCommandAction Command="{Binding PrintPreviewCommand, Mode=OneTime}"/>
                     </ei:DataTrigger>
+                    <ei:DataTrigger Binding="{Binding IsOpen, ElementName=PrintFlyout, Mode=OneWay}" Value="False">
+                        <p:InvokeCommandAction Command="{Binding ClearPrintPreviewCommand, Mode=OneTime}"/>
+                    </ei:DataTrigger>
                 </i:Interaction.Triggers>
                 <views:PrintPreviewContent Margin="{StaticResource Flyout.Margin}"/>
             </m:Flyout>
