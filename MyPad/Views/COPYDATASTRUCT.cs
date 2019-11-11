@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace MyPad.Models
+namespace MyPad.Views
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct COPYDATASTRUCT

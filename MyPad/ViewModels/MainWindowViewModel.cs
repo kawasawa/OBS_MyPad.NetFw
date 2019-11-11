@@ -125,6 +125,13 @@ namespace MyPad.ViewModels
         public ICommand PrintCommand
             => new DelegateCommand(() => this.PrintRequest.Raise(new PrintDocumentNotification(this.FlowDocument)));
 
+        public ICommand ClearPrintPreviewCommand
+            => new DelegateCommand(() =>
+            {
+                this.FlowDocument = null;
+                this.ForceGC();
+            });
+
         public ICommand InitializeXshdCommand
             => new DelegateCommand(() =>
             {
@@ -290,6 +297,7 @@ namespace MyPad.ViewModels
             for (var i = this.Terminals.Count - 1; 0 <= i; i--)
                 this.RemoveTerminal(this.Terminals[i]);
             this.FileNodes.Clear();
+            this.FlowDocument = null;
 
             base.Dispose(disposing);
             this.ForceGC();
