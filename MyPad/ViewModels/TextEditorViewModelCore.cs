@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Vanara.PInvoke;
@@ -171,6 +172,8 @@ namespace MyPad.ViewModels
 
             await this.SuspendAutoSaveTimer(async () =>
             {
+                Mouse.OverrideCursor = Cursors.Wait;
+
                 // ストリームからバイト配列を読み取る
                 var bytes = new byte[this.FileStream.Length];
                 this.FileStream.Position = 0;
@@ -203,6 +206,8 @@ namespace MyPad.ViewModels
 
                 // 一時ファイルを削除する
                 await Task.Run(() => this.SafeDeleteTemporary());
+
+                Mouse.OverrideCursor = null;
             });
         }
 
@@ -213,6 +218,8 @@ namespace MyPad.ViewModels
 
             await this.SuspendAutoSaveTimer(async () =>
             {
+                Mouse.OverrideCursor = Cursors.Wait;
+
                 // テキストをバイト配列に変換する
                 var bytes = await Application.Current.Dispatcher.InvokeAsync(() => encoding.GetBytes(this.Document.Text));
 
@@ -229,6 +236,8 @@ namespace MyPad.ViewModels
 
                 // 一時ファイルを削除する
                 await Task.Run(() => this.SafeDeleteTemporary());
+
+                Mouse.OverrideCursor = null;
             });
         }
 
@@ -244,6 +253,8 @@ namespace MyPad.ViewModels
 
         public FlowDocument CreateFlowDocument()
         {
+            Mouse.OverrideCursor = Cursors.Wait;
+
             IHighlighter highlighter = null;
             if (this.SyntaxDefinition != null)
             {
@@ -260,6 +271,8 @@ namespace MyPad.ViewModels
             flowDocument.Foreground = Brushes.Black;
             flowDocument.PagePadding = new Thickness(50);
             flowDocument.ColumnGap = 0;
+
+            Mouse.OverrideCursor = null;
             return flowDocument;
         }
 

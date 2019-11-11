@@ -1,7 +1,6 @@
 ﻿using MyLib;
 using MyLib.Wpf;
 using MyLib.Wpf.Interactions;
-using MyPad.Models;
 using MyPad.ViewModels;
 using System;
 using System.Collections.Generic;
