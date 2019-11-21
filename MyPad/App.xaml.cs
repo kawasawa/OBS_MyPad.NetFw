@@ -147,17 +147,19 @@ namespace MyPad
         private void InitializeQuickConverter()
         {
             // System
-            EquationTokenizer.AddNamespace(typeof(System.Object));                   // mscorlib              : System
-            EquationTokenizer.AddNamespace(typeof(System.IO.Path));                  // mscorlib              : System.IO
-            EquationTokenizer.AddNamespace(typeof(System.Text.Encoding));            // mscorlib              : System.Text
-            EquationTokenizer.AddNamespace(typeof(System.Reflection.Assembly));      // mscorlib              : System.Reflection
-            EquationTokenizer.AddNamespace(typeof(System.Windows.Point));            // WindowsBase           : System.Windows
-            EquationTokenizer.AddNamespace(typeof(System.Windows.UIElement));        // PresentationCore      : System.Windows
-            EquationTokenizer.AddNamespace(typeof(System.Windows.Controls.Control)); // PresentationFramework : System.Windows.Controls
-            EquationTokenizer.AddExtensionMethods(typeof(System.Linq.Enumerable));   // System.Core           : System.Linq
+            EquationTokenizer.AddNamespace(typeof(System.Object));                   // System                  : mscorlib.dll
+            EquationTokenizer.AddNamespace(typeof(System.IO.Path));                  // System.IO               : mscorlib.dll
+            EquationTokenizer.AddNamespace(typeof(System.Text.Encoding));            // System.Text             : mscorlib.dll
+            EquationTokenizer.AddNamespace(typeof(System.Reflection.Assembly));      // System.Reflection       : mscorlib.dll
+            EquationTokenizer.AddNamespace(typeof(System.Windows.Point));            // System.Windows          : WindowsBase.dll
+            EquationTokenizer.AddNamespace(typeof(System.Windows.UIElement));        // System.Windows          : PresentationCore.dll
+            EquationTokenizer.AddNamespace(typeof(System.Windows.Input.Key));        // System.Windows.Input    : WindowsBase.dll
+            EquationTokenizer.AddNamespace(typeof(System.Windows.Input.Cursor));     // System.Windows.Input    : PresentationCore.dll
+            EquationTokenizer.AddNamespace(typeof(System.Windows.Controls.Control)); // System.Windows.Controls : PresentationFramework.dll
+            EquationTokenizer.AddExtensionMethods(typeof(System.Linq.Enumerable));   // System.Linq             : System.Core.dll
 
             // Additional
-            EquationTokenizer.AddNamespace(typeof(Microsoft.VisualBasic.Globals));   // Microsoft.VisualBasic : Microsoft.VisualBasic
+            EquationTokenizer.AddNamespace(typeof(Microsoft.VisualBasic.Globals));   // Microsoft.VisualBasic   : Microsoft.VisualBasic.dll
             EquationTokenizer.AddNamespace(typeof(MyLib.Wpf.Interactions.InteractionNotification));
         }
     }
