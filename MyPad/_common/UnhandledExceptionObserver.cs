@@ -15,9 +15,9 @@ public static class UnhandledExceptionObserver
     /// <param name="application">アプリケーション</param>
     public static void Observe(Application application)
     {
-        AppDomain.CurrentDomain.UnhandledException += AppDomain_UnhandledException;
-        TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
         application.DispatcherUnhandledException += App_DispatcherUnhandledException;
+        TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+        AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
     }
 
     /// <summary>
@@ -47,7 +47,7 @@ public static class UnhandledExceptionObserver
     /// </summary>
     /// <param name="sender">イベントの発生源</param>
     /// <param name="e">イベントの情報</param>
-    private static void AppDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+    private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
         HandleException(e.ExceptionObject as Exception);
     }
