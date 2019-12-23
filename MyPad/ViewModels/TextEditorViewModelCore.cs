@@ -57,7 +57,7 @@ namespace MyPad.ViewModels
         }
 
         public string FileOwner
-            => File.GetAccessControl(this.FileName).GetOwner(typeof(NTAccount)).Value;
+            => this.IsNewFile ? null : File.GetAccessControl(this.FileName).GetOwner(typeof(NTAccount)).Value;
 
         private FileStream _fileStream;
         public FileStream FileStream

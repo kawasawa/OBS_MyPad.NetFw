@@ -7,6 +7,8 @@
         <ResourceDictionary Source="./Common.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
+    <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource Default.MenuItem}"/>
+    <Style TargetType="{x:Type ContextMenu}" BasedOn="{StaticResource Default.ContextMenu}"/>
     <Style TargetType="{x:Type Label}" BasedOn="{StaticResource Default.Label}"/>
     <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}"/>
     <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}"/>
@@ -37,8 +39,6 @@
     <Style TargetType="{x:Type ScrollViewer}" BasedOn="{StaticResource Default.ScrollViewer}"/>
     <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource Default.TabItem}"/>
     <Style TargetType="{x:Type TabControl}" BasedOn="{StaticResource Default.TabControl}"/>
-    <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource Default.MenuItem}"/>
-    <Style TargetType="{x:Type ContextMenu}" BasedOn="{StaticResource Default.ContextMenu}"/>
     <Style TargetType="{x:Type StatusBarItem}" BasedOn="{StaticResource Default.StatusBarItem}"/>
     <Style TargetType="{x:Type StatusBar}" BasedOn="{StaticResource Default.StatusBar}"/>
     <Style TargetType="{x:Type Menu}" BasedOn="{StaticResource Default.Menu}"/>
@@ -46,6 +46,8 @@
 
     <Style TargetType="{x:Type m:Badged}" BasedOn="{StaticResource Default.Badged}"/>
     <Style TargetType="{x:Type m:NumericUpDown}" BasedOn="{StaticResource Default.NumericUpDown}"/>
+    <Style TargetType="{x:Type m:DropDownButton}" BasedOn="{StaticResource Default.DropDownButton}"/>
+    <Style TargetType="{x:Type m:Tile}" BasedOn="{StaticResource Default.Tile}"/>
     <Style TargetType="{x:Type m:HamburgerMenu}" BasedOn="{StaticResource Default.HamburgerMenu}"/>
     <Style TargetType="{x:Type m:Flyout}" BasedOn="{StaticResource Default.Flyout}"/>
     <Style TargetType="{x:Type m:WindowCommands}" BasedOn="{StaticResource Default.WindowCommands}"/>

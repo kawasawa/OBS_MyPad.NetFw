@@ -75,6 +75,15 @@
 
     <s:Double x:Key="Const.Gap1">5.0</s:Double>
     <s:Double x:Key="Const.Gap2">10.0</s:Double>
+    <s:Double x:Key="Const.Gap3">15.0</s:Double>
+    <s:Double x:Key="Const.Gap4">20.0</s:Double>
+    <s:Double x:Key="Const.Gap5">25.0</s:Double>
+    <s:Double x:Key="Const.Gap6">30.0</s:Double>
+    <s:Double x:Key="Const.Gap7">35.0</s:Double>
+    <s:Double x:Key="Const.Gap8">40.0</s:Double>
+    <s:Double x:Key="Const.Gap9">45.0</s:Double>
+    <s:Double x:Key="Const.GapH">50.0</s:Double>
+
     <Thickness x:Key="Const.Gap1W"   Left="{StaticResource Const.Gap1}" Top="0.0"                         Right="{StaticResource Const.Gap1}" Bottom="0.0"                        />
     <Thickness x:Key="Const.Gap1H"   Left="0.0"                         Top="{StaticResource Const.Gap1}" Right="0.0"                         Bottom="{StaticResource Const.Gap1}"/>
     <Thickness x:Key="Const.Gap1W1H" Left="{StaticResource Const.Gap1}" Top="{StaticResource Const.Gap1}" Right="{StaticResource Const.Gap1}" Bottom="{StaticResource Const.Gap1}"/>
@@ -99,6 +108,24 @@
     |
     ************************************************************
     -->
+
+    <!-- VSStyle のメニューはチェック状態を表現できないため、常にスタンダードスタイルを適用する -->
+    <Style x:Key="Default.MenuItem" TargetType="{x:Type MenuItem}" BasedOn="{StaticResource MetroMenuItem}">
+        <Setter Property="Background" Value="{DynamicResource LightBackground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource LightBackground}"/>
+    </Style>
+
+    <Style x:Key="Default.ContextMenu" TargetType="{x:Type ContextMenu}" BasedOn="{StaticResource {x:Type ContextMenu}}">
+        <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource LightBackground}"/>
+        <Setter Property="Opacity" Value="{StaticResource Const.Opacity1}"/>
+        <Style.Resources>
+            <!-- 既定のリソースを打ち消す -->
+            <SolidColorBrush x:Key="ContextMenuBorderBrush" Color="{DynamicResource Gray2}" o:Freeze="True"/>
+            <SolidColorBrush x:Key="SubMenuBorderBrush" Color="{DynamicResource Gray2}" o:Freeze="True"/>
+            <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource Default.MenuItem}"/>
+        </Style.Resources>
+    </Style>
 
     <Style x:Key="Default.Badged" TargetType="{x:Type m:Badged}" BasedOn="{StaticResource {x:Type m:Badged}}">
         <Setter Property="BadgeForeground" Value="White"/>
@@ -246,6 +273,12 @@
         <Setter Property="Margin" Value="{StaticResource Const.Gap1W}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
         <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{DynamicResource AccentColorBrush2}"/>
+        <Style.Triggers>
+            <Trigger Property="IsHitTestVisible" Value="False">
+                <Setter Property="BorderBrush" Value="{DynamicResource GrayBrush8}"/>
+                <Setter Property="Background" Value="{DynamicResource GrayBrush8}"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <Style x:Key="Default.RadioButton" TargetType="{x:Type RadioButton}" BasedOn="{StaticResource MetroRadioButton}">
@@ -258,6 +291,7 @@
         <Setter Property="Foreground" Value="{DynamicResource BlackColorBrush}"/>
         <Setter Property="Background" Value="{DynamicResource GrayBrush8}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
+        <Setter Property="BorderThickness" Value="0"/>
         <Style.Triggers>
             <Trigger Property="IsChecked" Value="True">
                 <Setter Property="Background" Value="{DynamicResource AccentColorBrush2}"/>
@@ -283,6 +317,7 @@
         <Setter Property="Foreground" Value="{DynamicResource BlackColorBrush}"/>
         <Setter Property="Background" Value="{DynamicResource GrayBrush8}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
+        <Setter Property="BorderThickness" Value="0"/>
         <Style.Triggers>
             <Trigger Property="IsFocused" Value="True">
                 <Setter Property="Background" Value="{DynamicResource AccentColorBrush3}"/>
@@ -347,31 +382,101 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="Common.CircleToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource MahApps.Metro.Styles.MetroCircleToggleButtonStyle}">
-        <Setter Property="Width" Value="40"/>
-        <Setter Property="Height" Value="40"/>
-        <Setter Property="Foreground" Value="{DynamicResource GrayBrush3}"/>
+    <Style x:Key="Default.DropDownButton" TargetType="{x:Type m:DropDownButton}" BasedOn="{StaticResource {x:Type m:DropDownButton}}">
+        <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
+        <Setter Property="Foreground" Value="{DynamicResource BlackColorBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource GrayBrush8}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="ButtonStyle">
+            <Setter.Value>
+                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
+                    <Setter Property="Padding" Value="{StaticResource Const.Gap1W}"/>
+                </Style>
+            </Setter.Value>
+        </Setter>
         <Style.Triggers>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="Background" Value="{DynamicResource AccentColorBrush3}"/>
+            </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxPopupBorderBrush}"/>
+                <Setter Property="Background" Value="DarkGray"/>
+                <Setter Property="Foreground" Value="{DynamicResource Foreground}"/>
+            </Trigger>
+            <Trigger Property="IsExpanded" Value="True">
+                <Setter Property="Background" Value="{DynamicResource FlatButtonPressedBackgroundBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource FlatButtonPressedForegroundBrush}"/>
+                <Setter Property="MenuStyle" Value="{StaticResource Default.ContextMenu}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="{DynamicResource SemiTransparentWhiteBrush}"/>
-            </Trigger>
-            <Trigger Property="IsChecked" Value="True">
-                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Foreground" Value="{DynamicResource GrayBrush2}"/>
+                <Setter Property="Opacity" Value="1"/>
             </Trigger>
         </Style.Triggers>
-        <Style.Resources>
-            <Style TargetType="{x:Type mi:PackIconModern}">
-                <Setter Property="Width" Value="20"/>
-                <Setter Property="Height" Value="20"/>
-            </Style>
-            <Style TargetType="{x:Type mi:PackIconMaterial}">
-                <Setter Property="Width" Value="20"/>
-                <Setter Property="Height" Value="20"/>
-            </Style>
-        </Style.Resources>
+    </Style>
+
+    <Style x:Key="Common.AccentDropDownButton" TargetType="{x:Type m:DropDownButton}" BasedOn="{StaticResource Default.DropDownButton}">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="{DynamicResource AccentColorBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="ButtonStyle">
+            <Setter.Value>
+                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Common.AccentButton}">
+                    <Setter Property="Padding" Value="{StaticResource Const.Gap1W}"/>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="Background" Value="{DynamicResource AccentColorBrush2}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource AccentColorBrush3}"/>
+            </Trigger>
+            <Trigger Property="IsExpanded" Value="True">
+                <Setter Property="Background" Value="{DynamicResource FlatButtonPressedBackgroundBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource FlatButtonPressedForegroundBrush}"/>
+                <Setter Property="MenuStyle" Value="{StaticResource Default.ContextMenu}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Background" Value="{DynamicResource AccentColorBrush2}"/>
+                <Setter Property="Foreground" Value="{DynamicResource GrayBrush2}"/>
+                <Setter Property="Opacity" Value="1"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="Common.DangerDropDownButton" TargetType="{x:Type m:DropDownButton}" BasedOn="{StaticResource Default.DropDownButton}">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="{DynamicResource ValidationSummaryColor2}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ValidationSummaryColor2}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="ButtonStyle">
+            <Setter.Value>
+                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Common.DangerButton}">
+                    <Setter Property="Padding" Value="{StaticResource Const.Gap1W}"/>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="Background" Value="{DynamicResource ValidationSummaryColor3}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource ValidationSummaryColor4}"/>
+            </Trigger>
+            <Trigger Property="IsExpanded" Value="True">
+                <Setter Property="Background" Value="{DynamicResource FlatButtonPressedBackgroundBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource FlatButtonPressedForegroundBrush}"/>
+                <Setter Property="MenuStyle" Value="{StaticResource Default.ContextMenu}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Background" Value="{DynamicResource ValidationSummaryColor3}"/>
+                <Setter Property="Foreground" Value="{DynamicResource GrayBrush2}"/>
+                <Setter Property="Opacity" Value="1"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <Style x:Key="Common.CircleButton" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
@@ -447,6 +552,58 @@
         </Style.Resources>
     </Style>
 
+    <Style x:Key="Common.CircleToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource MahApps.Metro.Styles.MetroCircleToggleButtonStyle}">
+        <Setter Property="Width" Value="40"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Foreground" Value="{DynamicResource GrayBrush3}"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxPopupBorderBrush}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource SemiTransparentWhiteBrush}"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Foreground" Value="White"/>
+            </Trigger>
+        </Style.Triggers>
+        <Style.Resources>
+            <Style TargetType="{x:Type mi:PackIconModern}">
+                <Setter Property="Width" Value="20"/>
+                <Setter Property="Height" Value="20"/>
+            </Style>
+            <Style TargetType="{x:Type mi:PackIconMaterial}">
+                <Setter Property="Width" Value="20"/>
+                <Setter Property="Height" Value="20"/>
+            </Style>
+        </Style.Resources>
+    </Style>
+
+    <Style x:Key="Default.Tile" TargetType="{x:Type m:Tile}" BasedOn="{StaticResource {x:Type m:Tile}}">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="{DynamicResource AccentColorBrush2}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush2}"/>
+        <Setter Property="m:ControlsHelper.MouseOverBorderBrush" Value="{DynamicResource HighlightBrush}"/>
+        <Setter Property="BorderThickness" Value="3"/>
+        <Setter Property="Width" Value="100"/>
+        <Setter Property="Height" Value="100"/>
+        <Setter Property="TitleFontSize" Value="13"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Style.Resources>
+            <Style TargetType="{x:Type Label}" BasedOn="{StaticResource Default.Label}">
+                <Setter Property="Padding" Value="0"/>
+            </Style>
+            <Style TargetType="{x:Type mi:PackIconModern}">
+                <Setter Property="Width" Value="25"/>
+                <Setter Property="Height" Value="25"/>
+            </Style>
+            <Style TargetType="{x:Type mi:PackIconMaterial}">
+                <Setter Property="Width" Value="25"/>
+                <Setter Property="Height" Value="25"/>
+            </Style>
+        </Style.Resources>
+    </Style>
+
     <Style x:Key="Default.GroupBox" TargetType="{x:Type GroupBox}" BasedOn="{StaticResource MetroGroupBox}">
         <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
         <Setter Property="m:ControlsHelper.HeaderFontSize" Value="{StaticResource DialogMessageFontSize}"/>
@@ -497,23 +654,6 @@
         <Setter Property="Padding" Value="{StaticResource Const.Gap1W1H}"/>
         <Style.Resources>
             <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource Default.TabItem}"/>
-        </Style.Resources>
-    </Style>
-
-    <!-- VSStyle のメニューはチェック状態を表現できないため、常にスタンダードスタイルを適用する -->
-    <Style x:Key="Default.MenuItem" TargetType="{x:Type MenuItem}" BasedOn="{StaticResource MetroMenuItem}">
-        <Setter Property="Background" Value="{DynamicResource LightBackground}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource LightBackground}"/>
-    </Style>
-
-    <Style x:Key="Default.ContextMenu" TargetType="{x:Type ContextMenu}" BasedOn="{StaticResource {x:Type ContextMenu}}">
-        <Setter Property="Background" Value="{DynamicResource LightBackground}"/>
-        <Setter Property="Opacity" Value="{StaticResource Const.Opacity1}"/>
-        <Style.Resources>
-            <!-- 既定のリソースを打ち消す -->
-            <SolidColorBrush x:Key="ContextMenuBorderBrush" Color="{DynamicResource Gray2}" o:Freeze="True"/>
-            <SolidColorBrush x:Key="SubMenuBorderBrush" Color="{DynamicResource Gray2}" o:Freeze="True"/>
-            <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource Default.MenuItem}"/>
         </Style.Resources>
     </Style>
 
