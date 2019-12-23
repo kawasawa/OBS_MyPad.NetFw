@@ -15,9 +15,9 @@
                xmlns:dr="clr-namespace:Dragablz;assembly=Dragablz"
                xmlns:ae="http://icsharpcode.net/sharpdevelop/avalonedit"
                xmlns:ml="clr-namespace:MyLib;assembly=MyLib"
+               xmlns:mlw="clr-namespace:MyLib.Wpf;assembly=MyLib.Wpf"
                xmlns:mlwb="clr-namespace:MyLib.Wpf.Behaviors;assembly=MyLib.Wpf"
                xmlns:mlwi="clr-namespace:MyLib.Wpf.Interactions;assembly=MyLib.Wpf"
-               xmlns:mlwm="clr-namespace:MyLib.Wpf.Markup;assembly=MyLib.Wpf"
                xmlns:root="clr-namespace:MyPad"
                xmlns:models="clr-namespace:MyPad.Models"
                xmlns:viewModels="clr-namespace:MyPad.ViewModels"
@@ -83,7 +83,7 @@
 
     <!-- リソース -->
     <Window.Resources>
-        <mlwm:BindingProxy x:Key="Proxy" Data="{Binding Mode=OneWay}"/>
+        <mlw:BindingProxy x:Key="Proxy" Data="{Binding Mode=OneWay}"/>
         <Style TargetType="{x:Type Menu}" BasedOn="{StaticResource Default.Menu}">
             <Setter Property="Visibility" Value="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding System.ShowMenuBar, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}}"/>
         </Style>
@@ -791,25 +791,25 @@
                                             <Setter Property="Line"             Value="{Binding Line, Mode=TwoWay}"/>
                                             <Setter Property="Column"           Value="{Binding Column, Mode=TwoWay}"/>
                                             <Setter Property="VisualColumn"     Value="{Binding VisualColumn, Mode=TwoWay}"/>
-                                            <Setter Property="mlwm:PushBindingManager.StylePushBindings">
+                                            <Setter Property="mlw:PushBindingManager.StylePushBindings">
                                                 <Setter.Value>
-                                                    <mlwm:PushBindingCollection>
-                                                        <mlwm:PushBinding TargetProperty="ActualFontSize"       Path="ActualFontSize"/>
-                                                        <mlwm:PushBinding TargetProperty="ZoomIncrement"        Path="ZoomIncrement"/>
-                                                        <mlwm:PushBinding TargetProperty="VisualLength"         Path="VisualLength"/>
-                                                        <mlwm:PushBinding TargetProperty="TextLength"           Path="TextLength"/>
-                                                        <mlwm:PushBinding TargetProperty="SelectionLength"      Path="SelectionLength"/>
-                                                        <mlwm:PushBinding TargetProperty="SelectionStart"       Path="SelectionStart"/>
-                                                        <mlwm:PushBinding TargetProperty="SelectionEnd"         Path="SelectionEnd"/>
-                                                        <mlwm:PushBinding TargetProperty="SelectionStartLine"   Path="SelectionStartLine"/>
-                                                        <mlwm:PushBinding TargetProperty="SelectionEndLine"     Path="SelectionEndLine"/>
-                                                        <mlwm:PushBinding TargetProperty="SelectionLineCount"   Path="SelectionLineCount"/>
-                                                        <mlwm:PushBinding TargetProperty="SelectedText"         Path="SelectedText"/>
-                                                        <mlwm:PushBinding TargetProperty="CharName"             Path="CharName"/>
-                                                        <mlwm:PushBinding TargetProperty="IsAtEndOfLine"        Path="IsAtEndOfLine"/>
-                                                        <mlwm:PushBinding TargetProperty="IsInVirtualSpace"     Path="IsInVirtualSpace"/>
-                                                        <mlwm:PushBinding TargetProperty="EnableAutoCompletion" Path="EnableAutoCompletion"/>
-                                                    </mlwm:PushBindingCollection>
+                                                    <mlw:PushBindingCollection>
+                                                        <mlw:PushBinding TargetProperty="ActualFontSize"       Path="ActualFontSize"/>
+                                                        <mlw:PushBinding TargetProperty="ZoomIncrement"        Path="ZoomIncrement"/>
+                                                        <mlw:PushBinding TargetProperty="VisualLength"         Path="VisualLength"/>
+                                                        <mlw:PushBinding TargetProperty="TextLength"           Path="TextLength"/>
+                                                        <mlw:PushBinding TargetProperty="SelectionLength"      Path="SelectionLength"/>
+                                                        <mlw:PushBinding TargetProperty="SelectionStart"       Path="SelectionStart"/>
+                                                        <mlw:PushBinding TargetProperty="SelectionEnd"         Path="SelectionEnd"/>
+                                                        <mlw:PushBinding TargetProperty="SelectionStartLine"   Path="SelectionStartLine"/>
+                                                        <mlw:PushBinding TargetProperty="SelectionEndLine"     Path="SelectionEndLine"/>
+                                                        <mlw:PushBinding TargetProperty="SelectionLineCount"   Path="SelectionLineCount"/>
+                                                        <mlw:PushBinding TargetProperty="SelectedText"         Path="SelectedText"/>
+                                                        <mlw:PushBinding TargetProperty="CharName"             Path="CharName"/>
+                                                        <mlw:PushBinding TargetProperty="IsAtEndOfLine"        Path="IsAtEndOfLine"/>
+                                                        <mlw:PushBinding TargetProperty="IsInVirtualSpace"     Path="IsInVirtualSpace"/>
+                                                        <mlw:PushBinding TargetProperty="EnableAutoCompletion" Path="EnableAutoCompletion"/>
+                                                    </mlw:PushBindingCollection>
                                                 </Setter.Value>
                                             </Setter>
                                         </Style>
