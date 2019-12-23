@@ -47,6 +47,7 @@
     <Style TargetType="{x:Type m:Badged}" BasedOn="{StaticResource Default.Badged}"/>
     <Style TargetType="{x:Type m:NumericUpDown}" BasedOn="{StaticResource Default.NumericUpDown}"/>
     <Style TargetType="{x:Type m:DropDownButton}" BasedOn="{StaticResource Default.DropDownButton}"/>
+    <Style TargetType="{x:Type m:Tile}" BasedOn="{StaticResource Default.Tile}"/>
     <Style TargetType="{x:Type m:HamburgerMenu}" BasedOn="{StaticResource Default.HamburgerMenu}"/>
     <Style TargetType="{x:Type m:Flyout}" BasedOn="{StaticResource Default.Flyout}"/>
     <Style TargetType="{x:Type m:WindowCommands}" BasedOn="{StaticResource Default.WindowCommands}"/>

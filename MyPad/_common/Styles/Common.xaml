@@ -273,6 +273,12 @@
         <Setter Property="Margin" Value="{StaticResource Const.Gap1W}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
         <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{DynamicResource AccentColorBrush2}"/>
+        <Style.Triggers>
+            <Trigger Property="IsHitTestVisible" Value="False">
+                <Setter Property="BorderBrush" Value="{DynamicResource GrayBrush8}"/>
+                <Setter Property="Background" Value="{DynamicResource GrayBrush8}"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <Style x:Key="Default.RadioButton" TargetType="{x:Type RadioButton}" BasedOn="{StaticResource MetroRadioButton}">
@@ -569,6 +575,31 @@
             <Style TargetType="{x:Type mi:PackIconMaterial}">
                 <Setter Property="Width" Value="20"/>
                 <Setter Property="Height" Value="20"/>
+            </Style>
+        </Style.Resources>
+    </Style>
+
+    <Style x:Key="Default.Tile" TargetType="{x:Type m:Tile}" BasedOn="{StaticResource {x:Type m:Tile}}">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="{DynamicResource AccentColorBrush2}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush2}"/>
+        <Setter Property="m:ControlsHelper.MouseOverBorderBrush" Value="{DynamicResource HighlightBrush}"/>
+        <Setter Property="BorderThickness" Value="3"/>
+        <Setter Property="Width" Value="100"/>
+        <Setter Property="Height" Value="100"/>
+        <Setter Property="TitleFontSize" Value="13"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Style.Resources>
+            <Style TargetType="{x:Type Label}" BasedOn="{StaticResource Default.Label}">
+                <Setter Property="Padding" Value="0"/>
+            </Style>
+            <Style TargetType="{x:Type mi:PackIconModern}">
+                <Setter Property="Width" Value="25"/>
+                <Setter Property="Height" Value="25"/>
+            </Style>
+            <Style TargetType="{x:Type mi:PackIconMaterial}">
+                <Setter Property="Width" Value="25"/>
+                <Setter Property="Height" Value="25"/>
             </Style>
         </Style.Resources>
     </Style>
