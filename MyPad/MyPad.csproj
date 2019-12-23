@@ -29,12 +29,12 @@
     <ProductName>MyPad</ProductName>
     <PublisherName>Kazuki Awasawa</PublisherName>
     <SuiteName>MyPad</SuiteName>
-    <MinimumRequiredVersion>0.5.5.5</MinimumRequiredVersion>
+    <MinimumRequiredVersion>0.5.5.6</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>5</ApplicationRevision>
-    <ApplicationVersion>0.5.5.5</ApplicationVersion>
+    <ApplicationRevision>6</ApplicationRevision>
+    <ApplicationVersion>0.5.5.6</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
