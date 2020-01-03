@@ -657,64 +657,13 @@
         </Style.Resources>
     </Style>
 
-    <Style x:Key="Common.StatusTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type StatusBar}}, Mode=OneWay}"/>
-        <Setter Property="Padding" Value="{StaticResource Const.Gap1W}"/>
-    </Style>
-
-    <Style x:Key="Common.StatusComboBox" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource Default.ComboBox}">
-        <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType={x:Type StatusBar}}, Mode=OneWay}"/>
-        <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type StatusBar}}, Mode=OneWay}"/>
-        <Setter Property="Padding" Value="{StaticResource Const.Gap1W}"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="m:TextBoxHelper.ButtonWidth" Value="0"/>
-        <Setter Property="Focusable" Value="False"/>
-        <Setter Property="ItemContainerStyle">
-            <Setter.Value>
-                <Style TargetType="{x:Type ComboBoxItem}" BasedOn="{StaticResource Default.ComboBoxItem}">
-                    <Setter Property="Focusable" Value="False"/>
-                </Style>
-            </Setter.Value>
-        </Setter>
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{DynamicResource AccentColorBrush2}"/>
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-
-    <Style x:Key="Common.StatusToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Default.ToggleButton}">
-        <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType={x:Type StatusBar}}, Mode=OneWay}"/>
-        <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type StatusBar}}, Mode=OneWay}"/>
-        <Setter Property="FontFamily" Value="{DynamicResource {x:Static SystemFonts.StatusFontFamilyKey}}"/>
-        <Setter Property="FontStyle" Value="{DynamicResource {x:Static SystemFonts.StatusFontStyleKey}}"/>
-        <Setter Property="FontWeight" Value="{DynamicResource {x:Static SystemFonts.StatusFontWeightKey}}"/>
-        <Setter Property="FontSize" Value="{StaticResource StatusBarFontSize}"/>
-        <Setter Property="Focusable" Value="False"/>
-        <Style.Triggers>
-            <Trigger Property="IsChecked" Value="True">
-                <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType={x:Type StatusBar}}, Mode=OneWay}"/>
-            </Trigger>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{DynamicResource AccentColorBrush2}"/>
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-
     <Style x:Key="Default.StatusBarItem" TargetType="{x:Type StatusBarItem}">
         <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type StatusBar}}, Mode=OneWay}"/>
-        <Setter Property="Padding" Value="0"/>
-        <Style.Resources>
-            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.StatusTextBlock}"/>
-            <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource Common.StatusComboBox}"/>
-            <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Common.StatusToggleButton}"/>
-        </Style.Resources>
     </Style>
 
     <Style x:Key="Default.StatusBar" TargetType="{x:Type StatusBar}">
         <Setter Property="Foreground" Value="White"/>
-        <Setter Property="Background" Value="{DynamicResource VSColorBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource AccentColorBrush}"/>
     </Style>
 
     <Style x:Key="Default.HamburgerMenu" TargetType="{x:Type m:HamburgerMenu}" BasedOn="{StaticResource {x:Type m:HamburgerMenu}}">
