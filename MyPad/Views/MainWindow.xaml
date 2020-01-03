@@ -478,203 +478,204 @@
                 </Grid.ColumnDefinitions>
                 
                 <!-- ハンバーガーメニュー -->
-                <m:HamburgerMenu x:Name="HamburgerMenu" Grid.Column="0" Width="48" HamburgerWidth="48" HamburgerHeight="0" HamburgerVisibility="Collapsed" ItemInvoked="HamburgerMenu_ItemInvoked">
-                    <i:Interaction.Triggers>
-                        <ei:PropertyChangedTrigger Binding="{Binding Visibility, ElementName=HamburgerMenu, Mode=OneWay}">
-                            <ei:ChangePropertyAction PropertyName="Width" Value="Auto" TargetName="HamburgerMenuColumn"/>
-                        </ei:PropertyChangedTrigger>
-                    </i:Interaction.Triggers>
-                    <m:HamburgerMenu.Resources>
-                        <Style x:Key="IconButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
-                            <Setter Property="Padding" Value="0"/>
-                            <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
-                        </Style>
-                    </m:HamburgerMenu.Resources>
-                    <m:HamburgerMenu.ItemTemplate>
-                        <DataTemplate DataType="{x:Type m:HamburgerMenuIconItem}">
-                            <Grid Height="48" ge:GridEx.ColumnDefinition="48, *">
-                                <Border ToolTip="{Binding Label, Mode=OneWay}" Background="Transparent">
-                                    <ContentControl Content="{Binding Icon, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" IsTabStop="False" Focusable="False"/>
-                                </Border>
-                            </Grid>
-                        </DataTemplate>
-                    </m:HamburgerMenu.ItemTemplate>
-                    <m:HamburgerMenu.OptionsItemTemplate>
-                        <DataTemplate DataType="{x:Type m:HamburgerMenuIconItem}">
-                            <Grid Height="48" ge:GridEx.ColumnDefinition="48, *">
-                                <Border ToolTip="{Binding Label, Mode=OneWay}" Background="Transparent">
-                                    <ContentControl Content="{Binding Icon, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" IsTabStop="False" Focusable="False"/>
-                                </Border>
-                            </Grid>
-                        </DataTemplate>
-                    </m:HamburgerMenu.OptionsItemTemplate>
-                    <m:HamburgerMenu.ContentTemplate>
-                        <DataTemplate DataType="{x:Type m:HamburgerMenuIconItem}">
-                            <Grid Width="{qc:Binding '$P - 48', P={Binding ActualWidth, ElementName=HamburgerMenu, Mode=OneWay}}" ge:GridEx.RowDefinition="Auto, *">
-                                <Grid.ContextMenu>
-                                    <ContextMenu/>
-                                </Grid.ContextMenu>
-                                <TextBlock      Grid.Row="0" Margin="{StaticResource Const.Gap1W2H}" Text="{Binding Label, Mode=OneWay}" FontSize="{DynamicResource NormalFontSize}"/>
-                                <ContentControl Grid.Row="1" Margin="{StaticResource Const.Gap1W1H}" Content="{Binding Tag, Mode=OneWay}" IsTabStop="False" Focusable="False"/>
-                            </Grid>
-                        </DataTemplate>
-                    </m:HamburgerMenu.ContentTemplate>
-                    <m:HamburgerMenu.ItemsSource>
-                        <m:HamburgerMenuItemCollection>
-                            <m:HamburgerMenuIconItem x:Name="FileExplorerItem" Label="{Binding Resources.Command_FileExplorer, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
-                                <m:HamburgerMenuIconItem.Icon>
-                                    <mi:Material Kind="FileTree"/>
-                                </m:HamburgerMenuIconItem.Icon>
-                                <m:HamburgerMenuIconItem.Tag>
-                                    <TreeView ItemsSource="{Binding Data.FileNodes, Source={StaticResource Proxy}, Mode=OneWay}">
-                                        <TreeView.ItemContainerStyle>
-                                            <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource Default.TreeViewItem}">
-                                                <EventSetter Event="MouseDoubleClick" Handler="FileExplorerItem_MouseDoubleClick"/>
-                                                <EventSetter Event="KeyDown" Handler="FileExplorerItem_KeyDown"/>
-                                                <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsEmpty, Mode=OneWay}" Value="True">
-                                                        <Setter Property="Foreground" Value="{DynamicResource GrayBrush5}"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TreeView.ItemContainerStyle>
-                                        <TreeView.ItemTemplate>
-                                            <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="{x:Type viewModels:FileNodeViewModel}">
-                                                <Border Background="Transparent" ToolTip="{Binding FileName, Mode=OneWay}" ToolTipService.IsEnabled="{qc:Binding '!$P', P={Binding IsEmpty, Mode=OneWay}}">
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <Image Source="{Binding Image, Mode=OneWay}" Margin="{StaticResource Const.Gap1W}"/>
-                                                        <TextBlock Text="{qc:MultiBinding '$P0 ? \'empty\' : Path.GetFileName($P1)', P0={Binding IsEmpty, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}"/>
-                                                    </StackPanel>
-                                                </Border>
-                                            </HierarchicalDataTemplate>
-                                        </TreeView.ItemTemplate>
-                                    </TreeView>
-                                </m:HamburgerMenuIconItem.Tag>
-                            </m:HamburgerMenuIconItem>
-                            <m:HamburgerMenuIconItem x:Name="GrepItem" Label="{Binding Resources.Command_Grep, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
-                                <m:HamburgerMenuIconItem.Icon>
-                                    <mi:Material Kind="FolderSearchOutline"/>
-                                </m:HamburgerMenuIconItem.Icon>
-                                <m:HamburgerMenuIconItem.Tag>
-                                    <Grid DataContext="{Binding Data.Grep, Source={StaticResource Proxy}, Mode=OneWay}" ge:GridEx.RowDefinition="Auto, 10, *, 3, Auto">
-                                        <i:Interaction.Triggers>
-                                            <p:InteractionRequestTrigger SourceObject="{Binding MessageRequest, Mode=OneTime}">
-                                                <behaviors:MessageActionEx UseOverlayMessage="{Binding System.UseOverlayMessage, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}"/>
-                                            </p:InteractionRequestTrigger>
-                                            <p:InteractionRequestTrigger SourceObject="{Binding OpenDirectoryRequest, Mode=OneTime}">
-                                                <mlwi:OpenFileAction IsFolderPicker="True" UseFolderBrowserDialog="True"/>
-                                            </p:InteractionRequestTrigger>
-                                        </i:Interaction.Triggers>
-                                        <Grid Grid.Row="0" ge:GridEx.RowDefinition="Auto, 5, Auto, 5, Auto, 5, Auto, 5, Auto, 10, Auto, 5, Auto, 5, Auto">
-                                            <Grid Grid.Row="0" ge:GridEx.ColumnDefinition="*, 5, Auto">
-                                                <TextBox Grid.Column="0" Text="{Binding RootPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{Binding Resources.Label_Directory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" m:TextBoxHelper.UseFloatingWatermark="True" m:TextBoxHelper.ClearTextButton="True"/>
-                                                <Button  Grid.Column="2" Command="{Binding SelectRootPathCommand, Mode=OneTime}" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
-                                                    <mi:Modern Kind="FolderOpen"/>
+                <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="{qc:MultiBinding '$P0 == $P1 ? ScrollBarVisibility.Auto : ScrollBarVisibility.Disabled', P0={Binding Width, ElementName=HamburgerMenu, Mode=OneWay}, P1={Binding HamburgerWidth, ElementName=HamburgerMenu, Mode=OneWay}}">
+                    <m:HamburgerMenu x:Name="HamburgerMenu" Width="48" HamburgerWidth="48" HamburgerHeight="0" HamburgerVisibility="Collapsed" ItemInvoked="HamburgerMenu_ItemInvoked">
+                        <i:Interaction.Triggers>
+                            <ei:PropertyChangedTrigger Binding="{Binding Visibility, ElementName=HamburgerMenu, Mode=OneWay}">
+                                <ei:ChangePropertyAction PropertyName="Width" Value="Auto" TargetName="HamburgerMenuColumn"/>
+                            </ei:PropertyChangedTrigger>
+                        </i:Interaction.Triggers>
+                        <m:HamburgerMenu.Resources>
+                            <Style x:Key="IconButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
+                            </Style>
+                        </m:HamburgerMenu.Resources>
+                        <m:HamburgerMenu.ItemTemplate>
+                            <DataTemplate DataType="{x:Type m:HamburgerMenuIconItem}">
+                                <Grid Height="48" ge:GridEx.ColumnDefinition="48, *">
+                                    <Border ToolTip="{Binding Label, Mode=OneWay}" Background="Transparent">
+                                        <ContentControl Content="{Binding Icon, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" IsTabStop="False" Focusable="False"/>
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </m:HamburgerMenu.ItemTemplate>
+                        <m:HamburgerMenu.OptionsItemTemplate>
+                            <DataTemplate DataType="{x:Type m:HamburgerMenuIconItem}">
+                                <Grid Height="48" ge:GridEx.ColumnDefinition="48, *">
+                                    <Border ToolTip="{Binding Label, Mode=OneWay}" Background="Transparent">
+                                        <ContentControl Content="{Binding Icon, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" IsTabStop="False" Focusable="False"/>
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </m:HamburgerMenu.OptionsItemTemplate>
+                        <m:HamburgerMenu.ContentTemplate>
+                            <DataTemplate DataType="{x:Type m:HamburgerMenuIconItem}">
+                                <Grid Width="{qc:Binding '$P - 48', P={Binding ActualWidth, ElementName=HamburgerMenu, Mode=OneWay}}" ge:GridEx.RowDefinition="Auto, *">
+                                    <Grid.ContextMenu>
+                                        <ContextMenu/>
+                                    </Grid.ContextMenu>
+                                    <TextBlock      Grid.Row="0" Margin="{StaticResource Const.Gap1W2H}" Text="{Binding Label, Mode=OneWay}" FontSize="{DynamicResource NormalFontSize}"/>
+                                    <ContentControl Grid.Row="1" Margin="{StaticResource Const.Gap1W1H}" Content="{Binding Tag, Mode=OneWay}" IsTabStop="False" Focusable="False"/>
+                                </Grid>
+                            </DataTemplate>
+                        </m:HamburgerMenu.ContentTemplate>
+                        <m:HamburgerMenu.ItemsSource>
+                            <m:HamburgerMenuItemCollection>
+                                <m:HamburgerMenuIconItem x:Name="FileExplorerItem" Label="{Binding Resources.Command_FileExplorer, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
+                                    <m:HamburgerMenuIconItem.Icon>
+                                        <mi:Material Kind="FileTree"/>
+                                    </m:HamburgerMenuIconItem.Icon>
+                                    <m:HamburgerMenuIconItem.Tag>
+                                        <TreeView ItemsSource="{Binding Data.FileNodes, Source={StaticResource Proxy}, Mode=OneWay}">
+                                            <TreeView.ItemContainerStyle>
+                                                <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource Default.TreeViewItem}">
+                                                    <EventSetter Event="MouseDoubleClick" Handler="FileExplorerItem_MouseDoubleClick"/>
+                                                    <EventSetter Event="KeyDown" Handler="FileExplorerItem_KeyDown"/>
+                                                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsEmpty, Mode=OneWay}" Value="True">
+                                                            <Setter Property="Foreground" Value="{DynamicResource GrayBrush5}"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TreeView.ItemContainerStyle>
+                                            <TreeView.ItemTemplate>
+                                                <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="{x:Type viewModels:FileNodeViewModel}">
+                                                    <Border Background="Transparent" ToolTip="{Binding FileName, Mode=OneWay}" ToolTipService.IsEnabled="{qc:Binding '!$P', P={Binding IsEmpty, Mode=OneWay}}">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Image Source="{Binding Image, Mode=OneWay}" Margin="{StaticResource Const.Gap1W}"/>
+                                                            <TextBlock Text="{qc:MultiBinding '$P0 ? \'empty\' : Path.GetFileName($P1)', P0={Binding IsEmpty, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}"/>
+                                                        </StackPanel>
+                                                    </Border>
+                                                </HierarchicalDataTemplate>
+                                            </TreeView.ItemTemplate>
+                                        </TreeView>
+                                    </m:HamburgerMenuIconItem.Tag>
+                                </m:HamburgerMenuIconItem>
+                                <m:HamburgerMenuIconItem x:Name="GrepItem" Label="{Binding Resources.Command_Grep, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
+                                    <m:HamburgerMenuIconItem.Icon>
+                                        <mi:Material Kind="FolderSearchOutline"/>
+                                    </m:HamburgerMenuIconItem.Icon>
+                                    <m:HamburgerMenuIconItem.Tag>
+                                        <Grid DataContext="{Binding Data.Grep, Source={StaticResource Proxy}, Mode=OneWay}" ge:GridEx.RowDefinition="Auto, 10, *, 3, Auto">
+                                            <i:Interaction.Triggers>
+                                                <p:InteractionRequestTrigger SourceObject="{Binding MessageRequest, Mode=OneTime}">
+                                                    <behaviors:MessageActionEx UseOverlayMessage="{Binding System.UseOverlayMessage, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}"/>
+                                                </p:InteractionRequestTrigger>
+                                                <p:InteractionRequestTrigger SourceObject="{Binding OpenDirectoryRequest, Mode=OneTime}">
+                                                    <mlwi:OpenFileAction IsFolderPicker="True" UseFolderBrowserDialog="True"/>
+                                                </p:InteractionRequestTrigger>
+                                            </i:Interaction.Triggers>
+                                            <Grid Grid.Row="0" ge:GridEx.RowDefinition="Auto, 5, Auto, 5, Auto, 5, Auto, 5, Auto, 10, Auto, 5, Auto, 5, Auto">
+                                                <Grid Grid.Row="0" ge:GridEx.ColumnDefinition="*, 5, Auto">
+                                                    <TextBox Grid.Column="0" Text="{Binding RootPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{Binding Resources.Label_Directory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" m:TextBoxHelper.UseFloatingWatermark="True" m:TextBoxHelper.ClearTextButton="True"/>
+                                                    <Button  Grid.Column="2" Command="{Binding SelectRootPathCommand, Mode=OneTime}" ToolTip="{Binding Resources.Command_Open, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
+                                                        <mi:Modern Kind="FolderOpen"/>
+                                                    </Button>
+                                                </Grid>
+                                                <Grid Grid.Row="2" ge:GridEx.ColumnDefinition="*, 5, Auto">
+                                                    <TextBox Grid.Column="0" Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{Binding Resources.Label_SearchText, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" m:TextBoxHelper.UseFloatingWatermark="True" m:TextBoxHelper.ClearTextButton="True"/>
+                                                    <Button  Grid.Column="2" Command="{Binding GrepCommand, Mode=OneTime}" ToolTip="{Binding Resources.Command_Find, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
+                                                        <mi:Material Kind="Magnify"/>
+                                                    </Button>
+                                                </Grid>
+                                                <TextBox   Grid.Row="4"  Text="{Binding SearchPattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{Binding Resources.Label_SearchPattern, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" m:TextBoxHelper.UseFloatingWatermark="True" m:TextBoxHelper.ClearTextButton="True"/>
+                                                <ComboBox  Grid.Row="6"  SelectedValue="{Binding Encoding, Mode=TwoWay}" ItemsSource="{x:Static root:Consts.ENCODINGS}" DisplayMemberPath="EncodingName" m:TextBoxHelper.Watermark="{Binding Resources.Label_Encoding, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" m:TextBoxHelper.UseFloatingWatermark="True"/>
+                                                <CheckBox  Grid.Row="8"  IsChecked="{Binding AutoDetectEncoding, Mode=TwoWay}" Content="{Binding Resources.Label_AutoDetect, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                                <CheckBox  Grid.Row="10" IsChecked="{Binding AllDirectories, Mode=TwoWay}" Content="{Binding Resources.Command_AllDirectories, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                                <CheckBox  Grid.Row="12" IsChecked="{qc:Binding Convert='!$P', ConvertBack='!$value', P={Binding IgnoreCase, Mode=TwoWay}}" Content="{Binding Resources.Command_CaseSensitive, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                                <CheckBox  Grid.Row="14" IsChecked="{Binding UseRegex, Mode=TwoWay}" Content="{Binding Resources.Command_UseRegex, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                            </Grid>
+                                            <ListBox Grid.Row="2" ItemsSource="{Binding Results, Mode=OneWay}">
+                                                <ListBox.ItemContainerStyle>
+                                                    <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource Default.ListBoxItem}">
+                                                        <EventSetter Event="MouseDoubleClick" Handler="GrepItem_MouseDoubleClick"/>
+                                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                                    </Style>
+                                                </ListBox.ItemContainerStyle>
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{qc:MultiBinding '$P1.Substring($P0.Length) + \'(\' + $P2 + \'): \' + ($P3.Length.CompareTo(80) == 1 ? $P3.Substring(0, 80) : $P3)', P0={Binding Data.Grep.RootPath, Source={StaticResource Proxy}, Mode=OneTime}, P1={Binding Path, Mode=OneWay}, P2={Binding Line, Mode=OneWay}, P3={Binding Text, Mode=OneWay}}"/>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                            <Grid Grid.Row="4" ge:GridEx.ColumnDefinition="*, 5, Auto">
+                                                <TextBlock Grid.Column="0" Text="{Binding Results.Count, StringFormat={}{0} Lines, Mode=OneWay}"/>
+                                                <Button Grid.Column="2" Command="{Binding CopyGrepResultsCommand, Mode=OneTime}" ToolTip="{Binding Resources.Command_CopyToClipboard, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
+                                                    <mi:Modern Kind="ClipboardPaper"/>
                                                 </Button>
                                             </Grid>
-                                            <Grid Grid.Row="2" ge:GridEx.ColumnDefinition="*, 5, Auto">
-                                                <TextBox Grid.Column="0" Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{Binding Resources.Label_SearchText, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" m:TextBoxHelper.UseFloatingWatermark="True" m:TextBoxHelper.ClearTextButton="True"/>
-                                                <Button  Grid.Column="2" Command="{Binding GrepCommand, Mode=OneTime}" ToolTip="{Binding Resources.Command_Find, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
-                                                    <mi:Material Kind="Magnify"/>
-                                                </Button>
-                                            </Grid>
-                                            <TextBox   Grid.Row="4"  Text="{Binding SearchPattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{Binding Resources.Label_SearchPattern, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" m:TextBoxHelper.UseFloatingWatermark="True" m:TextBoxHelper.ClearTextButton="True"/>
-                                            <ComboBox  Grid.Row="6"  SelectedValue="{Binding Encoding, Mode=TwoWay}" ItemsSource="{x:Static root:Consts.ENCODINGS}" DisplayMemberPath="EncodingName" m:TextBoxHelper.Watermark="{Binding Resources.Label_Encoding, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" m:TextBoxHelper.UseFloatingWatermark="True"/>
-                                            <CheckBox  Grid.Row="8"  IsChecked="{Binding AutoDetectEncoding, Mode=TwoWay}" Content="{Binding Resources.Label_AutoDetect, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                                            <CheckBox  Grid.Row="10" IsChecked="{Binding AllDirectories, Mode=TwoWay}" Content="{Binding Resources.Command_AllDirectories, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                                            <CheckBox  Grid.Row="12" IsChecked="{qc:Binding Convert='!$P', ConvertBack='!$value', P={Binding IgnoreCase, Mode=TwoWay}}" Content="{Binding Resources.Command_CaseSensitive, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                                            <CheckBox  Grid.Row="14" IsChecked="{Binding UseRegex, Mode=TwoWay}" Content="{Binding Resources.Command_UseRegex, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                            <Border d:IsHidden="True" Style="{StaticResource Common.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsWorking, Mode=OneWay}}">
+                                                <m:ProgressRing/>
+                                            </Border>
                                         </Grid>
-                                        <ListBox Grid.Row="2" ItemsSource="{Binding Results, Mode=OneWay}">
-                                            <ListBox.ItemContainerStyle>
-                                                <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource Default.ListBoxItem}">
-                                                    <EventSetter Event="MouseDoubleClick" Handler="GrepItem_MouseDoubleClick"/>
-                                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                                </Style>
-                                            </ListBox.ItemContainerStyle>
-                                            <ListBox.ItemTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Text="{qc:MultiBinding '$P1.Substring($P0.Length) + \'(\' + $P2 + \'): \' + ($P3.Length.CompareTo(80) == 1 ? $P3.Substring(0, 80) : $P3)', P0={Binding Data.Grep.RootPath, Source={StaticResource Proxy}, Mode=OneTime}, P1={Binding Path, Mode=OneWay}, P2={Binding Line, Mode=OneWay}, P3={Binding Text, Mode=OneWay}}"/>
-                                                </DataTemplate>
-                                            </ListBox.ItemTemplate>
-                                        </ListBox>
-                                        <Grid Grid.Row="4" ge:GridEx.ColumnDefinition="*, 5, Auto">
-                                            <TextBlock Grid.Column="0" Text="{Binding Results.Count, StringFormat={}{0} Lines, Mode=OneWay}"/>
-                                            <Button Grid.Column="2" Command="{Binding CopyGrepResultsCommand, Mode=OneTime}" ToolTip="{Binding Resources.Command_CopyToClipboard, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}" Style="{StaticResource IconButton}">
-                                                <mi:Modern Kind="ClipboardPaper"/>
-                                            </Button>
+                                    </m:HamburgerMenuIconItem.Tag>
+                                </m:HamburgerMenuIconItem>
+                                <m:HamburgerMenuIconItem x:Name="ClipboardHistoryItem" Label="{Binding Resources.Command_ClipboardHistory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
+                                    <m:HamburgerMenuIconItem.Icon>
+                                        <mi:Modern Kind="ClipboardPaper"/>
+                                    </m:HamburgerMenuIconItem.Icon>
+                                    <m:HamburgerMenuIconItem.Tag>
+                                        <Grid ge:GridEx.RowDefinition="3*(50-), Auto, *(50-)">
+                                            <ListBox Grid.Row="0" ItemsSource="{Binding ClipboardItems, Source={x:Static viewModels:WorkspaceViewModel.Instance}, Mode=OneWay}">
+                                                <ListBox.ItemContainerStyle>
+                                                    <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource Default.ListBoxItem}">
+                                                        <EventSetter Event="MouseDoubleClick" Handler="ClipboardHistoryItem_MouseDoubleClick"/>
+                                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                                    </Style>
+                                                </ListBox.ItemContainerStyle>
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{qc:Binding '$P.Replace(ControlChars.Cr.ToString(), string.Empty).Replace(ControlChars.Lf.ToString(), string.Empty)', P={Binding Mode=OneWay}}"/>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                            <GridSplitter Grid.Row="1" Height="{StaticResource Const.Gap1}"/>
+                                            <TextBox Grid.Row="2" Text="{Binding Children[0].(ListBox.SelectedItem), RelativeSource={RelativeSource AncestorType={x:Type Grid}}, Mode=OneWay}" Style="{StaticResource ReadOnlyTextBox}"/>
                                         </Grid>
-                                        <Border d:IsHidden="True" Style="{StaticResource Common.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsWorking, Mode=OneWay}}">
-                                            <m:ProgressRing/>
-                                        </Border>
-                                    </Grid>
-                                </m:HamburgerMenuIconItem.Tag>
-                            </m:HamburgerMenuIconItem>
-                            <m:HamburgerMenuIconItem x:Name="ClipboardHistoryItem" Label="{Binding Resources.Command_ClipboardHistory, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
-                                <m:HamburgerMenuIconItem.Icon>
-                                    <mi:Modern Kind="ClipboardPaper"/>
-                                </m:HamburgerMenuIconItem.Icon>
-                                <m:HamburgerMenuIconItem.Tag>
-                                    <Grid ge:GridEx.RowDefinition="3*(50-), Auto, *(50-)">
-                                        <ListBox Grid.Row="0" ItemsSource="{Binding ClipboardItems, Source={x:Static viewModels:WorkspaceViewModel.Instance}, Mode=OneWay}">
-                                            <ListBox.ItemContainerStyle>
-                                                <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource Default.ListBoxItem}">
-                                                    <EventSetter Event="MouseDoubleClick" Handler="ClipboardHistoryItem_MouseDoubleClick"/>
-                                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                                </Style>
-                                            </ListBox.ItemContainerStyle>
-                                            <ListBox.ItemTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Text="{qc:Binding '$P.Replace(ControlChars.Cr.ToString(), string.Empty).Replace(ControlChars.Lf.ToString(), string.Empty)', P={Binding Mode=OneWay}}"/>
-                                                </DataTemplate>
-                                            </ListBox.ItemTemplate>
-                                        </ListBox>
-                                        <GridSplitter Grid.Row="1" Height="{StaticResource Const.Gap1}"/>
-                                        <TextBox Grid.Row="2" Text="{Binding Children[0].(ListBox.SelectedItem), RelativeSource={RelativeSource AncestorType={x:Type Grid}}, Mode=OneWay}" Style="{StaticResource ReadOnlyTextBox}"/>
-                                    </Grid>
-                                </m:HamburgerMenuIconItem.Tag>
-                            </m:HamburgerMenuIconItem>
-                            <m:HamburgerMenuIconItem x:Name="PropertyItem" Label="{Binding Resources.Command_Property, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
-                                <m:HamburgerMenuIconItem.Icon>
-                                    <mi:Material Kind="FileOutline"/>
-                                </m:HamburgerMenuIconItem.Icon>
-                                <m:HamburgerMenuIconItem.Tag>
-                                    <ScrollViewer>
-                                        <StackPanel DataContext="{Binding Data.ActiveEditor, Source={StaticResource Proxy}, Mode=OneWay}">
-                                            <Label     Content="{Binding Resources.Label_Name,          Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                                            <TextBlock Margin="20,0,0,5" Text="{qc:Binding 'Path.GetFileName($P)', P={Binding FileName, Mode=OneWay}}"/>
-                                            <Label     Content="{Binding Resources.Label_Type,          Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                                            <TextBlock Margin="20,0,0,5" Text="{Binding FileType, Mode=OneWay}"/>
-                                            <Label     Content="{Binding Resources.Label_Directory,     Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                                            <TextBlock Margin="20,0,0,5" Text="{Binding FileInfo.DirectoryName, Mode=OneWay}"/>
-                                            <Label     Content="{Binding Resources.Label_Size,          Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                                            <TextBlock Margin="20,0,0,5" Text="{Binding FileInfo.Length, StringFormat={}{0:N0} bytes, Mode=OneWay}"/>
-                                            <Label     Content="{Binding Resources.Label_CreationDate,  Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                                            <TextBlock Margin="20,0,0,5" Text="{Binding FileInfo.CreationTime,   StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"/>
-                                            <Label     Content="{Binding Resources.Label_ModifiredDate, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                                            <TextBlock Margin="20,0,0,5" Text="{Binding FileInfo.LastWriteTime,  StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"/>
-                                            <Label     Content="{Binding Resources.Label_AccessDate,    Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                                            <TextBlock Margin="20,0,0,5" Text="{Binding FileInfo.LastAccessTime, StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"/>
-                                            <Label     Content="{Binding Resources.Label_Owner,         Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
-                                            <TextBlock Margin="20,0,0,5" Text="{Binding FileOwner, Mode=OneWay}"/>
-                                        </StackPanel>
-                                    </ScrollViewer>
-                                </m:HamburgerMenuIconItem.Tag>
-                            </m:HamburgerMenuIconItem>
-                        </m:HamburgerMenuItemCollection>
-                    </m:HamburgerMenu.ItemsSource>
-                    <m:HamburgerMenu.OptionsItemsSource>
-                        <m:HamburgerMenuItemCollection>
-                            <m:HamburgerMenuIconItem x:Name="OptionsItem" Label="{Binding Resources.Command_Options, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
-                                <m:HamburgerMenuIconItem.Icon>
-                                    <mi:Modern Kind="Cog"/>
-                                </m:HamburgerMenuIconItem.Icon>
-                            </m:HamburgerMenuIconItem>
-                        </m:HamburgerMenuItemCollection>
-                    </m:HamburgerMenu.OptionsItemsSource>
-                </m:HamburgerMenu>
-
+                                    </m:HamburgerMenuIconItem.Tag>
+                                </m:HamburgerMenuIconItem>
+                                <m:HamburgerMenuIconItem x:Name="PropertyItem" Label="{Binding Resources.Command_Property, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
+                                    <m:HamburgerMenuIconItem.Icon>
+                                        <mi:Material Kind="FileOutline"/>
+                                    </m:HamburgerMenuIconItem.Icon>
+                                    <m:HamburgerMenuIconItem.Tag>
+                                        <ScrollViewer>
+                                            <StackPanel DataContext="{Binding Data.ActiveEditor, Source={StaticResource Proxy}, Mode=OneWay}">
+                                                <Label     Content="{Binding Resources.Label_Name,          Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                                <TextBlock Margin="20,0,0,5" Text="{qc:Binding 'Path.GetFileName($P)', P={Binding FileName, Mode=OneWay}}"/>
+                                                <Label     Content="{Binding Resources.Label_Type,          Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                                <TextBlock Margin="20,0,0,5" Text="{Binding FileType, Mode=OneWay}"/>
+                                                <Label     Content="{Binding Resources.Label_Directory,     Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                                <TextBlock Margin="20,0,0,5" Text="{Binding FileInfo.DirectoryName, Mode=OneWay}"/>
+                                                <Label     Content="{Binding Resources.Label_Size,          Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                                <TextBlock Margin="20,0,0,5" Text="{Binding FileInfo.Length, StringFormat={}{0:N0} bytes, Mode=OneWay}"/>
+                                                <Label     Content="{Binding Resources.Label_CreationDate,  Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                                <TextBlock Margin="20,0,0,5" Text="{Binding FileInfo.CreationTime,   StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"/>
+                                                <Label     Content="{Binding Resources.Label_ModifiredDate, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                                <TextBlock Margin="20,0,0,5" Text="{Binding FileInfo.LastWriteTime,  StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"/>
+                                                <Label     Content="{Binding Resources.Label_AccessDate,    Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                                <TextBlock Margin="20,0,0,5" Text="{Binding FileInfo.LastAccessTime, StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"/>
+                                                <Label     Content="{Binding Resources.Label_Owner,         Source={x:Static models:ResourceService.Instance}, Mode=OneWay}"/>
+                                                <TextBlock Margin="20,0,0,5" Text="{Binding FileOwner, Mode=OneWay}"/>
+                                            </StackPanel>
+                                        </ScrollViewer>
+                                    </m:HamburgerMenuIconItem.Tag>
+                                </m:HamburgerMenuIconItem>
+                            </m:HamburgerMenuItemCollection>
+                        </m:HamburgerMenu.ItemsSource>
+                        <m:HamburgerMenu.OptionsItemsSource>
+                            <m:HamburgerMenuItemCollection>
+                                <m:HamburgerMenuIconItem x:Name="OptionsItem" Label="{Binding Resources.Command_Options, Source={x:Static models:ResourceService.Instance}, Mode=OneWay}">
+                                    <m:HamburgerMenuIconItem.Icon>
+                                        <mi:Modern Kind="Cog"/>
+                                    </m:HamburgerMenuIconItem.Icon>
+                                </m:HamburgerMenuIconItem>
+                            </m:HamburgerMenuItemCollection>
+                        </m:HamburgerMenu.OptionsItemsSource>
+                    </m:HamburgerMenu>
+                </ScrollViewer>
                 <GridSplitter Grid.Column="1" Width="{qc:MultiBinding '$P0 ## double.IsNaN($P1) ? 5 : 0', P0={Binding System.ShowSideBar, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}, P1={Binding Width, ElementName=HamburgerMenu, Mode=OneWay}}"/>
 
                 <!-- メインコンテンツ -->
@@ -1040,7 +1041,13 @@
                 </StatusBarItem>
                 <StatusBarItem Grid.Column="4" DataContext="{Binding ActiveEditor, Mode=OneWay}">
                     <!-- ViewModel とコードビハインドで帳尻合わせするため Mode=OneWay で -->
-                    <ComboBox x:Name="LanguageComboBox" ItemsSource="{qc:Binding 'new string\[\] { string.Empty }.Concat($P.Keys)', P={Binding Source={x:Static root:Consts.SYNTAX_DEFINITIONS}, Mode=OneWay}}" SelectedValue="{Binding SyntaxDefinition.Name, Mode=OneWay}" m:TextBoxHelper.Watermark="Plain Text" SelectionChanged="StatusComboBox_SelectionChanged"/>
+                    <ComboBox x:Name="LanguageComboBox" ItemsSource="{qc:Binding 'new string\[\] { string.Empty }.Concat($P.Keys)', P={Binding Source={x:Static root:Consts.SYNTAX_DEFINITIONS}, Mode=OneWay}}" SelectedValue="{Binding SyntaxDefinition.Name, Mode=OneWay}" m:TextBoxHelper.Watermark="Plain Text" SelectionChanged="StatusComboBox_SelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{qc:Binding 'string.IsNullOrEmpty($P) ? \'Plain Text\' : $P', P={Binding Mode=OneWay}}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                 </StatusBarItem>
                 <StatusBarItem Grid.Column="5" DataContext="{Binding ActiveEditor, Mode=OneWay}">
                     <ToggleButton IsChecked="{Binding OverstrikeMode, Mode=TwoWay}" Content="{qc:Binding '$P ? \'OVER\' : \'INS\'', P={Binding OverstrikeMode, Mode=OneWay}}"/>
