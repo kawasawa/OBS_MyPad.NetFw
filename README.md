@@ -21,4 +21,4 @@ MyPad はメモ帳アプリです。
 - プログラミング言語別のカラー表示とキーワード補完
 - 内蔵された簡易ターミナル
 
-![2](https://user-images.githubusercontent.com/16559662/71766101-b38c8f80-2f3f-11ea-803c-fa788c530992.png)
+![2](https://user-images.githubusercontent.com/16559662/71780233-4e9a6d80-3003-11ea-8724-1c28ef981325.png)
