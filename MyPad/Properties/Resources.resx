@@ -666,4 +666,10 @@ Definitions is reflected on restart. Do you want to continue?</value>
   <data name="Command_CopyToClipboard" xml:space="preserve">
     <value>Copy to clipboard</value>
   </data>
+  <data name="Label_Format" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="Command_ExportLog" xml:space="preserve">
+    <value>Export log</value>
+  </data>
 </root>

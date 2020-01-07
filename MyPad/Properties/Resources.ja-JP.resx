@@ -623,4 +623,10 @@
   <data name="Command_CopyToClipboard" xml:space="preserve">
     <value>クリップボードにコピー</value>
   </data>
+  <data name="Label_Format" xml:space="preserve">
+    <value>形式</value>
+  </data>
+  <data name="Command_ExportLog" xml:space="preserve">
+    <value>ログファイルを出力する</value>
+  </data>
 </root>

@@ -10,7 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,6 +36,7 @@ namespace MyPad.ViewModels
         public InteractionRequest<MessageNotification> MessageRequest { get; } = new InteractionRequest<MessageNotification>();
         public InteractionRequest<OpenFileNotificationEx> OpenFileRequest { get; } = new InteractionRequest<OpenFileNotificationEx>();
         public InteractionRequest<SaveFileNotificationEx> SaveFileRequest { get; } = new InteractionRequest<SaveFileNotificationEx>();
+        public InteractionRequest<SaveFileNotification> SaveZipRequest { get; } = new InteractionRequest<SaveFileNotification>();
         public InteractionRequest<PrintDocumentNotification> PrintRequest { get; } = new InteractionRequest<PrintDocumentNotification>();
         public InteractionRequest<TransitionNotification> TransitionRequest { get; } = new InteractionRequest<TransitionNotification>();
 
@@ -141,6 +144,18 @@ namespace MyPad.ViewModels
                     {
                         if (n.Result == true)
                             ResourceService.InitializeXshd(true);
+                    });
+            });
+
+        public ICommand ExportLogCommand
+            => new DelegateCommand(() =>
+            {
+                this.SaveZipRequest.Raise(
+                    new SaveFileNotification() { FileName = $"Log_{DateTime.Now.ToString("yyyyMMddHHmmss")}" },
+                    async n =>
+                    {
+                        if (n.Result == true)
+                            await this.ExportLogArchive(n.FileName);
                     });
             });
 
@@ -731,6 +746,11 @@ namespace MyPad.ViewModels
             terminal.Dispose();
         }
 
+        private void Terminal_Disposed(object sender, EventArgs e)
+        {
+            this.RemoveTerminal((TerminalViewModel)sender);
+        }
+
         private void RefreshFileNodes()
         {
             var root = SettingsService.Instance.System.FileExplorerRoot;
@@ -743,9 +763,26 @@ namespace MyPad.ViewModels
             this.FileNodes.Add(node);
         }
 
-        private void Terminal_Disposed(object sender, EventArgs e)
+        private async Task<bool> ExportLogArchive(string path)
         {
-            this.RemoveTerminal((TerminalViewModel)sender);
+            try
+            {
+                this.IsWorking = true;
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+                await Task.Run(() => ZipFile.CreateFromDirectory(Logger.LogDirectoryPath, path, CompressionLevel.Optimal, false));
+                Process.Start("explorer.exe", $"/select, {path}");
+            }
+            catch (Exception e)
+            {
+                Logger.Write(LogLevel.Error, $"ログデータの出力に失敗しました。: Path={path}", e);
+                this.MessageRequest.Raise(new MessageNotification(e.Message, MessageKind.Error));
+                return false;
+            }
+            finally
+            {
+                this.IsWorking = false;
+            }
+            return true;
         }
 
         #endregion
