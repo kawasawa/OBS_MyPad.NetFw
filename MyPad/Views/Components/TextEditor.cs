@@ -52,13 +52,28 @@ namespace MyPad.Views.Components
                 TextArea.ZoomIncrementProperty.IsValidValue);
         public static readonly DependencyProperty LineProperty
             = Interactor.RegisterDependencyProperty(
-                new PropertyMetadata(1, (obj, e) => ((TextEditor)obj).TextArea.Caret.Line = (int)e.NewValue));
+                new PropertyMetadata(1, (obj, e) =>
+                {
+                    var self = (TextEditor)obj;
+                    if (self.IsLoaded)
+                        self.TextArea.Caret.Line = (int)e.NewValue;
+                }));
         public static readonly DependencyProperty ColumnProperty
             = Interactor.RegisterDependencyProperty(
-                new PropertyMetadata(1, (obj, e) => ((TextEditor)obj).TextArea.Caret.Column = (int)e.NewValue));
+                new PropertyMetadata(1, (obj, e) =>
+                {
+                    var self = (TextEditor)obj;
+                    if (self.IsLoaded)
+                        self.TextArea.Caret.Column = (int)e.NewValue;
+                }));
         public static readonly DependencyProperty VisualColumnProperty
             = Interactor.RegisterDependencyProperty(
-                new PropertyMetadata(1, (obj, e) => ((TextEditor)obj).TextArea.Caret.VisualColumn = (int)e.NewValue));
+                new PropertyMetadata(1, (obj, e) =>
+                {
+                    var self = (TextEditor)obj;
+                    if (self.IsLoaded)
+                        self.TextArea.Caret.VisualColumn = (int)e.NewValue;
+                }));
         public static readonly DependencyProperty VisualLengthProperty = VisualLengthPropertyKey.DependencyProperty;
         public static readonly DependencyProperty TextLengthProperty = TextLengthPropertyKey.DependencyProperty;
         public static readonly DependencyProperty SelectionLengthProperty = SelectionLengthPropertyKey.DependencyProperty;
@@ -206,11 +221,14 @@ namespace MyPad.Views.Components
             set => this.SetValue(EnableAutoCompletionProperty, value);
         }
 
+        public new TextArea TextArea => base.TextArea as TextArea;
+
         #endregion
 
         #region メンバ
 
         private int _totalDelimiterLength;
+        private bool _isInCaretPositionChangedHandler;
 
         private readonly IMapper _mapper
             = new MapperConfiguration(e =>
@@ -219,8 +237,6 @@ namespace MyPad.Views.Components
                 e.CreateMap<TextEditorSettings, TextEditorOptions>();
             }
             ).CreateMapper();
-
-        public new TextArea TextArea => base.TextArea as TextArea;
 
         #endregion
 
@@ -325,22 +341,34 @@ namespace MyPad.Views.Components
 
         private void Caret_PositionChanged(object sender, EventArgs e)
         {
-            var caret = (ICSharpCode.AvalonEdit.Editing.Caret)sender;
-            this.Line = caret.Line;
-            this.Column = caret.Column;
-            this.VisualColumn = caret.VisualColumn;
-            this.IsAtEndOfLine = caret.Position.IsAtEndOfLine;
-            this.IsInVirtualSpace = caret.IsInVirtualSpace;
+            if (this._isInCaretPositionChangedHandler)
+                return;
 
-            if (this.Document != null)
+            this._isInCaretPositionChangedHandler = true;
+
+            try
             {
-                var offset = this.Document.GetOffset(caret.Line, caret.Column);
-                var character = offset < this.Document.TextLength ? this.Document.GetCharAt(offset) : char.MinValue;
-                this.CharName = this.IsInVirtualSpace ? "Virtual" : TextUtilities.GetControlCharacterName(character);
+                var caret = (ICSharpCode.AvalonEdit.Editing.Caret)sender;
+                this.Line = caret.Line;
+                this.Column = caret.Column;
+                this.VisualColumn = caret.VisualColumn;
+                this.IsAtEndOfLine = caret.Position.IsAtEndOfLine;
+                this.IsInVirtualSpace = caret.IsInVirtualSpace;
+
+                if (this.Document != null)
+                {
+                    var offset = this.Document.GetOffset(caret.Line, caret.Column);
+                    var character = offset < this.Document.TextLength ? this.Document.GetCharAt(offset) : char.MinValue;
+                    this.CharName = this.IsInVirtualSpace ? "Virtual" : TextUtilities.GetControlCharacterName(character);
+                }
+                else
+                {
+                    this.CharName = this.IsInVirtualSpace ? "Virtual" : TextUtilities.GetControlCharacterName(char.MinValue);
+                }
             }
-            else
+            finally
             {
-                this.CharName = this.IsInVirtualSpace ? "Virtual" : TextUtilities.GetControlCharacterName(char.MinValue);
+                this._isInCaretPositionChangedHandler = false;
             }
         }
 
@@ -374,7 +402,7 @@ namespace MyPad.Views.Components
 
         private void TextArea_OverstrikeModeChanged(object sender, EventArgs e)
         {
-            var textArea = (TextArea)sender;
+            var textArea = (ICSharpCode.AvalonEdit.Editing.TextArea)sender;
             this.OverstrikeMode = textArea.OverstrikeMode;
         }
 
