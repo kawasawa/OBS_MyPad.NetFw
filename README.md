@@ -13,7 +13,7 @@ MyPad はメモ帳アプリです。
 - 行番号、空白、TAB、改行の可視化
 - エクスプローラーの表示やクリップボードの履歴管理
 
-![1](https://user-images.githubusercontent.com/16559662/71766022-acb14d00-2f3e-11ea-9b69-defed3b09c84.png)
+![1](https://user-images.githubusercontent.com/16559662/71902676-eafc7580-31a5-11ea-8f12-959208e4ac32.png)
 
 ### 簡単なコーディングにも
 
@@ -21,4 +21,4 @@ MyPad はメモ帳アプリです。
 - プログラミング言語別のカラー表示とキーワード補完
 - 内蔵された簡易ターミナル
 
-![2](https://user-images.githubusercontent.com/16559662/71780233-4e9a6d80-3003-11ea-8724-1c28ef981325.png)
+![2](https://user-images.githubusercontent.com/16559662/71902680-ec2da280-31a5-11ea-9a10-8f12278f04c4.png)
