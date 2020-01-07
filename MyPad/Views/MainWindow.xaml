@@ -49,10 +49,13 @@
             <behaviors:MessageActionEx UseOverlayMessage="{Binding System.UseOverlayMessage, Source={x:Static models:SettingsService.Instance}, Mode=OneWay}"/>
         </p:InteractionRequestTrigger>
         <p:InteractionRequestTrigger SourceObject="{Binding OpenFileRequest, Mode=OneTime}">
-            <behaviors:OpenFileActionEx Filter="{x:Static root:Consts.FILE_FILTER}" DefaultExtension="{x:Static root:Consts.DEFAULT_EXTENSION}" Multiselect="True"/>
+            <behaviors:OpenFileActionEx Filter="{x:Static root:Consts.FILE_FILTER}" DefaultExtension="{x:Static root:Consts.TEXT_EXTENSION}" Multiselect="True"/>
         </p:InteractionRequestTrigger>
         <p:InteractionRequestTrigger SourceObject="{Binding SaveFileRequest, Mode=OneTime}">
-            <behaviors:SaveFileActionEx Filter="{x:Static root:Consts.FILE_FILTER}" DefaultExtension="{x:Static root:Consts.DEFAULT_EXTENSION}"/>
+            <behaviors:SaveFileActionEx Filter="{x:Static root:Consts.FILE_FILTER}" DefaultExtension="{x:Static root:Consts.TEXT_EXTENSION}"/>
+        </p:InteractionRequestTrigger>
+        <p:InteractionRequestTrigger SourceObject="{Binding SaveZipRequest, Mode=OneTime}">
+            <mlwi:SaveFileAction Filter="{x:Static root:Consts.ZIP_FILTER}" DefaultExtension="{x:Static root:Consts.ZIP_EXTENSION}"/>
         </p:InteractionRequestTrigger>
         <p:InteractionRequestTrigger SourceObject="{Binding PrintRequest, Mode=OneTime}">
             <mlwi:PrintDocumentAction/>

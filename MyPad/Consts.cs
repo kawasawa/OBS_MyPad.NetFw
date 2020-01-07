@@ -32,11 +32,15 @@ namespace MyPad
         public static readonly string DEFAULT_FILE_EXPLORER_ROOT
             = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-        public const string DEFAULT_EXTENSION = "txt";
+        public const string TEXT_EXTENSION = ".txt";
+        public const string ZIP_EXTENSION = ".zip";
+
         public static string FILE_FILTER
             => string.Join("|", 
                 new[] { $"{Resources.Label_AllFiles}|*.*" }
                 .Concat(SYNTAX_DEFINITIONS.Values.Select(d => $"{d.Name}|{string.Join(";", d.Extensions)}")));
+        public static string ZIP_FILTER
+            => $"ZIP {Resources.Label_Format}|*{ZIP_EXTENSION}";
 
         public const string TEMPORARY_NAME_FORMAT = "yyyyMMddHHmmssfff";
         public static string CURRENT_TEMPORARY

@@ -158,7 +158,7 @@ namespace MyPad
             EquationTokenizer.AddNamespace(typeof(System.Windows.Controls.Control)); // System.Windows.Controls : PresentationFramework.dll
             EquationTokenizer.AddExtensionMethods(typeof(System.Linq.Enumerable));   // System.Linq             : System.Core.dll
 
-            // Additional
+            // Lib
             EquationTokenizer.AddNamespace(typeof(Microsoft.VisualBasic.Globals));   // Microsoft.VisualBasic   : Microsoft.VisualBasic.dll
             EquationTokenizer.AddNamespace(typeof(MyLib.Wpf.Interactions.InteractionNotification));
         }

@@ -23,14 +23,14 @@
             set => this.SetProperty(ref this._zoomIncrement, value);
         }
 
-        private int _line;
+        private int _line = 1; // 初期値
         public int Line
         {
             get => this._line;
             set => this.SetProperty(ref this._line, value);
         }
 
-        private int _column;
+        private int _column = 1; // 初期値
         public int Column
         {
             get => this._column;

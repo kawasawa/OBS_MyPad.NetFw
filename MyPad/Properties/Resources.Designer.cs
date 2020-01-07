@@ -19,7 +19,7 @@ namespace MyPad.Properties {
     // または Visual Studio のようなツールを使用して自動生成されました。
     // メンバーを追加または削除するには、.ResX ファイルを編集して、/str オプションと共に
     // ResGen を実行し直すか、または VS プロジェクトをビルドし直します。
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -292,6 +292,15 @@ namespace MyPad.Properties {
         public static string Command_ExitApplication {
             get {
                 return ResourceManager.GetString("Command_ExitApplication", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Export log に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_ExportLog {
+            get {
+                return ResourceManager.GetString("Command_ExportLog", resourceCulture);
             }
         }
         
@@ -1062,6 +1071,15 @@ namespace MyPad.Properties {
         public static string Label_Font {
             get {
                 return ResourceManager.GetString("Label_Font", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Format に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_Format {
+            get {
+                return ResourceManager.GetString("Label_Format", resourceCulture);
             }
         }
         
